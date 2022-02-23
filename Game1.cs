@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Swarms
 {
@@ -28,6 +30,13 @@ namespace Swarms
             LoadContent();
             base.Initialize();
         }
+
+        public int getWidth(){
+            return _screenWidth;
+        }
+        public int getHeight(){
+            return _screenHeight;
+        }
         protected void initGrid(){
             _columns = 5;
             _rows = 5;
@@ -35,7 +44,10 @@ namespace Swarms
         }
         protected void initSize(){
             _screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            Trace.WriteLine(_screenWidth);
             _screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            Trace.WriteLine(_screenHeight);
+            
         }
         Texture2D blackRectangle;
         protected override void LoadContent()
@@ -85,6 +97,7 @@ namespace Swarms
                     _spriteBatch.Draw(blackRectangle, new Vector2(i*5, j*5), Color.Black);
                 }
             }
+            Debug.WriteLine("yeet");
             _spriteBatch.End();
         }
         

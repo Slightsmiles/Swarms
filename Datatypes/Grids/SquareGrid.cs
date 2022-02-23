@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Reflection.Emit;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,11 @@ namespace Swarms.Datatypes.Grids
 
         public bool showGrid;
 
+        //UPDATE THESE IF THE HEIGHT AND WIDTH CHANGES OBVIOUSLY ;DD;D;D;D;;D;D;D DONT U... FORGET ABOUT ME.
+
+        //DONT DONT DONT DONT
+        public int _screenHeight = 480;
+        public int _screenWidth = 800;
         //todo find the equivalent of Basic2D
         // this is supposed to represent the img in each grid square
          public Texture2D gridImg; 
@@ -39,6 +45,8 @@ namespace Swarms.Datatypes.Grids
 
             currentHoverSlot = new Vector2(-1,-1);
 
+            setBaseGrid();
+
             //todo, make this a rectangle yakno
             // maybe make a class to represent a rectangle in the grid, containing the img etc.
             // Maybe this is the reasoning for having this matrix GridLocation[][], and GridLocation is what i'm thinking about?
@@ -51,9 +59,9 @@ namespace Swarms.Datatypes.Grids
         {
 
         }
-
+        //this won't work until we figure out how to get current mouse position and remove that stupid Global shit
         public virtual void Update(Vector2 offset){
-            
+            //currentHoverSlot = getSlotFromPixel(new Vector2(Globals.mouse.newMousePos.X, Globals.mouse.newMousePos.Y),offset);
         }
 
         //if statement simply checks if the location is within bounds.
@@ -68,6 +76,40 @@ namespace Swarms.Datatypes.Grids
         //this might not be used and doesnt work atm plz no usy papi
         public virtual Vector2 getSlotFromPixel(Vector2 pix, Vector2 offset){
             return slotDims;
+        }
+
+        // size of slot divided by number of slots, i would say we just initialize it with these dims in the constructor.   
+        public virtual void setBaseGrid(){
+            gridDims = new Vector2((int)(totalPhysicalDims.X/slotDims.X),totalPhysicalDims.X/slotDims.X);
+            
+            //make sure our grid is clear initially
+            Array.Clear(slots, 0, slots.Length);
+
+            for(int i = 0; i> gridDims.X; i++){
+                //this might fuck shit up, but adds to rows
+                slots[i] = new GridLocation[(int)gridDims.Y];
+                for(int j=0; j<gridDims.Y; i++){
+                    slots[i][j] = new GridLocation(1, false);
+                }
+            }
+        }
+
+        public virtual void drawGrid(Vector2 offset){
+            Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
+            //botRight MIGHT be iffy, i took it from debugging Game1.cs and checking our values out
+            Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
+
+            //needs some actual drawing logic i guess
+            if(showGrid){
+                //dimensional check, draw this out at some point 
+                for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
+                    for (int k=(int)topLeft.Y; k <= botRight.Y && k<slots[0].Count(); k++){
+                        
+                        //drawRectangle();
+
+                    }
+                }
+            }
         }
     }
 }
