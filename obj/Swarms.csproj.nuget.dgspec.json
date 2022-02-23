@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj": {}
+    "C:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj": {
+    "C:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj",
+        "projectUniqueName": "C:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj",
         "projectName": "Swarms",
-        "projectPath": "c:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj",
+        "projectPath": "C:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj",
         "packagesPath": "C:\\Users\\Trond\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Trond\\Desktop\\Swarms\\obj\\",
+        "outputPath": "C:\\Users\\Trond\\Desktop\\Swarms\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Trond\\AppData\\Roaming\\NuGet\\NuGet.Config"

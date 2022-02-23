@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p1dgGSDKte+l+DIv3+HLSa4YwmAUIWwMUArIOe+AZjhnCObn65V+LDOGTZU2nvnF49sGXnlMIX55yHRXmv5M8A==",
+  "dgSpecHash": "269e6Pqts48LOWuGVbPLwSivgHSp9WfTVzKpycxEZ57NBe0upe88fn8SoNlwNvBvKzrfC6apmfDMJDcScUXX1w==",
   "success": true,
-  "projectFilePath": "c:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj",
+  "projectFilePath": "C:\\Users\\Trond\\Desktop\\Swarms\\Swarms.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Trond\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
     "C:\\Users\\Trond\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",
