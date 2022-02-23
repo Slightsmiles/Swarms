@@ -8,7 +8,7 @@ namespace Swarms
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        
+        private int _gridSize;
         private int _screenWidth;
         private int _screenHeight;
         private int _rows;
@@ -25,12 +25,13 @@ namespace Swarms
             // TODO: Add your initialization logic here
             initGrid();
             initSize();
- 
+            LoadContent();
             base.Initialize();
         }
         protected void initGrid(){
-            _columns = 10;
-            _rows = 10;
+            _columns = 5;
+            _rows = 5;
+            _gridSize = 10;
         }
         protected void initSize(){
             _screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -52,7 +53,7 @@ namespace Swarms
             _spriteBatch.Dispose();
     // If you are creating your texture (instead of loading it with
     // Content.Load) then you must Dispose of it
-            blackRectangle.Dispose();
+           // blackRectangle.Dispose();
         }
 
         protected override void Update(GameTime gameTime)
@@ -75,11 +76,13 @@ namespace Swarms
 
             _spriteBatch.Begin();
                // TODO: Add your drawing code here
-            for (int i = 0; i < _columns; i++)
+            for (int i = 0; i < _screenHeight/10; i++)
             {
-                for (int j = 0; j < _rows; j++)
+                for (int j = 0; j < _screenWidth/10; j++)
                 {
-                    _spriteBatch.Draw(blackRectangle, new Rectangle(i * 2, j * 2, 1, 1), Color.Black);
+                   // _spriteBatch.Draw(blackRectangle, new Rectangle(i * _gridSize, j * _gridSize, _gridSize, _gridSize), Color.Black);
+                   //Changing the size of parameters in the Vector2 object changes the spacing between rectangles drawn
+                    _spriteBatch.Draw(blackRectangle, new Vector2(i*5, j*5), Color.Black);
                 }
             }
             _spriteBatch.End();
