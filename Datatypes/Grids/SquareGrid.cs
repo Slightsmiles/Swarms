@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-
 namespace Swarms.Datatypes.Grids
 {
     public class SquareGrid
@@ -37,7 +36,7 @@ namespace Swarms.Datatypes.Grids
 
         public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS)
         {
-            showGrid = false;
+            showGrid = true;
             slotDims = SLOTDIMS;
 
             gridOffset = new Vector2((int)STARTPOS.X, (int)STARTPOS.Y);
@@ -61,7 +60,7 @@ namespace Swarms.Datatypes.Grids
         }
         //this won't work until we figure out how to get current mouse position and remove that stupid Global shit
         public virtual void Update(Vector2 offset){
-            //currentHoverSlot = getSlotFromPixel(new Vector2(Globals.mouse.newMousePos.X, Globals.mouse.newMousePos.Y),offset);
+            currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
         }
 
         //if statement simply checks if the location is within bounds.
@@ -75,6 +74,10 @@ namespace Swarms.Datatypes.Grids
 
         //this might not be used and doesnt work atm plz no usy papi
         public virtual Vector2 getSlotFromPixel(Vector2 pix, Vector2 offset){
+            Vector2 adjustedPos = pix - gridOffset + offset;
+
+            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.Y)), slots[0].Count()-1));
+            
             return slotDims;
         }
 
@@ -105,8 +108,8 @@ namespace Swarms.Datatypes.Grids
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k<slots[0].Count(); k++){
                         
-                        //drawRectangle();
-
+                        
+                         //drawing logic goes here
                     }
                 }
             }

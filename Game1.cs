@@ -1,8 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Swarms.Datatypes.Grids;
 
 namespace Swarms
 {
@@ -15,6 +17,9 @@ namespace Swarms
         private int _screenHeight;
         private int _rows;
         private int _columns;
+
+        private SquareGrid _grid;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -86,19 +91,7 @@ namespace Swarms
 
             base.Draw(gameTime);
 
-            _spriteBatch.Begin();
-               // TODO: Add your drawing code here
-            for (int i = 0; i < _screenHeight/10; i++)
-            {
-                for (int j = 0; j < _screenWidth/10; j++)
-                {
-                   // _spriteBatch.Draw(blackRectangle, new Rectangle(i * _gridSize, j * _gridSize, _gridSize, _gridSize), Color.Black);
-                   //Changing the size of parameters in the Vector2 object changes the spacing between rectangles drawn
-                    _spriteBatch.Draw(blackRectangle, new Vector2(i*5, j*5), Color.Black);
-                }
-            }
-            Debug.WriteLine("yeet");
-            _spriteBatch.End();
+            //TODO, look into spritebatch and drawing, i think the grid data structure is bueno, we just need to be able to draw it.
         }
         
     }
