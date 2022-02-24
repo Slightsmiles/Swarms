@@ -78,7 +78,8 @@ namespace Swarms.Datatypes.Grids
 
             Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.Y)), slots[0].Count()-1));
             
-            return slotDims;
+            //WRONG RETURN VALUE
+            return tempVec;
         }
 
         // size of slot divided by number of slots, i would say we just initialize it with these dims in the constructor.   
