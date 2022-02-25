@@ -57,8 +57,8 @@ namespace Swarms
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            blackRectangle = new Texture2D(GraphicsDevice, 1, 1);
-            blackRectangle.SetData(new Color[] { Color.Black });
+            blackRectangle = new Texture2D(GraphicsDevice, 2, 2);
+            blackRectangle.SetData(new Color[] { Color.Black, Color.Black, Color.Black, Color.Black });
             // TODO: use this.Content to load your game content here
         }
 

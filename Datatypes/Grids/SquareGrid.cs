@@ -33,6 +33,7 @@ namespace Swarms.Datatypes.Grids
         public Vector2 slotDims, gridDims, gridOffset, totalPhysicalDims, currentHoverSlot;
 
         //this is essentially our matrix for all the squares.
+        //TODO, change syntax cuz this aint working methinks
         public GridLocation[][] slots = new GridLocation[40][];
 
         public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS)
@@ -89,7 +90,7 @@ namespace Swarms.Datatypes.Grids
             
             //make sure our grid is clear initially
             Array.Clear(slots, 0, slots.Length);
-
+            
             for(int i = 0; i < gridDims.X; i++){
                 //this might fuck shit up, but adds to rows
                 slots[i] = new GridLocation[(int)gridDims.Y];
@@ -110,20 +111,21 @@ namespace Swarms.Datatypes.Grids
                 spriteBatch.Begin();
                 //dimensional check, draw this out at some point 
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
-                    for (int k=(int)topLeft.Y; k <= botRight.Y && k<slots[0].Count(); k++){
+                    for (int k=(int)topLeft.Y; k <= botRight.Y && k < slots[0].Count(); k++){
                         
-                        spriteBatch.Draw(texture, topLeft, Color.Black);
-
+                        spriteBatch.Draw(texture, offset, Color.Black);
+                        
+                        //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
                          //drawing logic goes here
                     }
                 }
                 spriteBatch.End();
             }
+        }
+        public virtual void drawRectangle(Vector2 pos, Vector2 offset){
+
+
         }   
 
-        public virtual void drawRectangle(){
-
-
-        }
     }
 }
