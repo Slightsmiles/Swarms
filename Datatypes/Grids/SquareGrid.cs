@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System;
 using System.Reflection.Emit;
@@ -32,7 +33,7 @@ namespace Swarms.Datatypes.Grids
         public Vector2 slotDims, gridDims, gridOffset, totalPhysicalDims, currentHoverSlot;
 
         //this is essentially our matrix for all the squares.
-        public GridLocation[][] slots = new GridLocation[10][];
+        public GridLocation[][] slots = new GridLocation[40][];
 
         public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS)
         {
@@ -78,7 +79,7 @@ namespace Swarms.Datatypes.Grids
 
             Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.Y)), slots[0].Count()-1));
             
-            //WRONG RETURN VALUE
+            //WRONG RETURN VALUE (maybe)
             return tempVec;
         }
 
@@ -89,31 +90,40 @@ namespace Swarms.Datatypes.Grids
             //make sure our grid is clear initially
             Array.Clear(slots, 0, slots.Length);
 
-            for(int i = 0; i> gridDims.X; i++){
+            for(int i = 0; i < gridDims.X; i++){
                 //this might fuck shit up, but adds to rows
                 slots[i] = new GridLocation[(int)gridDims.Y];
-                for(int j=0; j<gridDims.Y; i++){
+                for(int j=0; j<gridDims.Y ; j++){
                     slots[i][j] = new GridLocation(1, false);
                 }
             }
         }
 
-        public virtual void drawGrid(Vector2 offset){
+        public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
             //botRight MIGHT be iffy, i took it from debugging Game1.cs and checking our values out
             Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
 
+
             //needs some actual drawing logic i guess
             if(showGrid){
+                spriteBatch.Begin();
                 //dimensional check, draw this out at some point 
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k<slots[0].Count(); k++){
                         
-                        
+                        spriteBatch.Draw(texture, topLeft, Color.Black);
+
                          //drawing logic goes here
                     }
                 }
+                spriteBatch.End();
             }
+        }   
+
+        public virtual void drawRectangle(){
+
+
         }
     }
 }

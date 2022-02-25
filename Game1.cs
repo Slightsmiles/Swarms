@@ -25,13 +25,13 @@ namespace Swarms
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-        }
+            }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            initGrid();
             initSize();
+            initGrid();
             LoadContent();
             base.Initialize();
         }
@@ -43,9 +43,7 @@ namespace Swarms
             return _screenHeight;
         }
         protected void initGrid(){
-            _columns = 5;
-            _rows = 5;
-            _gridSize = 10;
+           _grid = new SquareGrid(new Vector2(25,25), new Vector2(-100,-100), new Vector2(_screenWidth+200,_screenHeight+200) );
         }
         protected void initSize(){
             _screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -70,7 +68,7 @@ namespace Swarms
             _spriteBatch.Dispose();
     // If you are creating your texture (instead of loading it with
     // Content.Load) then you must Dispose of it
-           // blackRectangle.Dispose();
+            blackRectangle.Dispose();
         }
 
         protected override void Update(GameTime gameTime)
@@ -87,8 +85,10 @@ namespace Swarms
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
-        
-
+            //change the offset here
+            
+            _grid.drawGrid(new Vector2(0,0), _spriteBatch, blackRectangle);
+         
             base.Draw(gameTime);
 
             //TODO, look into spritebatch and drawing, i think the grid data structure is bueno, we just need to be able to draw it.
