@@ -40,26 +40,25 @@ namespace Swarms.Datatypes.Grids
         public Vector2 slotDims, gridDims, gridOffset, totalPhysicalDims, currentHoverSlot;
 
         //this is essentially our matrix for all the squares.
-        public GridLocation[][] slots = new GridLocation[40][];
-        
+        public GridLocation[][] slots;
+        public int gridSize = 40;
 
 
         public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS, GraphicsDevice _graphics)
         {
             showGrid = true;
             slotDims = SLOTDIMS;
-
+            slotDims = new Vector2(_screenWidth/gridSize,_screenHeight/gridSize);
+            SQUARE_SIZE = (int)slotDims.X;
             gridOffset = new Vector2((int)STARTPOS.X, (int)STARTPOS.Y);
             totalPhysicalDims = new Vector2((int)TOTALDIMS.X, (int)TOTALDIMS.Y);
 
             currentHoverSlot = new Vector2(-1,-1);
+            // This shouldnt be 40, but should be dependant on 
+            
             LoadContent(_graphics);
             setBaseGrid();
 
-            //todo, make this a rectangle yakno
-            // maybe make a class to represent a rectangle in the grid, containing the img etc.
-            // Maybe this is the reasoning for having this matrix GridLocation[][], and GridLocation is what i'm thinking about?
-            // We want the position of this to be with an offset, because we draw from the middle, but the position currently in our grid is the top left corner of each square.
             gridImg = null;
 
         }
@@ -73,7 +72,7 @@ namespace Swarms.Datatypes.Grids
             rectTexture = new Texture2D(graphics, 1, 1);
             rectTexture.SetData(new[] {Color.White});
         }
-        //this won't work until we figure out how to get current mouse position and remove that stupid Global shit
+        //When to update?
         public virtual void Update(Vector2 offset){
             currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
             Trace.WriteLine(currentHoverSlot);
@@ -101,15 +100,15 @@ namespace Swarms.Datatypes.Grids
         public virtual void setBaseGrid(){
 
 
-            gridDims = new Vector2((int)(totalPhysicalDims.X/slotDims.X),totalPhysicalDims.X/slotDims.X);
-            
+            gridDims = slotDims;
+            slots = new GridLocation[(int) gridDims.X][];
             //make sure our grid is clear initially
             Array.Clear(slots, 0, slots.Length);
             
             for(int i = 0; i < gridDims.X; i++){
                 //this might fuck shit up, but adds to rows
 
-                slots[i] = new GridLocation[(int)gridDims.Y];
+                slots[i] = new GridLocation[(int)gridDims.X];
                 for(int j=0; j<gridDims.Y ; j++){
                     slots[i][j] = new GridLocation(1, false);
                 }
@@ -139,7 +138,6 @@ namespace Swarms.Datatypes.Grids
                     var yOffset = offset.Y + SQUARE_SIZE*j;
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k < slots[0].Count(); k++){
                         var xOffset = offset.X + SQUARE_SIZE*k;
-
                         spriteBatch.Draw(rectTexture, topLeft, Color.Black);
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)yOffset, (int)xOffset, SQUARE_SIZE, SQUARE_SIZE),Color.Black,10);
                         
