@@ -43,22 +43,21 @@ namespace Swarms
             return _screenHeight;
         }
         protected void initGrid(){
-           _grid = new SquareGrid(new Vector2(25,25), new Vector2(-100,-100), new Vector2(_screenWidth+200,_screenHeight+200) );
+           _grid = new SquareGrid(new Vector2(25,25), new Vector2(0,0), new Vector2(_screenWidth,_screenHeight), GraphicsDevice );
         }
         protected void initSize(){
             _screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
-            Trace.WriteLine(_screenWidth);
             _screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-            Trace.WriteLine(_screenHeight);
             
         }
-        Texture2D blackRectangle;
+        //currently unused in SquareGrid class, even though we pass it as argument
+        Texture2D rectTexture;
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            blackRectangle = new Texture2D(GraphicsDevice, 2, 2);
-            blackRectangle.SetData(new Color[] { Color.Black, Color.Black, Color.Black, Color.Black });
+            rectTexture = new Texture2D(GraphicsDevice, 1, 1);
+            rectTexture.SetData(new[] {Color.White});
             // TODO: use this.Content to load your game content here
         }
 
@@ -68,7 +67,7 @@ namespace Swarms
             _spriteBatch.Dispose();
     // If you are creating your texture (instead of loading it with
     // Content.Load) then you must Dispose of it
-            blackRectangle.Dispose();
+            rectTexture.Dispose();
         }
 
         protected override void Update(GameTime gameTime)
@@ -87,7 +86,7 @@ namespace Swarms
             
             //change the offset here
             
-            _grid.drawGrid(new Vector2(0,0), _spriteBatch, blackRectangle);
+            _grid.drawGrid(new Vector2(0,0), _spriteBatch, rectTexture);
          
             base.Draw(gameTime);
 
