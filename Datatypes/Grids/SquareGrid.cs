@@ -21,9 +21,13 @@ namespace Swarms.Datatypes.Grids
         //DONT DONT DONT DONT
         public int _screenHeight = 480;
         public int _screenWidth = 800;
-        //todo find the equivalent of Basic2D
+
+        public Vector2 rectPosition;
+        public float rectSpeed = 100f;
+
+        public Texture2D rectTexture;
         // this is supposed to represent the img in each grid square
-         public Texture2D gridImg; 
+        public Texture2D gridImg; 
 
         //slotDims: Size of each slot in the grid
         //gridDims: size of the entire grid. good since we use arrays
@@ -33,10 +37,11 @@ namespace Swarms.Datatypes.Grids
         public Vector2 slotDims, gridDims, gridOffset, totalPhysicalDims, currentHoverSlot;
 
         //this is essentially our matrix for all the squares.
-        //TODO, change syntax cuz this aint working methinks
         public GridLocation[][] slots = new GridLocation[40][];
+        
 
-        public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS)
+
+        public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS, GraphicsDevice _graphics)
         {
             showGrid = true;
             slotDims = SLOTDIMS;
@@ -45,7 +50,7 @@ namespace Swarms.Datatypes.Grids
             totalPhysicalDims = new Vector2((int)TOTALDIMS.X, (int)TOTALDIMS.Y);
 
             currentHoverSlot = new Vector2(-1,-1);
-
+            LoadContent(_graphics);
             setBaseGrid();
 
             //todo, make this a rectangle yakno
@@ -60,9 +65,15 @@ namespace Swarms.Datatypes.Grids
         {
 
         }
+
+        public void LoadContent(GraphicsDevice graphics){
+            rectTexture = new Texture2D(graphics, 1, 1);
+            rectTexture.SetData(new[] {Color.White});
+        }
         //this won't work until we figure out how to get current mouse position and remove that stupid Global shit
         public virtual void Update(Vector2 offset){
             currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
+            Trace.WriteLine(currentHoverSlot);
         }
 
         //if statement simply checks if the location is within bounds.
@@ -80,12 +91,13 @@ namespace Swarms.Datatypes.Grids
 
             Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.Y)), slots[0].Count()-1));
             
-            //WRONG RETURN VALUE (maybe)
             return tempVec;
         }
 
         // size of slot divided by number of slots, i would say we just initialize it with these dims in the constructor.   
         public virtual void setBaseGrid(){
+
+
             gridDims = new Vector2((int)(totalPhysicalDims.X/slotDims.X),totalPhysicalDims.X/slotDims.X);
             
             //make sure our grid is clear initially
@@ -93,12 +105,21 @@ namespace Swarms.Datatypes.Grids
             
             for(int i = 0; i < gridDims.X; i++){
                 //this might fuck shit up, but adds to rows
+
                 slots[i] = new GridLocation[(int)gridDims.Y];
                 for(int j=0; j<gridDims.Y ; j++){
                     slots[i][j] = new GridLocation(1, false);
                 }
             }
+
+            // FROM BELOW IS COPYPASTED AND PART OF SMIMONS SMOLUTION:
+          //  rectPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+           // rectSpeed = 100f;
+           // rectPosition = new Vector2(0,0);
         }
+
+
+  
 
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
@@ -111,9 +132,13 @@ namespace Swarms.Datatypes.Grids
                 spriteBatch.Begin();
                 //dimensional check, draw this out at some point 
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
+                    //var yOffset = offset.Y + 50*j;
+                    var yOffset = offset.Y + 50*j;
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k < slots[0].Count(); k++){
-                        
-                        spriteBatch.Draw(texture, offset, Color.Black);
+                        var xOffset = offset.X + 50*k;
+
+                        spriteBatch.Draw(rectTexture, topLeft, Color.Black);
+                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)yOffset, (int)xOffset, 100,100),Color.Black,10);
                         
                         //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
                          //drawing logic goes here
