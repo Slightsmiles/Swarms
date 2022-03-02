@@ -21,7 +21,10 @@ namespace Swarms.Datatypes.Grids
         //DONT DONT DONT DONT
         public int _screenHeight = 480;
         public int _screenWidth = 800;
-
+        
+        //TODO: Change to be relative to screen size
+        readonly int SQUARE_SIZE = 100;
+        
         public Vector2 rectPosition;
         public float rectSpeed = 100f;
 
@@ -133,12 +136,12 @@ namespace Swarms.Datatypes.Grids
                 //dimensional check, draw this out at some point 
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
                     //var yOffset = offset.Y + 50*j;
-                    var yOffset = offset.Y + 50*j;
+                    var yOffset = offset.Y + SQUARE_SIZE*j;
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k < slots[0].Count(); k++){
-                        var xOffset = offset.X + 50*k;
+                        var xOffset = offset.X + SQUARE_SIZE*k;
 
                         spriteBatch.Draw(rectTexture, topLeft, Color.Black);
-                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)yOffset, (int)xOffset, 100,100),Color.Black,10);
+                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)yOffset, (int)xOffset, SQUARE_SIZE, SQUARE_SIZE),Color.Black,10);
                         
                         //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
                          //drawing logic goes here
