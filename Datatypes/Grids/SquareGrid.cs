@@ -47,14 +47,11 @@ namespace Swarms.Datatypes.Grids
         public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS, GraphicsDevice _graphics)
         {
             showGrid = true;
-            slotDims = SLOTDIMS;
             slotDims = new Vector2(_screenWidth/gridSize,_screenHeight/gridSize);
-            SQUARE_SIZE = (int)slotDims.X;
             gridOffset = new Vector2((int)STARTPOS.X, (int)STARTPOS.Y);
             totalPhysicalDims = new Vector2((int)TOTALDIMS.X, (int)TOTALDIMS.Y);
 
             currentHoverSlot = new Vector2(-1,-1);
-            // This shouldnt be 40, but should be dependant on 
             
             LoadContent(_graphics);
             setBaseGrid();
@@ -75,7 +72,6 @@ namespace Swarms.Datatypes.Grids
         //When to update?
         public virtual void Update(Vector2 offset){
             currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
-            Trace.WriteLine(currentHoverSlot);
         }
 
         //if statement simply checks if the location is within bounds.
@@ -99,8 +95,8 @@ namespace Swarms.Datatypes.Grids
         // size of slot divided by number of slots, i would say we just initialize it with these dims in the constructor.   
         public virtual void setBaseGrid(){
 
-
-            gridDims = slotDims;
+            // 40/1.6 = 25, this is aspect ratio stuff, TODO: stop magic numbering trond
+            gridDims = new Vector2(gridSize,25);
             slots = new GridLocation[(int) gridDims.X][];
             //make sure our grid is clear initially
             Array.Clear(slots, 0, slots.Length);
@@ -114,10 +110,6 @@ namespace Swarms.Datatypes.Grids
                 }
             }
 
-            // FROM BELOW IS COPYPASTED AND PART OF SMIMONS SMOLUTION:
-          //  rectPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
-           // rectSpeed = 100f;
-           // rectPosition = new Vector2(0,0);
         }
 
 
@@ -125,7 +117,6 @@ namespace Swarms.Datatypes.Grids
 
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
-            //botRight MIGHT be iffy, i took it from debugging Game1.cs and checking our values out
             Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
 
 
@@ -135,11 +126,11 @@ namespace Swarms.Datatypes.Grids
                 //dimensional check, draw this out at some point 
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
                     //var yOffset = offset.Y + 50*j;
-                    var yOffset = offset.Y + SQUARE_SIZE*j;
+                    var xOffset = offset.X + slotDims.X*j;
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k < slots[0].Count(); k++){
-                        var xOffset = offset.X + SQUARE_SIZE*k;
-                        spriteBatch.Draw(rectTexture, topLeft, Color.Black);
-                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)yOffset, (int)xOffset, SQUARE_SIZE, SQUARE_SIZE),Color.Black,10);
+                        var yOffset = offset.Y + slotDims.Y*k;
+                        //spriteBatch.Draw(rectTexture, topLeft, Color.Black);
+                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.Y),Color.Black,5);
                         
                         //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
                          //drawing logic goes here
@@ -148,10 +139,7 @@ namespace Swarms.Datatypes.Grids
                 spriteBatch.End();
             }
         }
-        public virtual void drawRectangle(Vector2 pos, Vector2 offset){
-
-
-        }   
+           
 
     }
 }
