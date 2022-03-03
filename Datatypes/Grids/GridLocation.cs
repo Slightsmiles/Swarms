@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System;
 namespace Swarms.Datatypes.Grids
 {
     //individual grid locations
@@ -15,6 +15,8 @@ namespace Swarms.Datatypes.Grids
         // some floats for pathfinding, cost is cost to move through a single square.
         public float currentDist, cost;
 
+        private Enum whatTheFuckIsContainedInThisFuckingSquareLad;
+
         public Vector2 parent, pos;
 
         public GridLocation(float Cost, bool FILLED){
@@ -24,6 +26,11 @@ namespace Swarms.Datatypes.Grids
             traversable = true;
             
         
+        }
+
+        public Enum getType(){
+
+            return whatTheFuckIsContainedInThisFuckingSquareLad;
         }
     }
 }
