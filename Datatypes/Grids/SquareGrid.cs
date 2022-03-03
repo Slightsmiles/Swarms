@@ -119,7 +119,7 @@ namespace Swarms.Datatypes.Grids
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
             Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
 
-
+            var rowNum = 25;
             //needs some actual drawing logic i guess
             if(showGrid){
                 spriteBatch.Begin();
@@ -127,10 +127,11 @@ namespace Swarms.Datatypes.Grids
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
                     //var yOffset = offset.Y + 50*j;
                     var xOffset = offset.X + slotDims.X*j;
-                    for (int k=(int)topLeft.Y; k <= botRight.Y && k < slots[0].Count(); k++){
-                        var yOffset = offset.Y + slotDims.Y*k;
+                    for (int k=(int)topLeft.Y; k <= botRight.Y && k < rowNum; k++){
+                        //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
+                        var yOffset = offset.Y + slotDims.X*k;
                         //spriteBatch.Draw(rectTexture, topLeft, Color.Black);
-                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.Y),Color.Black,5);
+                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.Black,2);
                         
                         //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
                          //drawing logic goes here
