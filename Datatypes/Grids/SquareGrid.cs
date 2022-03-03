@@ -118,7 +118,7 @@ namespace Swarms.Datatypes.Grids
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
             Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
-
+            var slotCounter = 0;
             var rowNum = 25;
             //needs some actual drawing logic i guess
             if(showGrid){
@@ -132,12 +132,13 @@ namespace Swarms.Datatypes.Grids
                         var yOffset = offset.Y + slotDims.X*k;
                         //spriteBatch.Draw(rectTexture, topLeft, Color.Black);
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.Black,2);
-                        
+                        slotCounter++;
                         //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
                          //drawing logic goes here
                     }
                 }
                 spriteBatch.End();
+                Trace.WriteLine(slotCounter);
             }
         }
            
