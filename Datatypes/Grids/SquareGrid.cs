@@ -41,13 +41,17 @@ namespace Swarms.Datatypes.Grids
 
         //this is essentially our matrix for all the squares.
         public GridLocation[][] slots;
-        public int gridSize = 40;
+
+        //this could just be made into a vector where X represents rows and Y represents columns but cba
+        //btw i refuse to figure out what a row is and what a column is sooooooooooo WEHU
+        private int rowSize = 40;
+        private int columnSize = 25; 
 
 
         public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS, GraphicsDevice _graphics)
         {
             showGrid = true;
-            slotDims = new Vector2(_screenWidth/gridSize,_screenHeight/gridSize);
+            slotDims = new Vector2(_screenWidth/rowSize,_screenHeight/rowSize);
             gridOffset = new Vector2((int)STARTPOS.X, (int)STARTPOS.Y);
             totalPhysicalDims = new Vector2((int)TOTALDIMS.X, (int)TOTALDIMS.Y);
 
@@ -96,7 +100,7 @@ namespace Swarms.Datatypes.Grids
         public virtual void setBaseGrid(){
 
             // 40/1.6 = 25, this is aspect ratio stuff, TODO: stop magic numbering trond
-            gridDims = new Vector2(gridSize,25);
+            gridDims = new Vector2(rowSize,columnSize);
             slots = new GridLocation[(int) gridDims.X][];
             //make sure our grid is clear initially
             Array.Clear(slots, 0, slots.Length);
@@ -119,7 +123,6 @@ namespace Swarms.Datatypes.Grids
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
             Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
             var slotCounter = 0;
-            var rowNum = 25;
             //needs some actual drawing logic i guess
             if(showGrid){
                 spriteBatch.Begin();
@@ -127,7 +130,7 @@ namespace Swarms.Datatypes.Grids
                 for(int j=(int)topLeft.X; j<= botRight.X && j<slots.Count(); j++){
                     //var yOffset = offset.Y + 50*j;
                     var xOffset = offset.X + slotDims.X*j;
-                    for (int k=(int)topLeft.Y; k <= botRight.Y && k < rowNum; k++){
+                    for (int k=(int)topLeft.Y; k <= botRight.Y && k < columnSize; k++){
                         //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
                         var yOffset = offset.Y + slotDims.X*k;
                         //spriteBatch.Draw(rectTexture, topLeft, Color.Black);
