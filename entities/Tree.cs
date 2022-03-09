@@ -1,13 +1,19 @@
-using System.Drawing;
+using System;
+using Microsoft.Xna.Framework;
+using Swarms.Datatypes.Grids;
+
 namespace Swarms.entities
 {
     public class Tree : Boardentity
     {
-        
+        bool isBurning;
         public Tree(){
-            this.location = getLocation();
+            this.location = getLocationFromVector();
             this.temp = getTemp();
-            this.color = GetColor();
+            if (isBurning){
+                this.color = Color.Green;
+            }
+            else color = Color.Red;
         }
         public Tree(Location location, int temp, Color color){
             this.location = location;

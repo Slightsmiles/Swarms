@@ -19,6 +19,8 @@ namespace Swarms.Datatypes.Grids
 
         public Vector2 parent, pos;
 
+        public Color color;
+
         public GridLocation(float Cost, bool FILLED){
             cost = Cost;
             filled = FILLED;
@@ -27,10 +29,13 @@ namespace Swarms.Datatypes.Grids
             
         
         }
+        public GridLocation(){
 
-        public Enum getType(){
-
-            return whatTheFuckIsContainedInThisFuckingSquareLad;
         }
+
+        public Vector2 getLocation(){
+            return new Vector2(0,0);
+        }
+    
     }
 }

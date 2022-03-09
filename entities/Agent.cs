@@ -1,4 +1,6 @@
 using System;
+using Microsoft.Xna.Framework;
+using Swarms.Datatypes.Grids;
 namespace Swarms.entities
 {
     public class Agent : Boardentity
@@ -6,8 +8,9 @@ namespace Swarms.entities
 
         
         public Agent(){
-            this.location = getLocation();
+            this.location = getLocationFromVector();
             this.temp = getTemp();
+            color = Color.Black;
         }
         private void setTemp(int temp){
             this.temp = temp;
