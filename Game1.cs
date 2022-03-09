@@ -75,6 +75,9 @@ namespace Swarms
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Tab)) {
+                // ForceTick()?
+            }
             // TODO: Add your update logic here
 
             base.Update(gameTime);
