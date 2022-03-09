@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Swarms.entities;
 using System.Linq;
 
 
@@ -139,11 +140,21 @@ namespace Swarms.Datatypes.Grids
                     for (int k=(int)topLeft.Y; k <= botRight.Y && k < columnSize; k++){
                         //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
                         var yOffset = offset.Y + slotDims.X*k;
-                        //spriteBatch.Draw(rectTexture, topLeft, Color.Black);
+
+
+                        switch(slots[j][k].GetType().Name){
+                            case nameof(Agent):
+                            //draw Agent color
+                                var something = Microsoft.Xna.Framework.Color.Black;
+                                break;
+                            case nameof(Tree):
+                                //draw Tree color.
+                                var something2 = Microsoft.Xna.Framework.Color.Green;
+                                break;
+                            
+                        }
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.Black,2);
                         slotCounter++;
-                        //TODO Theres some true shitfuckery on the go right here, look into our array accesses.
-                         //drawing logic goes here
                     }
                 }
                 spriteBatch.End();

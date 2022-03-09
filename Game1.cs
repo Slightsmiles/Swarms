@@ -75,6 +75,7 @@ namespace Swarms
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            //debugging purposes, just wanted to know if we could get the correct slot, which we do. this could potentially be used to place things?
             if (Keyboard.GetState().IsKeyDown(Keys.Tab)) {
                 Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero));
             }
