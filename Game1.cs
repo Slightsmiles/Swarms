@@ -76,8 +76,9 @@ namespace Swarms
                 Exit();
 
             if (Keyboard.GetState().IsKeyDown(Keys.Tab)) {
-                // ForceTick()?
+                Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero));
             }
+            _grid.Update(Vector2.Zero);
             // TODO: Add your update logic here
 
             base.Update(gameTime);

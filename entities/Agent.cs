@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
-using Swarms.Datatypes.Grids;
+
 namespace Swarms.entities
 {
     public class Agent : Boardentity

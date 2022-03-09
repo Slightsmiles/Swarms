@@ -72,10 +72,16 @@ namespace Swarms.Datatypes.Grids
         public void LoadContent(GraphicsDevice graphics){
             rectTexture = new Texture2D(graphics, 1, 1);
             rectTexture.SetData(new[] {Color.White});
+            // TreeContent
+
+            //AgentContent
+
+            // ObstacleContent
         }
         //When to update?
         public virtual void Update(Vector2 offset){
             currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
+            
         }
 
         //if statement simply checks if the location is within bounds.
@@ -87,11 +93,11 @@ namespace Swarms.Datatypes.Grids
             return null;
         }
 
-        //this might not be used and doesnt work atm plz no usy papi
+        
         public virtual Vector2 getSlotFromPixel(Vector2 pix, Vector2 offset){
             Vector2 adjustedPos = pix - gridOffset + offset;
 
-            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.Y)), slots[0].Count()-1));
+            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.X)), slots[0].Count()-1));
             
             return tempVec;
         }
@@ -141,7 +147,6 @@ namespace Swarms.Datatypes.Grids
                     }
                 }
                 spriteBatch.End();
-                Trace.WriteLine(slotCounter);
             }
         }
            

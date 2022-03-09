@@ -15,7 +15,6 @@ namespace Swarms.Datatypes.Grids
         // some floats for pathfinding, cost is cost to move through a single square.
         public float currentDist, cost;
 
-        private Enum whatTheFuckIsContainedInThisFuckingSquareLad;
 
         public Vector2 parent, pos;
 
