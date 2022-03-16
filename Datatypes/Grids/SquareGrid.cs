@@ -23,9 +23,6 @@ namespace Swarms.Datatypes.Grids
         public int _screenHeight = 480;
         public int _screenWidth = 800;
         
-        //TODO: Change to be relative to screen size
-        readonly int SQUARE_SIZE = 100;
-        
         public Vector2 rectPosition;
         public float rectSpeed = 100f;
 
@@ -147,16 +144,17 @@ namespace Swarms.Datatypes.Grids
 
                             case nameof(Agent):
                             //draw Agent color
-                                //offset needs to be changed, now just draws an extra rectangle if its an agent.
-                                RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color,2);
+                                //needs to be fillRectangle();
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X), color);
                                 break;
                             case nameof(Tree):
                                 //draw Tree color.
                                 //offset needs to be changed, now just draws an extra rectangle if its an agent.
-                                var something2 = slots[j][k].color;;
-                                RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color,2);
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color);
                                 break;
-
+                            case nameof(Obstacle):
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color);
+                                break;  
 
                         }
                         

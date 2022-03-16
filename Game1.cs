@@ -81,26 +81,31 @@ namespace Swarms
             if (state.IsKeyDown(Keys.Tab)) {
                 Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero));
             }
+            if (state.IsKeyDown(Keys.LeftControl)){
             if (state.IsKeyDown(Keys.T)){
                 var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
                 var posX = position.X;
                 var posY = position.Y;
-                _grid.slots[(int)posX][(int)posY] = new Tree(position, 20, Color.Green);
+                _grid.slots[(int)posX][(int)posY] = new Tree(position);
 
             }
              if (state.IsKeyDown(Keys.A)){
                 var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
                 var posX = position.X;
                 var posY = position.Y;
-                _grid.slots[(int)posX][(int)posY] = new Agent(position, 20, Color.Green);
+                _grid.slots[(int)posX][(int)posY] = new Agent(position);
 
             }
-             if (state.IsKeyDown(Keys.T)){
+             if (state.IsKeyDown(Keys.R)){
                 var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
                 var posX = position.X;
                 var posY = position.Y;
-                _grid.slots[(int)posX][(int)posY] = new Tree(position, 20, Color.Green);
+                _grid.slots[(int)posX][(int)posY] = new Obstacle(position);
 
+            }
+            if (state.IsKeyDown(Keys.LeftShift) && state.IsKeyDown(Keys.R)){
+                initGrid();
+            }
             }
             _grid.Update(Vector2.Zero);
             // TODO: Add your update logic here
