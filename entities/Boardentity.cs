@@ -5,13 +5,10 @@ namespace Swarms.entities
 {
     public class Boardentity : GridLocation
     {
-        protected Location location;
+        protected Vector2 location;
         protected int temp;
 
-
-        public Location getLocationFromVector(){
-            return new Location((int)base.getLocation().X, (int)base.getLocation().Y);
-        }
+        protected int defaultTemp = 20;
         public int getTemp(){
             return temp;
         }

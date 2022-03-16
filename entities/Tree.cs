@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Globalization;
 using System;
 using Microsoft.Xna.Framework;
 using Swarms.Datatypes.Grids;
@@ -6,22 +8,26 @@ namespace Swarms.entities
 {
     public class Tree : Boardentity
     {
+
         bool isBurning;
         public Tree(){
-            this.location = getLocationFromVector();
+            this.location = new Vector2(-1,-1);
             this.temp = getTemp();
             if (isBurning){
                 this.color = Color.Green;
             }
             else color = Color.Red;
         }
-        public Tree(Location location, int temp, Color color){
+        public Tree(Vector2 location){
             this.location = location;
-            this.temp = temp;
-            this.color = color;
+            this.temp = defaultTemp;
+            this.color = GetColor();
         }
-        public Tree(Location location){
-            this.location = location;
+
+        
+        public new Color GetColor(){
+            if (this.temp <= 80) return Color.Green;
+            else return Color.Red;
         }
     }
 }

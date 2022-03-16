@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using Swarms.Datatypes.Grids;
+using Swarms.entities;
 
 namespace Swarms
 {
@@ -71,13 +72,35 @@ namespace Swarms
         }
 
         protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {   
+            var state = Keyboard.GetState();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || state.IsKeyDown(Keys.Escape))
                 Exit();
 
             //debugging purposes, just wanted to know if we could get the correct slot, which we do. this could potentially be used to place things?
-            if (Keyboard.GetState().IsKeyDown(Keys.Tab)) {
+            if (state.IsKeyDown(Keys.Tab)) {
                 Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero));
+            }
+            if (state.IsKeyDown(Keys.T)){
+                var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
+                var posX = position.X;
+                var posY = position.Y;
+                _grid.slots[(int)posX][(int)posY] = new Tree(position, 20, Color.Green);
+
+            }
+             if (state.IsKeyDown(Keys.A)){
+                var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
+                var posX = position.X;
+                var posY = position.Y;
+                _grid.slots[(int)posX][(int)posY] = new Agent(position, 20, Color.Green);
+
+            }
+             if (state.IsKeyDown(Keys.T)){
+                var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
+                var posX = position.X;
+                var posY = position.Y;
+                _grid.slots[(int)posX][(int)posY] = new Tree(position, 20, Color.Green);
+
             }
             _grid.Update(Vector2.Zero);
             // TODO: Add your update logic here

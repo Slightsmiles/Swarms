@@ -129,7 +129,6 @@ namespace Swarms.Datatypes.Grids
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
             Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
-            var slotCounter = 0;
             //needs some actual drawing logic i guess
             if(showGrid){
                 spriteBatch.Begin();
@@ -141,20 +140,26 @@ namespace Swarms.Datatypes.Grids
                         //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
                         var yOffset = offset.Y + slotDims.X*k;
 
-
+                        var color = slots[j][k].color;
+                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.White,2);
                         switch(slots[j][k].GetType().Name){
+                            
+
                             case nameof(Agent):
                             //draw Agent color
-                                var something = Microsoft.Xna.Framework.Color.Black;
+                                //offset needs to be changed, now just draws an extra rectangle if its an agent.
+                                RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color,2);
                                 break;
                             case nameof(Tree):
                                 //draw Tree color.
-                                var something2 = Microsoft.Xna.Framework.Color.Green;
+                                //offset needs to be changed, now just draws an extra rectangle if its an agent.
+                                var something2 = slots[j][k].color;;
+                                RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color,2);
                                 break;
-                            
+
+
                         }
-                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.Black,2);
-                        slotCounter++;
+                        
                     }
                 }
                 spriteBatch.End();
