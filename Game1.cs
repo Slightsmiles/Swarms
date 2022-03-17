@@ -79,7 +79,7 @@ namespace Swarms
         {
             HandleKeyInput();
 
-            _grid.Update(Vector2.Zero);
+            _grid.Update();
             // TODO: Add your update logic here
 
             base.Update(gameTime);

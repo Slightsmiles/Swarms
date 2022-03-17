@@ -73,7 +73,7 @@ namespace Swarms.Datatypes.Grids
  
         }
         //When to update?
-        public virtual void Update(Vector2 offset){
+        public virtual void Update(){
             currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
             
         }
@@ -116,7 +116,7 @@ namespace Swarms.Datatypes.Grids
 
         }
 
-        
+        //Adds entities to a board in a structured fashion.
         public virtual void setRiverGrid(){
             for (int i = 13; i<23; i++ ){
                 slots[i][22] = new Agent(new Vector2(i,22));
