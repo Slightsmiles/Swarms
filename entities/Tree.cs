@@ -23,8 +23,13 @@ namespace Swarms.entities
 
         
         public new Color GetColor(){
-            if (this.temp <= 80) return Color.LawnGreen;
-            else return Color.Red;
+            if (this.temp <= 80) {
+                isBurning = false;
+                return Color.LawnGreen;
+            }
+            else{
+              isBurning = true;  
+            } return Color.Red;
         }
     }
 }
