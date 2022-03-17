@@ -13,10 +13,7 @@ namespace Swarms.entities
         public Tree(){
             this.location = new Vector2(-1,-1);
             this.temp = getTemp();
-            if (isBurning){
-                this.color = Color.Green;
-            }
-            else color = Color.Red;
+            this.color = GetColor();
         }
         public Tree(Vector2 location){
             this.location = location;
@@ -26,7 +23,7 @@ namespace Swarms.entities
 
         
         public new Color GetColor(){
-            if (this.temp <= 80) return Color.Green;
+            if (this.temp <= 80) return Color.LawnGreen;
             else return Color.Red;
         }
     }

@@ -143,17 +143,15 @@ namespace Swarms.Datatypes.Grids
                             
 
                             case nameof(Agent):
-                            //draw Agent color
-                                //needs to be fillRectangle();
-                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X), color);
+                            
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X), color);
                                 break;
                             case nameof(Tree):
-                                //draw Tree color.
-                                //offset needs to be changed, now just draws an extra rectangle if its an agent.
-                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color);
+
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X),color);
                                 break;
                             case nameof(Obstacle):
-                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),color);
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X),color);
                                 break;  
 
                         }

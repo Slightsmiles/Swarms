@@ -23,7 +23,7 @@ class RectangleSprite
 
     public static void FillRectangle(SpriteBatch spriteBatch, Rectangle rect, Color color){
 
-         var _fillTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            var _fillTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
         
 
             _fillTexture.SetData<Color>(new Color[]{color});
