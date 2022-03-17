@@ -57,7 +57,7 @@ namespace Swarms.Datatypes.Grids
             
             LoadContent(_graphics);
             setBaseGrid();
-
+            //setRiverGrid();
             gridImg = null;
 
         }
@@ -70,11 +70,7 @@ namespace Swarms.Datatypes.Grids
         public void LoadContent(GraphicsDevice graphics){
             rectTexture = new Texture2D(graphics, 1, 1);
             rectTexture.SetData(new[] {Color.White});
-            // TreeContent
-
-            //AgentContent
-
-            // ObstacleContent
+ 
         }
         //When to update?
         public virtual void Update(Vector2 offset){
@@ -115,6 +111,26 @@ namespace Swarms.Datatypes.Grids
                 slots[i] = new GridLocation[(int)gridDims.X];
                 for(int j=0; j<gridDims.Y ; j++){
                     slots[i][j] = new GridLocation(1, false);
+                }
+            }
+
+        }
+
+        
+        public virtual void setRiverGrid(){
+            for (int i = 13; i<23; i++ ){
+                slots[i][22] = new Agent(new Vector2(i,22));
+            }
+            for (int i = 0; i<40; i++){
+                if (i % 5 != 0){
+                slots[i][16] = new Obstacle(new Vector2(i,16));
+                }
+            }
+            for (int i = 0; i < 40; i++){
+                for (int j = 0; j<8; j++){
+                    if (i % 3 == 0 && j % 2 == 0){
+                        slots[i][j] = new Tree(new Vector2(i,j));
+                    } 
                 }
             }
 
