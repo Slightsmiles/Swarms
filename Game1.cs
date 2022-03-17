@@ -104,7 +104,7 @@ namespace Swarms
         {
 
             var state = Keyboard.GetState();
-            var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero);
+            var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
             var posX = position.X;
             var posY = position.Y;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || state.IsKeyDown(Keys.Escape))
@@ -113,7 +113,7 @@ namespace Swarms
             //debugging purposes, just wanted to know if we could get the correct slot, which we do. this could potentially be used to place things?
             if (state.IsKeyDown(Keys.Tab))
             {
-                Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -Vector2.Zero));
+                Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
             }
             // Below is for adding and removing stuff
             if (state.IsKeyDown(Keys.LeftControl))

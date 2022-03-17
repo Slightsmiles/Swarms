@@ -74,7 +74,7 @@ namespace Swarms.Datatypes.Grids
         }
         //When to update?
         public virtual void Update(Vector2 offset){
-            currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
+            currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
             
         }
 
@@ -88,8 +88,8 @@ namespace Swarms.Datatypes.Grids
         }
 
         
-        public virtual Vector2 getSlotFromPixel(Vector2 pix, Vector2 offset){
-            Vector2 adjustedPos = pix - gridOffset + offset;
+        public virtual Vector2 getSlotFromPixel(Vector2 pix){
+            Vector2 adjustedPos = pix - gridOffset;
 
             Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.X)), slots[0].Count()-1));
             
@@ -140,8 +140,8 @@ namespace Swarms.Datatypes.Grids
   
 
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
-            Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
-            Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
+            Vector2 topLeft = getSlotFromPixel(new Vector2(0,0));
+            Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight));
             //needs some actual drawing logic i guess
             if(showGrid){
                 spriteBatch.Begin();
@@ -156,14 +156,10 @@ namespace Swarms.Datatypes.Grids
                         var color = slots[j][k].color;
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.White,2);
                         switch(slots[j][k].GetType().Name){
-                            
-
                             case nameof(Agent):
-                            
                                 RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X), color);
                                 break;
                             case nameof(Tree):
-
                                 RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X),color);
                                 break;
                             case nameof(Obstacle):
