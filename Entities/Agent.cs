@@ -47,8 +47,8 @@ namespace Swarms.Entities
         }
         public void move(Vector2 toPos, SquareGrid grid) {
             if (isLocAllowed(toPos, grid)){
-                int fromPosX = (int)this.location.X;
-                int fromPosY = (int)this.location.Y;
+                int fromPosX = (int)location.X;
+                int fromPosY = (int)location.Y;
 
                 grid.slots[fromPosX][fromPosY] = new GridLocation(1, false);
                 grid.slots[(int)toPos.X][(int)toPos.Y] = this;

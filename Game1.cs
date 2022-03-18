@@ -25,6 +25,9 @@ namespace Swarms
         private SquareGrid _grid;
         private Agent agent; // For debugging purposes /**/
 
+        private KeyboardState _currentKeyboardState;
+        private KeyboardState _previousKeyboardState;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -106,47 +109,47 @@ namespace Swarms
 
         private void HandleKeyInput()
         {
-
-            var state = Keyboard.GetState();
+            _previousKeyboardState = _currentKeyboardState;
+            _currentKeyboardState = Keyboard.GetState();
             var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
             var posX = position.X;
             var posY = position.Y;
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || state.IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || _currentKeyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
             //debugging purposes, just wanted to know if we could get the correct slot, which we do. this could potentially be used to place things?
-            if (state.IsKeyDown(Keys.Tab))
+            if (_currentKeyboardState.IsKeyDown(Keys.Tab))
             {
                 Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
             }
             // Below is for adding and removing stuff
-            if (state.IsKeyDown(Keys.LeftControl))
+            if (_currentKeyboardState.IsKeyDown(Keys.LeftControl))
             {
 
-                if (state.IsKeyDown(Keys.T))
+                if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
                     _grid.slots[(int)posX][(int)posY] = new Tree(position);
                 }
 
-                if (state.IsKeyDown(Keys.A))
+                if (_currentKeyboardState.IsKeyDown(Keys.A))
                 {
                     _grid.slots[(int)posX][(int)posY] = new Agent(position);
 
                 }
 
-                if (state.IsKeyDown(Keys.R))
+                if (_currentKeyboardState.IsKeyDown(Keys.R))
                 {
                     _grid.slots[(int)posX][(int)posY] = new Obstacle(position);
 
                 }
 
                 //used for clearing
-                if (state.IsKeyDown(Keys.Space))
+                if (_currentKeyboardState.IsKeyDown(Keys.Space))
                 {
                     _grid.slots[(int)posX][(int)posY] = new Boardentity();
                 }
 
-                if (state.IsKeyDown(Keys.LeftShift) && state.IsKeyDown(Keys.R))
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.R))
                 {
                     initGrid();
                 }
@@ -154,14 +157,34 @@ namespace Swarms
             }
             //For debugging purposes
             
-            if(state.IsKeyDown(Keys.Down))
+            if(_currentKeyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))
                 {
                     var newY = agent.location.Y + 1;
                     
                     var direction = new Vector2(agent.location.X, newY);
                     agent.move(direction, _grid);                
                 }
-
+            if(_currentKeyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    var newY = agent.location.Y - 1;
+                    
+                    var direction = new Vector2(agent.location.X, newY);
+                    agent.move(direction, _grid);                
+                }
+            if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))
+                {
+                    var newX = agent.location.X + 1;
+                    
+                    var direction = new Vector2(newX, agent.location.Y);
+                    agent.move(direction, _grid);                
+                }
+            if(_currentKeyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))
+                {
+                    var newX = agent.location.X - 1;
+                    
+                    var direction = new Vector2(newX, agent.location.Y);
+                    agent.move(direction, _grid);                
+                }
             /**/   
         }
 
