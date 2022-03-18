@@ -59,6 +59,7 @@ namespace Swarms.Datatypes.Grids
             setBaseGrid();
             Console.WriteLine(slots.Length);
 
+            //setRiverGrid();
             gridImg = null;
 
         }
@@ -71,15 +72,11 @@ namespace Swarms.Datatypes.Grids
         public void LoadContent(GraphicsDevice graphics){
             rectTexture = new Texture2D(graphics, 1, 1);
             rectTexture.SetData(new[] {Color.White});
-            // TreeContent
-
-            //AgentContent
-
-            // ObstacleContent
+ 
         }
         //When to update?
-        public virtual void Update(Vector2 offset){
-            currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), -offset);
+        public virtual void Update(){
+            currentHoverSlot = getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
             
         }
 
@@ -93,8 +90,8 @@ namespace Swarms.Datatypes.Grids
         }
 
         
-        public virtual Vector2 getSlotFromPixel(Vector2 pix, Vector2 offset){
-            Vector2 adjustedPos = pix - gridOffset + offset;
+        public virtual Vector2 getSlotFromPixel(Vector2 pix){
+            Vector2 adjustedPos = pix - gridOffset;
 
             Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/slotDims.X)), slots[0].Count()-1));
             
@@ -121,12 +118,32 @@ namespace Swarms.Datatypes.Grids
 
         }
 
+        //Adds entities to a board in a structured fashion.
+        public virtual void setRiverGrid(){
+            for (int i = 13; i<23; i++ ){
+                slots[i][22] = new Agent(new Vector2(i,22));
+            }
+            for (int i = 0; i<40; i++){
+                if (i % 5 != 0){
+                slots[i][16] = new Obstacle(new Vector2(i,16));
+                }
+            }
+            for (int i = 0; i < 40; i++){
+                for (int j = 0; j<8; j++){
+                    if (i % 3 == 0 && j % 2 == 0){
+                        slots[i][j] = new Tree(new Vector2(i,j));
+                    } 
+                }
+            }
+
+        }
+
 
   
 
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
-            Vector2 topLeft = getSlotFromPixel(new Vector2(0,0), Vector2.Zero);
-            Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight), Vector2.Zero);
+            Vector2 topLeft = getSlotFromPixel(new Vector2(0,0));
+            Vector2 botRight = getSlotFromPixel(new Vector2(_screenWidth,_screenHeight));
             //needs some actual drawing logic i guess
             if(showGrid){
                 spriteBatch.Begin();
@@ -141,14 +158,10 @@ namespace Swarms.Datatypes.Grids
                         var color = slots[j][k].color;
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle((int)xOffset, (int)yOffset, (int)slotDims.X, (int)slotDims.X),Color.White,2);
                         switch(slots[j][k].GetType().Name){
-                            
-
                             case nameof(Agent):
-                            
                                 RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X), color);
                                 break;
                             case nameof(Tree):
-
                                 RectangleSprite.FillRectangle(spriteBatch, new Rectangle((int)xOffset+2, (int)yOffset+2, (int)slotDims.X, (int)slotDims.X),color);
                                 break;
                             case nameof(Obstacle):
