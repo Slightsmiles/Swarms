@@ -12,16 +12,18 @@ namespace Swarms
 {
     public class Game1 : Game
     {
+        private const int DEFAULT_SCREEN_HEIGHT = 480;
+        private const int DEFAULT_SCREEN_WIDTH = 800;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private int _gridSize;
-        private int _screenWidth;
-        private int _screenHeight;
+        public int _screenWidth {get; private set;}
+        public int _screenHeight {get; private set;}
         private int _rows;
         private int _columns;
 
         private SquareGrid _grid;
-        /*private Agent agent; // For debugging purposes /**/
+        private Agent agent; // For debugging purposes /**/
 
         public Game1()
         {
@@ -32,33 +34,29 @@ namespace Swarms
 
         protected override void Initialize()
         {
+            _screenHeight = DEFAULT_SCREEN_HEIGHT;
+            _screenWidth = DEFAULT_SCREEN_WIDTH;
+
             // TODO: Add your initialization logic here
             initSize();
             initGrid();
             
-            /*agent = new Agent(new Vector2(0,0));
+            agent = new Agent(new Vector2(0,0));
             _grid.slots[0][0] = agent; /**/
             
             LoadContent();
             base.Initialize();
         }
 
-        public int getWidth()
-        {
-            return _screenWidth;
-        }
-        public int getHeight()
-        {
-            return _screenHeight;
-        }
         protected void initGrid()
         {
-            _grid = new SquareGrid(new Vector2(25, 25), new Vector2(0, 0), new Vector2(_screenWidth, _screenHeight), GraphicsDevice);
+            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight);
         }
+        
         protected void initSize()
         {
-            _screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
-            _screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            GraphicsDevice.PresentationParameters.BackBufferWidth = _screenWidth;
+            GraphicsDevice.PresentationParameters.BackBufferHeight = _screenHeight;
 
         }
         //currently unused in SquareGrid class, even though we pass it as argument
@@ -154,8 +152,8 @@ namespace Swarms
                 }
 
             }
-            /*For debugging purposes
-
+            //For debugging purposes
+            
             if(state.IsKeyDown(Keys.Down))
                 {
                     var newY = agent.location.Y + 1;

@@ -13,7 +13,7 @@ namespace Swarms.Entities
     {
         public Obstacle(Vector2 loc){
             this.location = loc;
-            this.color = Color.Gray;
+            this.color = Color.Aqua;
         }
     }
 }

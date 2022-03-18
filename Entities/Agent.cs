@@ -6,8 +6,6 @@ namespace Swarms.Entities
 {
     public class Agent : Boardentity
     {
-
-
         public Agent(){
             this.location = new Vector2(-1,-1);
             this.temp = defaultTemp;
@@ -18,12 +16,6 @@ namespace Swarms.Entities
             this.location = location;
             this.temp = defaultTemp;
             color = Color.Black;
-        }
-        public void setTemp(int temp){
-            this.temp = temp;
-        }
-        public void setLocation(int x, int y){
-            this.location = new Vector2(x,y);
         }
 
         public GridLocation[] checkSurrounding(SquareGrid grid) {
