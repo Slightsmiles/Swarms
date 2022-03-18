@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using Swarms.entities;
+using Swarms.Entities;
 using System.Linq;
 
 
@@ -46,17 +46,18 @@ namespace Swarms.Datatypes.Grids
         private int columnSize = 25; 
 
 
-        public SquareGrid(Vector2 SLOTDIMS, Vector2 STARTPOS, Vector2 TOTALDIMS, GraphicsDevice _graphics)
+        public SquareGrid(Vector2 SlotDims, Vector2 StartPos, Vector2 TotalDims, GraphicsDevice _graphics)
         {
             showGrid = true;
             slotDims = new Vector2(_screenWidth/rowSize,_screenHeight/rowSize);
-            gridOffset = new Vector2((int)STARTPOS.X, (int)STARTPOS.Y);
-            totalPhysicalDims = new Vector2((int)TOTALDIMS.X, (int)TOTALDIMS.Y);
+            gridOffset = new Vector2((int)StartPos.X, (int)StartPos.Y);
+            totalPhysicalDims = new Vector2((int)TotalDims.X, (int)TotalDims.Y);
 
-            currentHoverSlot = new Vector2(-1,-1);
+            currentHoverSlot = new Vector2(-1,-1); // For debugging purposes
             
             LoadContent(_graphics);
             setBaseGrid();
+            Console.WriteLine(slots.Length);
 
             gridImg = null;
 

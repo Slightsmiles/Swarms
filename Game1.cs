@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Threading;
 using Swarms.Datatypes.Grids;
-using Swarms.entities;
+using Swarms.Entities;
 
 namespace Swarms
 {
@@ -20,6 +21,7 @@ namespace Swarms
         private int _columns;
 
         private SquareGrid _grid;
+        /*private Agent agent; // For debugging purposes /**/
 
         public Game1()
         {
@@ -33,6 +35,10 @@ namespace Swarms
             // TODO: Add your initialization logic here
             initSize();
             initGrid();
+            
+            /*agent = new Agent(new Vector2(0,0));
+            _grid.slots[0][0] = agent; /**/
+            
             LoadContent();
             base.Initialize();
         }
@@ -80,6 +86,7 @@ namespace Swarms
             HandleKeyInput();
 
             _grid.Update(Vector2.Zero);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -148,6 +155,17 @@ namespace Swarms
                 }
 
             }
+            /*For debugging purposes
+
+            if(state.IsKeyDown(Keys.Down))
+                {
+                    var newY = agent.location.Y + 1;
+                    
+                    var direction = new Vector2(agent.location.X, newY);
+                    agent.move(direction, _grid);                
+                }
+
+            /**/   
         }
 
     }
