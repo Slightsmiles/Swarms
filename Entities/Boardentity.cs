@@ -7,7 +7,7 @@ namespace Swarms.Entities
     {
         public int _temp {get; protected set;}
 
-        public Boardentity(float cost, bool traversable, Vector2 location) : base(cost, false, location, traversable){
+        public Boardentity(float cost, bool traversable, Vector2 location) : base(cost, location, traversable){
             
         }
         protected int defaultTemp = 20;

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Swarms.Datatypes.Grids;
 using Swarms.Entities;
@@ -20,6 +21,7 @@ namespace Swarms
         public int _screenHeight {get; private set;}
 
         private SquareGrid _grid;
+        private SquareGrid _tempGrid;
         private Agent _debugAgent; // For debugging purposes /**/
 
         private KeyboardState _currentKeyboardState;
@@ -41,9 +43,8 @@ namespace Swarms
             initSize();
             initGrid();
             
-            _debugAgent = new Agent(new Vector2(0,0));
-            _grid.slots[0][0] = _debugAgent; /**/
-            
+            _debugAgent = new Agent(new Vector2(20,20));
+            _grid.slots[20][20] = _debugAgent; /**/
             LoadContent();
             base.Initialize();
         }
@@ -51,6 +52,7 @@ namespace Swarms
         protected void initGrid()
         {
             _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight);
+
         }
         
         protected void initSize()
@@ -82,10 +84,9 @@ namespace Swarms
         protected override void Update(GameTime gameTime)
         {
             HandleKeyInput();
-
+            
             _grid.Update();
             // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -104,8 +105,10 @@ namespace Swarms
 
 
 
+        [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")]
         private void HandleKeyInput()
         {
+            _grid = _grid.autoMove();
             _previousKeyboardState = _currentKeyboardState;
             _currentKeyboardState = Keyboard.GetState();
             var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
@@ -159,45 +162,52 @@ namespace Swarms
                     var newY = _debugAgent._location.Y + 1;
                     
                     var direction = new Vector2(_debugAgent._location.X, newY);
-                    _debugAgent.move(direction, _grid);                
+                    _debugAgent.move(direction, _grid.slots);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))
                 {
                     var newY = _debugAgent._location.Y - 1;
                     
                     var direction = new Vector2(_debugAgent._location.X, newY);
-                    _debugAgent.move(direction, _grid);                
+                    _debugAgent.move(direction, _grid.slots);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))
                 {
                     var newX = _debugAgent._location.X + 1;
                     
                     var direction = new Vector2(newX, _debugAgent._location.Y);
-                    _debugAgent.move(direction, _grid);                
+                    _debugAgent.move(direction, _grid.slots);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))
                 {
                     var newX = _debugAgent._location.X - 1;
                     
                     var direction = new Vector2(newX, _debugAgent._location.Y);
-                    _debugAgent.move(direction, _grid);                
+                    _debugAgent.move(direction, _grid.slots);                
                 }
-            if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space)) {
-                for (int i = 0; i < _grid.slots.Length; i++)
+            if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
+            {
+                
+                /*for (int i = 0; i < _grid.slots.Length; i++)
                 {
                     for (int j = 0; j < _grid.slots[0].Length; j++)
                     {  
                         var entity = _grid.slots[i][j];
                         if(entity.GetType() == typeof(Agent)) 
-                        {   
+                        {
+                            Console.WriteLine(entity._location.X + ", " + entity._location.X );
                             var agent = (Agent)entity;
-                            agent.autoMove(_grid);   
+                            agent.autoMove(_grid.slots);
+                            Console.WriteLine(entity._location.X + ", " + entity._location.X );
                         }
                     }
                 }
-            }
+                */
+                //_grid.slots = _tempGrid.slots;
+            } 
             /**/   
         }
-
+    
     }
+    
 }

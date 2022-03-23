@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Globalization;
 using Swarms.Entities;
 using System.Linq;
 
@@ -66,7 +67,7 @@ namespace Swarms.Datatypes.Grids
             setBaseGrid();
             Console.WriteLine(slots.Length);
 
-            setRiverGrid();
+            //setRiverGrid();
             gridImg = null;
 
         }
@@ -91,6 +92,11 @@ namespace Swarms.Datatypes.Grids
             return null;
         }
 
+        public virtual bool isFilled(Vector2 slot)
+        {
+            var lol = slots[(int) slot.X][(int) slot.Y].GetType();
+            return lol == typeof(Agent) || lol == typeof(Tree) || lol == typeof(Obstacle);
+        }
         
         public virtual Vector2 getSlotFromPixel(Vector2 pix){
             Vector2 adjustedPos = pix - _gridOffset;
@@ -101,7 +107,7 @@ namespace Swarms.Datatypes.Grids
         }
 
         // size of slot divided by number of slots, i would say we just initialize it with these dims in the constructor.   
-        public virtual void setBaseGrid(){
+        public void setBaseGrid(){
 
             // 40/1.6 = 25, this is aspect ratio stuff, TODO: stop magic numbering trond
             slots = new GridLocation[_columnNums][];
@@ -113,14 +119,14 @@ namespace Swarms.Datatypes.Grids
 
                 slots[i] = new GridLocation[_rowNums];
                 for(int j = 0; j < _rowNums ; j++){
-                    slots[i][j] = new GridLocation(1, false, new Vector2 (i, j));
+                    slots[i][j] = new GridLocation(1, new Vector2 (i, j));
                 }
             }
 
         }
 
         //Adds entities to a board in a structured fashion.
-        public virtual void setRiverGrid(){
+        public void setRiverGrid(){
             for (int i = 13; i<23; i++ ){
                 //slots[i][22] = new Agent(new Vector2(i,22));
             }
@@ -171,6 +177,84 @@ namespace Swarms.Datatypes.Grids
                 }
                 spriteBatch.End();
             }
+        }
+
+        private void move(Agent agent)
+        {
+            var newPos = decideMove(agent);
+            var from = agent._location;
+            agent._location = newPos;
+            slots[(int)newPos.X][(int)newPos.Y] = agent;
+            slots[(int)from.X][(int)from.Y] = new Boardentity(1, true, from);
+
+        }
+
+        private Vector2 decideMove(Agent agent)
+        {
+            var possibleDirections = checkAvailable(agent);
+            Console.WriteLine(possibleDirections.Count);
+            return possibleDirections.First();
+
+        }
+
+        private List<Vector2> getAdjacent(Vector2 loc)
+        {
+
+            var up = new Vector2(loc.X - 1, loc.Y);
+            var down = new Vector2(loc.X + 1, loc.Y);
+            var left = new Vector2(loc.X , loc.Y -1);
+            var right = new Vector2(loc.X , loc.Y +1 );
+            var adjacent = new List<Vector2>();
+            
+            adjacent.Add(up);
+            adjacent.Add(down);
+            adjacent.Add(left);
+            adjacent.Add(right);
+            return adjacent;
+        }
+        private List<Vector2> checkAvailable(Agent agent)
+        {
+            var available = new List<Vector2>();
+
+
+            foreach (var position in getAdjacent(agent._location))
+            {
+                
+                if (isWithinBounds(position))
+                {
+                    Console.WriteLine(position.X + " , " + position.Y);
+                    if (slots[(int)position.X][(int)position.Y]._traversable)
+                    available.Add(position);
+                    Console.WriteLine("yeet");
+                }
+            }
+            
+            return available;
+        }
+
+
+        private bool isWithinBounds(Vector2 loc) {
+            return      loc.X >= 0 
+                        &&  loc.X < slots.Length
+                        &&  loc.Y >= 0 
+                        &&  loc.Y < slots[0].Length;
+        }
+        public SquareGrid autoMove()
+        {
+            for (int i = 0; i < _slotDims.X; i++)
+            {
+                for (int j = 0; j < _slotDims.Y; j++)
+                {
+                    switch (slots[i][j].GetType().Name)
+                    {
+                        case nameof(Agent):
+                            move((Agent) slots[i][j]);
+                            break;
+                            
+                    }
+                }
+            }
+            return this;
         }
            
 
