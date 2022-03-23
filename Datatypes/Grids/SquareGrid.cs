@@ -113,7 +113,7 @@ namespace Swarms.Datatypes.Grids
 
                 slots[i] = new GridLocation[_rowNums];
                 for(int j=0; j < _rowNums ; j++){
-                    slots[i][j] = new GridLocation(1, false);
+                    slots[i][j] = new GridLocation(1, false, new Vector2 (i, j));
                 }
             }
 

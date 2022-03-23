@@ -7,13 +7,8 @@ namespace Swarms.Entities
 {
     public class Agent : Boardentity
     {
-        public Agent(){
-            _location = new Vector2(-1,-1);
-            _temp = defaultTemp;
-            _color = Color.Black;
-        }
 
-        public Agent(Vector2 location){
+        public Agent(Vector2 location) : base(1, false, location){
             _location = location;
             _temp = defaultTemp;
             _color = Color.Black;
@@ -58,7 +53,7 @@ namespace Swarms.Entities
                 int fromPosX = (int)_location.X;
                 int fromPosY = (int)_location.Y;
 
-                grid.slots[fromPosX][fromPosY] = new GridLocation(1, false);
+                grid.slots[fromPosX][fromPosY] = new GridLocation(1, true, _location); //Change to what it was before
                 grid.slots[(int)toPos.X][(int)toPos.Y] = this;
 
                 _location = toPos;

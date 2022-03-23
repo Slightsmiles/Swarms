@@ -11,7 +11,7 @@ namespace Swarms.Entities
 {
     public class Obstacle : Boardentity
     {
-        public Obstacle(Vector2 loc){
+        public Obstacle(Vector2 loc) : base(-1, false, loc) {
             _location = loc;
             _color = Color.Aqua;
         }

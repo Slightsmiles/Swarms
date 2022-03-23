@@ -143,7 +143,7 @@ namespace Swarms
                 //used for clearing
                 if (_currentKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    _grid.slots[(int)posX][(int)posY] = new Boardentity();
+                    _grid.slots[(int)posX][(int)posY] = new Boardentity(1, true, position);
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.R))

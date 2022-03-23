@@ -10,11 +10,8 @@ namespace Swarms.Entities
     {
 
         bool isBurning;
-        public Tree(){
-            _location = new Vector2(-1,-1);
-            _color = GetColor();
-        }
-        public Tree(Vector2 location){
+
+        public Tree(Vector2 location) : base(-1, false, location){
             _location = location;
             _temp = defaultTemp;
             _color = GetColor();

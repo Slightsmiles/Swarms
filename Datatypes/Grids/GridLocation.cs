@@ -19,9 +19,10 @@ namespace Swarms.Datatypes.Grids
 
         public Color _color {get; set;}
 
-        public GridLocation(float cost, bool filled, bool traversable = true){
+        public GridLocation(float cost, bool filled, Vector2 location, bool traversable = true){
             _cost = cost;
             _filled = filled;
+            _pos = location;
 
             _traversable = traversable;
         }
