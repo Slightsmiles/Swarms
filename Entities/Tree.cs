@@ -4,7 +4,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Swarms.Datatypes.Grids;
 
-namespace Swarms.entities
+namespace Swarms.Entities
 {
     public class Tree : Boardentity
     {

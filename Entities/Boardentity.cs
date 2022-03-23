@@ -1,11 +1,11 @@
 using System;
 using Microsoft.Xna.Framework;
 using Swarms.Datatypes.Grids;
-namespace Swarms.entities
+namespace Swarms.Entities
 {
     public class Boardentity : GridLocation
     {
-        protected Vector2 location;
+        public Vector2 location {get; protected set;} // Array indexes
         protected int temp;
 
         protected int defaultTemp = 20;

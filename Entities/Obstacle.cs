@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using Swarms.Datatypes.Grids;
-using Swarms.entities;
+using Swarms.Entities;
 
-namespace Swarms.entities
+namespace Swarms.Entities
 {
     public class Obstacle : Boardentity
     {

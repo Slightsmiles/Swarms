@@ -15,14 +15,13 @@ namespace Swarms.Datatypes.Grids
         // some floats for pathfinding, cost is cost to move through a single square.
         public float currentDist, cost;
 
-
         public Vector2 parent, pos;
 
         public Color color;
 
-        public GridLocation(float Cost, bool FILLED){
-            cost = Cost;
-            filled = FILLED;
+        public GridLocation(float cost, bool filled){
+            this.cost = cost;
+            this.filled = filled;
 
             traversable = true;
             

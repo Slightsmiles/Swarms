@@ -1,4 +1,4 @@
-namespace Swarms.entities
+namespace Swarms.Entities
 {
     public class Path
     {
