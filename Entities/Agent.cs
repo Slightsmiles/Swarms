@@ -28,6 +28,7 @@ namespace Swarms.Entities
             return surrounding; // TODO: Implement to check for surrounding entities
         }
 
+        // This is where the magic happens
         public Vector2 decideDirection(SquareGrid grid) {
             var traversableSquares = checkSurrounding(grid);
             traversableSquares = traversableSquares.Where(gridLocation => 
@@ -53,7 +54,7 @@ namespace Swarms.Entities
                 int fromPosY = (int)_location.Y;
 
                 grid.slots[fromPosX][fromPosY] = new GridLocation(1, false, _location); //Change to what it was before
-                var toLoc = grid.slots[(int)toPos.X][(int)toPos.Y];
+                grid.slots[(int)toPos.X][(int)toPos.Y] = this;
 
                 _location = toPos;
             }
