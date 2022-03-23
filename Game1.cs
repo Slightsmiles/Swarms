@@ -20,7 +20,7 @@ namespace Swarms
         public int _screenHeight {get; private set;}
 
         private SquareGrid _grid;
-        private Agent agent; // For debugging purposes /**/
+        private Agent _debugAgent; // For debugging purposes /**/
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
@@ -41,8 +41,8 @@ namespace Swarms
             initSize();
             initGrid();
             
-            agent = new Agent(new Vector2(0,0));
-            _grid.slots[0][0] = agent; /**/
+            _debugAgent = new Agent(new Vector2(0,0));
+            _grid.slots[0][0] = _debugAgent; /**/
             
             LoadContent();
             base.Initialize();
@@ -156,34 +156,45 @@ namespace Swarms
             
             if(_currentKeyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))
                 {
-                    var newY = agent._location.Y + 1;
+                    var newY = _debugAgent._location.Y + 1;
                     
-                    var direction = new Vector2(agent._location.X, newY);
-                    agent.move(direction, _grid);                
+                    var direction = new Vector2(_debugAgent._location.X, newY);
+                    _debugAgent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))
                 {
-                    var newY = agent._location.Y - 1;
+                    var newY = _debugAgent._location.Y - 1;
                     
-                    var direction = new Vector2(agent._location.X, newY);
-                    agent.move(direction, _grid);                
+                    var direction = new Vector2(_debugAgent._location.X, newY);
+                    _debugAgent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))
                 {
-                    var newX = agent._location.X + 1;
+                    var newX = _debugAgent._location.X + 1;
                     
-                    var direction = new Vector2(newX, agent._location.Y);
-                    agent.move(direction, _grid);                
+                    var direction = new Vector2(newX, _debugAgent._location.Y);
+                    _debugAgent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))
                 {
-                    var newX = agent._location.X - 1;
+                    var newX = _debugAgent._location.X - 1;
                     
-                    var direction = new Vector2(newX, agent._location.Y);
-                    agent.move(direction, _grid);                
+                    var direction = new Vector2(newX, _debugAgent._location.Y);
+                    _debugAgent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space)) {
-                       agent.autoMove(_grid);
+                for (int i = 0; i < _grid.slots.Length; i++)
+                {
+                    for (int j = 0; j < _grid.slots[0].Length; j++)
+                    {  
+                        var entity = _grid.slots[i][j];
+                        if(entity.GetType() == typeof(Agent)) 
+                        {   
+                            var agent = (Agent)entity;
+                            agent.autoMove(_grid);   
+                        }
+                    }
+                }
             }
             /**/   
         }

@@ -25,7 +25,7 @@ namespace Swarms.Entities
             surrounding[2] = x == 0                      ? null : grid.slots[x - 1][y]; //Entity to the left
             surrounding[3] = x == grid.slots.Length      ? null : grid.slots[x + 1][y]; //Entity to the right
             
-            return surrounding; // TODO: Implement to check for surrounding entities
+            return surrounding;
         }
 
         // This is where the magic happens
@@ -42,12 +42,14 @@ namespace Swarms.Entities
             }
             return _location;
         }
+
         private bool isLocAllowed(Vector2 loc, SquareGrid grid) {
             return      loc.X >= 0 
                     &&  loc.X < grid.slots.Length
                     &&  loc.Y >= 0 
                     &&  loc.Y < grid.slots[0].Length;
         }
+        
         public void move(Vector2 toPos, SquareGrid grid) {
             if (isLocAllowed(toPos, grid)){
                 int fromPosX = (int)_location.X;
