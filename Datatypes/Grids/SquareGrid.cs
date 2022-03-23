@@ -57,7 +57,7 @@ namespace Swarms.Datatypes.Grids
             
             LoadContent(_graphics);
             setBaseGrid();
-            //setRiverGrid();
+            setRiverGrid();
             gridImg = null;
 
         }
