@@ -122,7 +122,7 @@ namespace Swarms.Datatypes.Grids
         //Adds entities to a board in a structured fashion.
         public virtual void setRiverGrid(){
             for (int i = 13; i<23; i++ ){
-                slots[i][22] = new Agent(new Vector2(i,22));
+                //slots[i][22] = new Agent(new Vector2(i,22));
             }
             for (int i = 0; i<40; i++){
                 if (i % 5 != 0){
@@ -132,7 +132,7 @@ namespace Swarms.Datatypes.Grids
             for (int i = 0; i < 40; i++){
                 for (int j = 0; j<8; j++){
                     if (i % 3 == 0 && j % 2 == 0){
-                        slots[i][j] = new Tree(new Vector2(i,j));
+                        //slots[i][j] = new Tree(new Vector2(i,j));
                     } 
                 }
             }
