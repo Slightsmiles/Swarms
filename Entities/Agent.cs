@@ -8,7 +8,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
 
-        public Agent(Vector2 location) : base(1, false, location){
+        public Agent(Vector2 location) : base(-1, false, location){
             _location = location;
             _temp = defaultTemp;
             _color = Color.Black;
@@ -37,11 +37,10 @@ namespace Swarms.Entities
             for (int i = 0; i < traversableSquares.Length; i++)
             {
                 var direction = traversableSquares[i];
-                if( direction._traversable == true ) return direction._pos;
+                if( direction._traversable == true ) return direction._location;
             }
-            return _pos; //Temp value
+            return _location;
         }
-
         private bool isLocAllowed(Vector2 loc, SquareGrid grid) {
             return      loc.X >= 0 
                     &&  loc.X < grid.slots.Length
@@ -53,8 +52,8 @@ namespace Swarms.Entities
                 int fromPosX = (int)_location.X;
                 int fromPosY = (int)_location.Y;
 
-                grid.slots[fromPosX][fromPosY] = new GridLocation(1, true, _location); //Change to what it was before
-                grid.slots[(int)toPos.X][(int)toPos.Y] = this;
+                grid.slots[fromPosX][fromPosY] = new GridLocation(1, false, _location); //Change to what it was before
+                var toLoc = grid.slots[(int)toPos.X][(int)toPos.Y];
 
                 _location = toPos;
             }

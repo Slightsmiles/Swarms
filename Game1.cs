@@ -182,7 +182,7 @@ namespace Swarms
                     var direction = new Vector2(newX, agent._location.Y);
                     agent.move(direction, _grid);                
                 }
-            if(_currentKeyboardState.IsKeyDown(Keys.Space)) {
+            if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space)) {
                        agent.autoMove(_grid);
             }
             /**/   

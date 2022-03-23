@@ -5,10 +5,9 @@ namespace Swarms.Entities
 {
     public class Boardentity : GridLocation
     {
-        public Vector2 _location {get; protected set;} // Array indexes
         public int _temp {get; protected set;}
 
-        public Boardentity(float cost, bool traversable, Vector2 location) : base(cost, traversable, location){
+        public Boardentity(float cost, bool traversable, Vector2 location) : base(cost, false, location, traversable){
             
         }
         protected int defaultTemp = 20;
