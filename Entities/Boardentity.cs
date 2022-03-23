@@ -5,15 +5,12 @@ namespace Swarms.Entities
 {
     public class Boardentity : GridLocation
     {
-        public Vector2 location {get; protected set;} // Array indexes
-        public int temp {get; protected set;}
+        public Vector2 _location {get; protected set;} // Array indexes
+        public int _temp {get; protected set;}
 
+        public Boardentity() : base(1, true){
+            
+        }
         protected int defaultTemp = 20;
-        public int getTemp(){
-            return temp;
-        }
-        public Color GetColor(){
-            return color;
-        }
     }
 }

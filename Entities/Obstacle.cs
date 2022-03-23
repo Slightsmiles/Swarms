@@ -12,8 +12,8 @@ namespace Swarms.Entities
     public class Obstacle : Boardentity
     {
         public Obstacle(Vector2 loc){
-            this.location = loc;
-            this.color = Color.Aqua;
+            _location = loc;
+            _color = Color.Aqua;
         }
     }
 }

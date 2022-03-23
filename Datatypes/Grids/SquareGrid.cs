@@ -20,8 +20,8 @@ namespace Swarms.Datatypes.Grids
         //UPDATE THESE IF THE HEIGHT AND WIDTH CHANGES OBVIOUSLY ;DD;D;D;D;;D;D;D DONT U... FORGET ABOUT ME.
 
         //DONT DONT DONT DONT
-        public int _screenHeight;
-        public int _screenWidth;
+        public int _screenHeight {get; private set;}
+        public int _screenWidth {get; private set;}
         
         public Vector2 rectPosition;
         public float rectSpeed = 100f;
@@ -44,14 +44,17 @@ namespace Swarms.Datatypes.Grids
         //btw i refuse to figure out what a row is and what a column is sooooooooooo WEHU
 
         //I mean yes but wouldn't it be better to separate this from our model logic
-        private int _rowNums = 25; // Y-dimension
-        private int _columnNums = 40; // X-dimension
+        private int _rowNums; // Y-dimension
+        private int _columnNums; // X-dimension
 
 
-        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight)
+        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
+
+            _rowNums = rowNums;
+            _columnNums = columnNums;
 
             showGrid = true;
             _slotDims = new Vector2(_screenWidth / _columnNums, _screenHeight / _rowNums);
@@ -137,8 +140,6 @@ namespace Swarms.Datatypes.Grids
         }
 
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
-            Vector2 topLeft = new Vector2(0,0);
-            Vector2 botRight = new Vector2(_columnNums, _rowNums);
             //needs some actual drawing logic i guess
             if(showGrid){
                 spriteBatch.Begin();
@@ -151,7 +152,7 @@ namespace Swarms.Datatypes.Grids
                         //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
                         var yOffset = (int)(offset.Y + _slotDims.X * k);
 
-                        var color = slots[j][k].color;
+                        var color = slots[j][k]._color;
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDims.X, (int)_slotDims.X),Color.White,2);
                         switch(slots[j][k].GetType().Name){
                             case nameof(Agent):

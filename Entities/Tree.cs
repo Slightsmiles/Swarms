@@ -11,19 +11,18 @@ namespace Swarms.Entities
 
         bool isBurning;
         public Tree(){
-            this.location = new Vector2(-1,-1);
-            this.temp = getTemp();
-            this.color = GetColor();
+            _location = new Vector2(-1,-1);
+            _color = GetColor();
         }
         public Tree(Vector2 location){
-            this.location = location;
-            this.temp = defaultTemp;
-            this.color = GetColor();
+            _location = location;
+            _temp = defaultTemp;
+            _color = GetColor();
         }
 
         
         public new Color GetColor(){
-            if (this.temp <= 80) return Color.LawnGreen;
+            if (_temp <= 80) return Color.LawnGreen;
             else return Color.Red;
         }
     }

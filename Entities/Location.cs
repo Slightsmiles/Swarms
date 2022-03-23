@@ -2,17 +2,11 @@ namespace Swarms.Entities
 {
     public class Location
     {
-        int x;
-        int y;
-        public Location(int p, int q){
-            this.x = p;
-            this.y = q;
-        }
-        public int getX(){
-            return x;
-        }
-        public int getY(){
-            return y;
+        public int x {get; set;}
+        public int y {get; set;}
+        public Location(int x, int y){
+            this.x = x;
+            this.y = y;
         }
      
     }

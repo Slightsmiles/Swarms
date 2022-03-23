@@ -16,11 +16,8 @@ namespace Swarms
         private const int DEFAULT_SCREEN_WIDTH = 800;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private int _gridSize;
         public int _screenWidth {get; private set;}
         public int _screenHeight {get; private set;}
-        private int _rows;
-        private int _columns;
 
         private SquareGrid _grid;
         private Agent agent; // For debugging purposes /**/
@@ -159,32 +156,35 @@ namespace Swarms
             
             if(_currentKeyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))
                 {
-                    var newY = agent.location.Y + 1;
+                    var newY = agent._location.Y + 1;
                     
-                    var direction = new Vector2(agent.location.X, newY);
+                    var direction = new Vector2(agent._location.X, newY);
                     agent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))
                 {
-                    var newY = agent.location.Y - 1;
+                    var newY = agent._location.Y - 1;
                     
-                    var direction = new Vector2(agent.location.X, newY);
+                    var direction = new Vector2(agent._location.X, newY);
                     agent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))
                 {
-                    var newX = agent.location.X + 1;
+                    var newX = agent._location.X + 1;
                     
-                    var direction = new Vector2(newX, agent.location.Y);
+                    var direction = new Vector2(newX, agent._location.Y);
                     agent.move(direction, _grid);                
                 }
             if(_currentKeyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))
                 {
-                    var newX = agent.location.X - 1;
+                    var newX = agent._location.X - 1;
                     
-                    var direction = new Vector2(newX, agent.location.Y);
+                    var direction = new Vector2(newX, agent._location.Y);
                     agent.move(direction, _grid);                
                 }
+            if(_currentKeyboardState.IsKeyDown(Keys.Space)) {
+                       agent.autoMove(_grid);
+            }
             /**/   
         }
 

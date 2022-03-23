@@ -11,29 +11,19 @@ namespace Swarms.Datatypes.Grids
         // traversable, means that it is filled by something we can traverse.
         // unPathable = cant make a path but not necessarily filled (edges maybe?)
         // we might not need all these bools
-        public bool filled, traversable, unPathable;
+        public bool _filled, _traversable, _unPathable ;
         // some floats for pathfinding, cost is cost to move through a single square.
-        public float currentDist, cost;
+        public float _currentDist, _cost;
 
-        public Vector2 parent, pos;
+        public Vector2 _parent, _pos;
 
-        public Color color;
+        public Color _color {get; set;}
 
-        public GridLocation(float cost, bool filled){
-            this.cost = cost;
-            this.filled = filled;
+        public GridLocation(float cost, bool filled, bool traversable = true){
+            _cost = cost;
+            _filled = filled;
 
-            traversable = true;
-            
-        
+            _traversable = traversable;
         }
-        public GridLocation(){
-
-        }
-
-        public Vector2 getLocation(){
-            return new Vector2(0,0);
-        }
-    
     }
 }

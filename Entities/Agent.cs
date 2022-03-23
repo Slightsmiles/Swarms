@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Swarms.Datatypes.Grids;
 
@@ -7,22 +8,22 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         public Agent(){
-            this.location = new Vector2(-1,-1);
-            this.temp = defaultTemp;
-            color = Color.Black;
+            _location = new Vector2(-1,-1);
+            _temp = defaultTemp;
+            _color = Color.Black;
         }
 
         public Agent(Vector2 location){
-            this.location = location;
-            this.temp = defaultTemp;
-            color = Color.Black;
+            _location = location;
+            _temp = defaultTemp;
+            _color = Color.Black;
         }
 
         public GridLocation[] checkSurrounding(SquareGrid grid) {
             var surrounding = new GridLocation[4];
             
-            int x = (int)location.X;
-            int y = (int)location.Y;
+            int x = (int)_location.X;
+            int y = (int)_location.Y;
             
             surrounding[0] = y == 0                      ? null : grid.slots[x][y - 1]; //Entity above
             surrounding[1] = y == grid.slots[0].Length   ? null : grid.slots[x][y + 1]; //Entity below
@@ -33,10 +34,17 @@ namespace Swarms.Entities
         }
 
         public Vector2 decideDirection(SquareGrid grid) {
-            var traversableSquares = new GridLocation[4];
-            var surroundingSquares = checkSurrounding(grid);
-
-            return new Vector2(1,1);
+            var traversableSquares = checkSurrounding(grid);
+            traversableSquares = traversableSquares.Where(gridLocation => 
+                gridLocation != null 
+                && gridLocation._traversable == true).ToArray();
+            
+            for (int i = 0; i < traversableSquares.Length; i++)
+            {
+                var direction = traversableSquares[i];
+                if( direction._traversable == true ) return direction._pos;
+            }
+            return _pos; //Temp value
         }
 
         private bool isLocAllowed(Vector2 loc, SquareGrid grid) {
@@ -47,16 +55,20 @@ namespace Swarms.Entities
         }
         public void move(Vector2 toPos, SquareGrid grid) {
             if (isLocAllowed(toPos, grid)){
-                int fromPosX = (int)location.X;
-                int fromPosY = (int)location.Y;
+                int fromPosX = (int)_location.X;
+                int fromPosY = (int)_location.Y;
 
                 grid.slots[fromPosX][fromPosY] = new GridLocation(1, false);
                 grid.slots[(int)toPos.X][(int)toPos.Y] = this;
 
-                location = toPos;
+                _location = toPos;
             }
             else return;   
 
+        }
+        public void autoMove(SquareGrid grid) {
+            var direction = decideDirection(grid);
+            move(direction, grid);
         }
     }
 }
