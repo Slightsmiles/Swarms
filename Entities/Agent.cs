@@ -7,7 +7,8 @@ namespace Swarms.Entities
 {
     public class Agent : Boardentity
     {
-
+        
+        public Vector2 prevLocation { get; set; }
         public Agent(Vector2 location) : base(-1, false, location){
             _location = location;
             _temp = defaultTemp;

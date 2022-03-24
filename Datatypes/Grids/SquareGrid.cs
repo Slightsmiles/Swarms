@@ -39,7 +39,9 @@ namespace Swarms.Datatypes.Grids
         public Vector2 _slotDims, _gridOffset, _currentHoverSlot;
 
         //this is essentially our matrix for all the squares.
-        public GridLocation[][] slots {get; set;}
+        public GridLocation[][] _slots {get; set;}
+
+        public List<Agent> _agents;
 
         //this could just be made into a vector where X represents rows and Y represents columns but cba
         //btw i refuse to figure out what a row is and what a column is sooooooooooo WEHU
@@ -65,9 +67,9 @@ namespace Swarms.Datatypes.Grids
             
             LoadContent(graphics);
             setBaseGrid();
-            Console.WriteLine(slots.Length);
+            Console.WriteLine(_slots.Length);
 
-            //setRiverGrid();
+            setRiverGrid();
             gridImg = null;
 
         }
@@ -86,40 +88,40 @@ namespace Swarms.Datatypes.Grids
         //if statement simply checks if the location is within bounds.
         public virtual GridLocation getSlotFromLocation(Vector2 loc){
             
-            if(loc.X >= 0 && loc.Y >= 0 && loc.X < slots[(int)loc.X].Count()){
-                return slots[(int)loc.X][(int)loc.Y];
+            if(loc.X >= 0 && loc.Y >= 0 && loc.X < _slots[(int)loc.X].Count()){
+                return _slots[(int)loc.X][(int)loc.Y];
             }
             return null;
         }
 
         public virtual bool isFilled(Vector2 slot)
         {
-            var lol = slots[(int) slot.X][(int) slot.Y].GetType();
-            return lol == typeof(Agent) || lol == typeof(Tree) || lol == typeof(Obstacle);
+            var type = _slots[(int) slot.X][(int) slot.Y].GetType();
+            return type == typeof(Agent) || type == typeof(Tree) || type == typeof(Obstacle);
         }
         
         public virtual Vector2 getSlotFromPixel(Vector2 pix){
             Vector2 adjustedPos = pix - _gridOffset;
 
-            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/_slotDims.X)), slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/_slotDims.X)), slots[0].Count()-1));
+            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/_slotDims.X)), _slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/_slotDims.X)), _slots[0].Count()-1));
             
             return tempVec;
         }
 
-        // size of slot divided by number of slots, i would say we just initialize it with these dims in the constructor.   
+        // size of slot divided by number of _slots, i would say we just initialize it with these dims in the constructor.   
         public void setBaseGrid(){
 
             // 40/1.6 = 25, this is aspect ratio stuff, TODO: stop magic numbering trond
-            slots = new GridLocation[_columnNums][];
+            _slots = new GridLocation[_columnNums][];
             //make sure our grid is clear initially
-            Array.Clear(slots, 0, slots.Length);
+            Array.Clear(_slots, 0, _slots.Length);
             
             for(int i = 0; i < _columnNums; i++){
                 //this might fuck shit up, but adds to rows
 
-                slots[i] = new GridLocation[_rowNums];
+                _slots[i] = new GridLocation[_rowNums];
                 for(int j = 0; j < _rowNums ; j++){
-                    slots[i][j] = new GridLocation(1, new Vector2 (i, j));
+                    _slots[i][j] = new GridLocation(1, new Vector2 (i, j));
                 }
             }
 
@@ -128,17 +130,17 @@ namespace Swarms.Datatypes.Grids
         //Adds entities to a board in a structured fashion.
         public void setRiverGrid(){
             for (int i = 13; i<23; i++ ){
-                //slots[i][22] = new Agent(new Vector2(i,22));
+                _slots[i][22] = new Agent(new Vector2(i,22));
             }
             for (int i = 0; i<40; i++){
                 if (i % 5 != 0){
-                slots[i][16] = new Obstacle(new Vector2(i,16));
+                _slots[i][16] = new Obstacle(new Vector2(i,16));
                 }
             }
             for (int i = 0; i < 40; i++){
                 for (int j = 0; j<8; j++){
                     if (i % 3 == 0 && j % 2 == 0){
-                        //slots[i][j] = new Tree(new Vector2(i,j));
+                        _slots[i][j] = new Tree(new Vector2(i,j));
                     } 
                 }
             }
@@ -158,9 +160,9 @@ namespace Swarms.Datatypes.Grids
                         //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
                         var yOffset = (int)(offset.Y + _slotDims.X * k);
 
-                        var color = slots[j][k]._color;
+                        var color = _slots[j][k]._color;
                         RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDims.X, (int)_slotDims.X),Color.White,2);
-                        switch(slots[j][k].GetType().Name){
+                        switch(_slots[j][k].GetType().Name){
                             case nameof(Agent):
                                 RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDims.X, (int)_slotDims.X), color);
                                 break;
@@ -184,15 +186,15 @@ namespace Swarms.Datatypes.Grids
             var newPos = decideMove(agent);
             var from = agent._location;
             agent._location = newPos;
-            slots[(int)newPos.X][(int)newPos.Y] = agent;
-            slots[(int)from.X][(int)from.Y] = new Boardentity(1, true, from);
+            agent.prevLocation = from;
+            //_slots[(int)newPos.X][(int)newPos.Y] = agent;
+            //_slots[(int)from.X][(int)from.Y] = new Boardentity(1, true, from);
 
         }
 
         private Vector2 decideMove(Agent agent)
         {
             var possibleDirections = checkAvailable(agent);
-            Console.WriteLine(possibleDirections.Count);
             return possibleDirections.First();
 
         }
@@ -215,17 +217,18 @@ namespace Swarms.Datatypes.Grids
         private List<Vector2> checkAvailable(Agent agent)
         {
             var available = new List<Vector2>();
-
+            
 
             foreach (var position in getAdjacent(agent._location))
             {
                 
                 if (isWithinBounds(position))
                 {
-                    Console.WriteLine(position.X + " , " + position.Y);
-                    if (slots[(int)position.X][(int)position.Y]._traversable)
-                    available.Add(position);
-                    Console.WriteLine("yeet");
+                    if (_slots[(int) position.X][(int) position.Y]._traversable)
+                    {
+                        available.Add(position);
+                    }
+                    
                 }
             }
             
@@ -235,28 +238,46 @@ namespace Swarms.Datatypes.Grids
 
         private bool isWithinBounds(Vector2 loc) {
             return      loc.X >= 0 
-                        &&  loc.X < slots.Length
+                        &&  loc.X < _slots.Length
                         &&  loc.Y >= 0 
-                        &&  loc.Y < slots[0].Length;
+                        &&  loc.Y < _slots[0].Length;
         }
         public SquareGrid autoMove()
         {
-            for (int i = 0; i < _slotDims.X; i++)
+            _agents = new List<Agent>();
+            _agents.Clear();
+            for (int i = 0; i < 40; i++)
             {
-                for (int j = 0; j < _slotDims.Y; j++)
+                for (int j = 0; j < 24; j++)
                 {
-                    switch (slots[i][j].GetType().Name)
+                    switch (_slots[i][j].GetType().Name)
                     {
                         case nameof(Agent):
-                            move((Agent) slots[i][j]);
+                            var agent = (Agent)_slots[i][j];
+                            _agents.Add(agent);
+                            move(agent);
                             break;
                             
                     }
                 }
             }
+
+            UpdateGrid();
             return this;
         }
-           
 
+
+        public void UpdateGrid()
+        {
+            foreach (var agent in _agents)
+            {
+                Console.WriteLine("yeet");
+                Console.WriteLine("location is: " + agent._location.X + " , " + agent._location.Y);
+                _slots[(int) agent.prevLocation.X][(int) agent.prevLocation.Y] = new Boardentity(1, true, agent.prevLocation);
+                _slots[(int) agent._location.X][(int) agent._location.Y] = agent;
+            }
+        }
+           
+    
     }
 }
