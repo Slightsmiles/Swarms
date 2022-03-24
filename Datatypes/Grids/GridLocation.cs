@@ -29,5 +29,7 @@ namespace Swarms.Datatypes.Grids
 
             _traversable = traversable;
         }
+
+
     }
 }
