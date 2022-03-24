@@ -20,8 +20,6 @@ namespace Swarms
         public int _screenHeight {get; private set;}
 
         private SquareGrid _grid;
-        
-        // private Agent _debugAgent; // For debugging purposes /**/
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
@@ -41,9 +39,6 @@ namespace Swarms
             // TODO: Add your initialization logic here
             initSize();
             initGrid();
-            
-            // _debugAgent = new Agent(new Vector2(0,0));
-            // _grid.slots[0][0] = _debugAgent; /**/
             
             LoadContent();
             base.Initialize();
@@ -158,48 +153,14 @@ namespace Swarms
                 {
                     initGrid();
                 }
-
             }
-            //For debugging purposes
-            
-            // if(_currentKeyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))
-            //     {
-            //         var newY = _debugAgent._location.Y + 1;
-                    
-            //         var direction = new Vector2(_debugAgent._location.X, newY);
-            //         _debugAgent.move(direction, _grid);                
-            //     }
-            // if(_currentKeyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))
-            //     {
-            //         var newY = _debugAgent._location.Y - 1;
-                    
-            //         var direction = new Vector2(_debugAgent._location.X, newY);
-            //         _debugAgent.move(direction, _grid);                
-            //     }
-            // if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))
-            //     {
-            //         var newX = _debugAgent._location.X + 1;
-                    
-            //         var direction = new Vector2(newX, _debugAgent._location.Y);
-            //         _debugAgent.move(direction, _grid);                
-            //     }
-            // if(_currentKeyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))
-            //     {
-            //         var newX = _debugAgent._location.X - 1;
-                    
-            //         var direction = new Vector2(newX, _debugAgent._location.Y);
-            //         _debugAgent.move(direction, _grid);                
-            //     }
+
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space)) {
-                Console.WriteLine("Pressed Space");
-                int i = 1;
                 foreach (var agent in _grid._agentList)
                 {
-                    Console.WriteLine( $"moved: {i++}");
                     agent.autoMove(_grid);
                 }
             }
-            /**/   
         }
 
     }
