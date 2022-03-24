@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Swarms.Datatypes.Grids;
 using Swarms.Entities;
@@ -20,6 +21,7 @@ namespace Swarms
         public int _screenHeight {get; private set;}
 
         private SquareGrid _grid;
+        private SquareGrid _tempGrid;
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
@@ -47,6 +49,7 @@ namespace Swarms
         protected void initGrid()
         {
             _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight);
+
         }
         
         protected void initSize()
@@ -78,10 +81,9 @@ namespace Swarms
         protected override void Update(GameTime gameTime)
         {
             HandleKeyInput();
-
+            
             _grid.Update();
             // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -101,13 +103,16 @@ namespace Swarms
 
         public bool isSquareOccupied(Vector2 position) {
 
-            var gLType = _grid.slots[(int)position.X][(int)position.Y].GetType();
+            var gLType = _grid._slots[(int)position.X][(int)position.Y].GetType();
             return     gLType == typeof(Agent)
                     || gLType == typeof(Tree)
                     || gLType == typeof(Obstacle);
         }
+
+        [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")] //What is this @Trond? Det var på yeetums branchen
         private void HandleKeyInput()
         {
+            
             _previousKeyboardState = _currentKeyboardState;
             _currentKeyboardState = Keyboard.GetState();
             var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
@@ -127,7 +132,7 @@ namespace Swarms
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
-                    _grid.slots[(int)posX][(int)posY] = new Tree(position);
+                    _grid._slots[(int)posX][(int)posY] = new Tree(position);
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.A))
@@ -139,14 +144,14 @@ namespace Swarms
 
                 if (_currentKeyboardState.IsKeyDown(Keys.R))
                 {
-                    _grid.slots[(int)posX][(int)posY] = new Obstacle(position);
+                    _grid._slots[(int)posX][(int)posY] = new Obstacle(position);
 
                 }
 
                 //used for clearing
                 if (_currentKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    _grid.slots[(int)posX][(int)posY] = new Boardentity(1, true, position);
+                    _grid._slots[(int)posX][(int)posY] = new Boardentity(1, true, position);
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.R))
@@ -155,13 +160,19 @@ namespace Swarms
                 }
             }
 
-            if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space)) {
+            if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right)) {
                 foreach (var agent in _grid._agentList)
                 {
                     agent.autoMove(_grid);
                 }
             }
-        }
 
+            if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
+            {
+                _grid = _grid.autoMove();
+            } 
+        }
+    
     }
+    
 }
