@@ -187,14 +187,13 @@ namespace Swarms.Datatypes.Grids
             var from = agent._location;
             agent._location = newPos;
             agent.prevLocation = from;
-            //_slots[(int)newPos.X][(int)newPos.Y] = agent;
-            //_slots[(int)from.X][(int)from.Y] = new Boardentity(1, true, from);
 
         }
 
         private Vector2 decideMove(Agent agent)
         {
             var possibleDirections = checkAvailable(agent);
+            if (possibleDirections.Count == 0) return agent._location;
             return possibleDirections.First();
 
         }
@@ -226,6 +225,7 @@ namespace Swarms.Datatypes.Grids
                 {
                     if (_slots[(int) position.X][(int) position.Y]._traversable)
                     {
+                        
                         available.Add(position);
                     }
                     
