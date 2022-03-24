@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Swarms.Datatypes.Grids;
@@ -14,7 +15,9 @@ namespace Swarms.Entities
             _temp = defaultTemp;
             _color = Color.Black;
         }
-
+        
+        // -------Mulig Optimering-------
+        // Måske en IEnumerable<Vector2> eller andet her for memory reasons
         public GridLocation[] checkSurrounding(GridLocation[][] grid) {
             var surrounding = new GridLocation[4];
             
@@ -42,31 +45,20 @@ namespace Swarms.Entities
             }
             return _location;
         }
-
-        private bool isLocAllowed(Vector2 loc, GridLocation[][] grid) {
-            return      loc.X >= 0 
-                    &&  loc.X < grid.Length
-                    &&  loc.Y >= 0 
-                    &&  loc.Y < grid[0].Length;
-        }
         
         public void move(Vector2 toPos, GridLocation[][] grid) {
-            if (isLocAllowed(toPos, grid)){
-                int fromPosX = (int)_location.X;
-                int fromPosY = (int)_location.Y;
-                _location = toPos;
-                grid[(int)toPos.X][(int)toPos.Y] = this;
-                grid[fromPosX][fromPosY] = new GridLocation(1, new Vector2(fromPosX, fromPosY)); //Change to what it was before
-                
-            }
+            
+            int fromPosX = (int)_location.X;
+            int fromPosY = (int)_location.Y;
+            _location = toPos;
+            grid[(int)toPos.X][(int)toPos.Y] = this;
+            grid[fromPosX][fromPosY] = new GridLocation(1, new Vector2(fromPosX, fromPosY)); //Change to what it was before
 
         }
         public void autoMove(SquareGrid grid)
         {
-            
             var direction = decideDirection(grid._slots);
             move(direction, grid._slots);
-
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Swarms
         public int _screenHeight {get; private set;}
 
         private SquareGrid _grid;
-        private SquareGrid _tempGrid;
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;

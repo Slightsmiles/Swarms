@@ -41,7 +41,7 @@ namespace Swarms.Datatypes.Grids
         //this is essentially our matrix for all the squares.
         public GridLocation[][] _slots {get; set;}
 
-        public List<Agent> _agents;
+        public List<Agent> _agentList {get; set;}
 
         //this could just be made into a vector where X represents rows and Y represents columns but cba
         //btw i refuse to figure out what a row is and what a column is sooooooooooo WEHU
@@ -49,8 +49,6 @@ namespace Swarms.Datatypes.Grids
         //I mean yes but wouldn't it be better to separate this from our model logic
         private int _rowNums; // Y-dimension
         private int _columnNums; // X-dimension
-
-        public List<Agent> _agentList {get; private set;}
 
 
         public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
@@ -156,7 +154,7 @@ namespace Swarms.Datatypes.Grids
             for (int i = 0; i < 40; i++){
                 for (int j = 0; j<8; j++){
                     if (i % 3 == 0 && j % 2 == 0){
-                        _slots[i][j] = new Tree(new Vector2(i,j));
+                        //_slots[i][j] = new Tree(new Vector2(i,j));
                     } 
                 }
             }
@@ -222,10 +220,10 @@ namespace Swarms.Datatypes.Grids
         private List<Vector2> getAdjacent(Vector2 loc)
         {
 
-            var up = new Vector2(loc.X - 1, loc.Y);
-            var down = new Vector2(loc.X + 1, loc.Y);
-            var left = new Vector2(loc.X , loc.Y -1);
-            var right = new Vector2(loc.X , loc.Y +1 );
+            var up = new Vector2(loc.X, loc.Y - 1);
+            var down = new Vector2(loc.X, loc.Y + 1);
+            var left = new Vector2(loc.X - 1, loc.Y);
+            var right = new Vector2(loc.X + 1, loc.Y);
             var adjacent = new List<Vector2>();
             
             adjacent.Add(up);
@@ -238,10 +236,8 @@ namespace Swarms.Datatypes.Grids
         {
             var available = new List<Vector2>();
             
-
             foreach (var position in getAdjacent(agent._location))
-            {
-                
+            {     
                 if (isWithinBounds(position))
                 {
                     if (_slots[(int) position.X][(int) position.Y]._traversable)
@@ -265,8 +261,8 @@ namespace Swarms.Datatypes.Grids
         }
         public SquareGrid autoMove()
         {
-            _agents = new List<Agent>();
-            _agents.Clear();
+         _agentList = new List<Agent>();
+         _agentList.Clear();
             for (int i = 0; i < 40; i++)
             {
                 for (int j = 0; j < 24; j++)
@@ -275,7 +271,7 @@ namespace Swarms.Datatypes.Grids
                     {
                         case nameof(Agent):
                             var agent = (Agent)_slots[i][j];
-                            _agents.Add(agent);
+                            _agentList.Add(agent);
                             move(agent);
                             break;
                             
@@ -290,7 +286,7 @@ namespace Swarms.Datatypes.Grids
 
         public void UpdateGrid()
         {
-            foreach (var agent in _agents)
+            foreach (var agent in _agentList)
             {
                 Console.WriteLine("yeet");
                 Console.WriteLine("location is: " + agent._location.X + " , " + agent._location.Y);
