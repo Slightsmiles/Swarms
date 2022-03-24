@@ -33,20 +33,20 @@ namespace Swarms.Entities
         }
 
         // This is where the magic happens
-        public Vector2 decideDirection(GridLocation[][] grid) {
+        private Vector2 randomDirection(GridLocation[][] grid) {
             var traversableSquares = checkSurrounding(grid).Where(gridLocation => 
                 gridLocation != null 
                 && gridLocation._traversable).ToArray();
             
-            for (int i = 0; i < traversableSquares.Length; i++)
-            {
-                var direction = traversableSquares[i];
-                if( direction._traversable) return direction._location;
-            }
-            return _location;
+            var randomize = new Random().Next(0, traversableSquares.Length);
+
+            var direction = traversableSquares[randomize];
+            
+            if(traversableSquares.Length == 0) return this._location;
+            else return direction._location;
         }
         
-        public void move(Vector2 toPos, GridLocation[][] grid) {
+        private void move(Vector2 toPos, GridLocation[][] grid) {
             
             int fromPosX = (int)_location.X;
             int fromPosY = (int)_location.Y;
@@ -57,7 +57,7 @@ namespace Swarms.Entities
         }
         public void autoMove(SquareGrid grid)
         {
-            var direction = decideDirection(grid._slots);
+            var direction = randomDirection(grid._slots);
             move(direction, grid._slots);
         }
     }
