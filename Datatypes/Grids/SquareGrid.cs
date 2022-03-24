@@ -47,6 +47,8 @@ namespace Swarms.Datatypes.Grids
         private int _rowNums; // Y-dimension
         private int _columnNums; // X-dimension
 
+        public List<Agent> _agentList {get; private set;}
+
 
         public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
         {
@@ -61,10 +63,11 @@ namespace Swarms.Datatypes.Grids
             _gridOffset = new Vector2((int)startPos.X, (int)startPos.Y);
 
             _currentHoverSlot = new Vector2(-1,-1); // For debugging purposes
+
+            _agentList = new List<Agent>();
             
             LoadContent(graphics);
             setBaseGrid();
-            Console.WriteLine(slots.Length);
 
             setRiverGrid();
             gridImg = null;
@@ -91,7 +94,19 @@ namespace Swarms.Datatypes.Grids
             return null;
         }
 
-        
+        public void addAgent(Vector2 position) {
+            var agent = new Agent(position);
+            slots[(int)position.X][(int)position.Y] = agent;
+            _agentList.Add(agent);
+            
+            
+            Console.WriteLine($"NoOf Agents: {_agentList.Count}"); //Debug
+        }
+
+        public void removeAgent(Agent agent) {
+            _agentList.Remove(agent);
+        }
+
         public virtual Vector2 getSlotFromPixel(Vector2 pix){
             Vector2 adjustedPos = pix - _gridOffset;
 
@@ -122,7 +137,7 @@ namespace Swarms.Datatypes.Grids
         //Adds entities to a board in a structured fashion.
         public virtual void setRiverGrid(){
             for (int i = 13; i<23; i++ ){
-                slots[i][22] = new Agent(new Vector2(i,22));
+                //addAgent(new Vector2(i,22));
             }
             for (int i = 0; i<40; i++){
                 if (i % 5 != 0){
@@ -172,7 +187,5 @@ namespace Swarms.Datatypes.Grids
                 spriteBatch.End();
             }
         }
-           
-
     }
 }

@@ -30,15 +30,14 @@ namespace Swarms.Entities
 
         // This is where the magic happens
         public Vector2 decideDirection(SquareGrid grid) {
-            var traversableSquares = checkSurrounding(grid);
-            traversableSquares = traversableSquares.Where(gridLocation => 
+            var traversableSquares = checkSurrounding(grid).Where(gridLocation => 
                 gridLocation != null 
-                && gridLocation._traversable == true).ToArray();
+                && gridLocation._traversable).ToArray();
             
             for (int i = 0; i < traversableSquares.Length; i++)
             {
                 var direction = traversableSquares[i];
-                if( direction._traversable == true ) return direction._location;
+                if( direction._traversable) return direction._location;
             }
             return _location;
         }
