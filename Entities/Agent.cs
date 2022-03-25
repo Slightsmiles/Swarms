@@ -9,7 +9,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         
-        public Vector2 prevLocation { get; set; }
+        public Vector2 _prevLocation { get; set; }
         public Agent(Vector2 location) : base(-1, false, location){
             _location = location;
             _temp = defaultTemp;
@@ -18,47 +18,61 @@ namespace Swarms.Entities
         
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
-        public GridLocation[] checkSurrounding(GridLocation[][] grid) {
-            var surrounding = new GridLocation[4];
+        private List<Vector2> getAdjacent()
+        {
+            var adjacent = new List<Vector2>();
             
-            int x = (int)_location.X;
-            int y = (int)_location.Y;
+            adjacent.Add(new Vector2(_location.X, _location.Y - 1)); //up
+            adjacent.Add(new Vector2(_location.X, _location.Y + 1)); //down
+            adjacent.Add(new Vector2(_location.X - 1, _location.Y)); //left
+            adjacent.Add(new Vector2(_location.X + 1, _location.Y)); //right
             
-            surrounding[0] = y == 0                     ? null : grid[x][y - 1]; //Entity above
-            surrounding[1] = y == grid[0].Length - 1    ? null : grid[x][y + 1]; //Entity below
-            surrounding[2] = x == 0                     ? null : grid[x - 1][y]; //Entity to the left
-            surrounding[3] = x == grid.Length - 1       ? null : grid[x + 1][y]; //Entity to the right
-            
-            return surrounding;
+            return adjacent;
+        }
+
+        private List<Vector2> checkAvailable(GridLocation[][] grid)
+        {
+            var available = getAdjacent().Where(position => isWithinBounds(position, grid) && isTraversable(position, grid)).ToList();
+            Console.WriteLine(available.Count);
+            return available;
+        }
+        
+        private bool isTraversable(Vector2 location, GridLocation[][] grid) {
+            return grid[(int) location.X][(int) location.Y]._traversable;
+        }
+
+        private bool isWithinBounds(Vector2 loc, GridLocation[][] grid) {
+            return      loc.X >= 0 
+                        &&  loc.X < grid.Length
+                        &&  loc.Y >= 0 
+                        &&  loc.Y < grid[0].Length;
         }
 
         // This is where the magic happens
         private Vector2 randomDirection(GridLocation[][] grid) {
-            var traversableSquares = checkSurrounding(grid).Where(gridLocation => 
-                gridLocation != null 
-                && gridLocation._traversable).ToArray();
+            List<Vector2> traversableSquares = checkAvailable(grid);
             
-            var randomize = new Random().Next(0, traversableSquares.Length);
+            var randomize = new Random().Next(0, traversableSquares.Count);
 
             var direction = traversableSquares[randomize];
             
-            if(traversableSquares.Length == 0) return this._location;
-            else return direction._location;
+            if(traversableSquares.Count == 0) return this._location;
+            else return direction;
         }
         
-        private void move(Vector2 toPos, GridLocation[][] grid) {
-            
-            int fromPosX = (int)_location.X;
-            int fromPosY = (int)_location.Y;
-            _location = toPos;
-            grid[(int)toPos.X][(int)toPos.Y] = this;
-            grid[fromPosX][fromPosY] = new GridLocation(1, new Vector2(fromPosX, fromPosY)); //Change to what it was before
+        private void move(GridLocation[][] grid)
+        {
+            var newPos = randomDirection(grid);
+            var from = _location;
+            _location = newPos;
+            _prevLocation = from;
 
         }
-        public void autoMove(SquareGrid grid)
+
+        public void autoMove(GridLocation[][] grid)
         {
-            var direction = randomDirection(grid._slots);
-            move(direction, grid._slots);
+            var direction = randomDirection(grid);
+            move(grid);
         }
     }
 }

@@ -154,7 +154,7 @@ namespace Swarms.Datatypes.Grids
             for (int i = 0; i < 40; i++){
                 for (int j = 0; j<8; j++){
                     if (i % 3 == 0 && j % 2 == 0){
-                        //_slots[i][j] = new Tree(new Vector2(i,j));
+                        _slots[i][j] = new Tree(new Vector2(i,j));
                     } 
                 }
             }
@@ -199,85 +199,10 @@ namespace Swarms.Datatypes.Grids
         //-- Jeg er ikke sikker på jeg er enig i at move logikken skal være i SquareGrid --
         //---------------------------------------------------------------------------------
         // Lad os tage den næste gang vi mødes
-        
-        private void move(Agent agent)
-        {
-            var newPos = decideMove(agent);
-            var from = agent._location;
-            agent._location = newPos;
-            agent.prevLocation = from;
 
-        }
-
-        private Vector2 decideMove(Agent agent)
-        {
-            var possibleDirections = checkAvailable(agent);
-            if (possibleDirections.Count == 0) return agent._location;
-            return possibleDirections.First();
-
-        }
-
-        private List<Vector2> getAdjacent(Vector2 loc)
-        {
-
-            var up = new Vector2(loc.X, loc.Y - 1);
-            var down = new Vector2(loc.X, loc.Y + 1);
-            var left = new Vector2(loc.X - 1, loc.Y);
-            var right = new Vector2(loc.X + 1, loc.Y);
-            var adjacent = new List<Vector2>();
-            
-            adjacent.Add(up);
-            adjacent.Add(down);
-            adjacent.Add(left);
-            adjacent.Add(right);
-            return adjacent;
-        }
-        private List<Vector2> checkAvailable(Agent agent)
-        {
-            var available = new List<Vector2>();
-            
-            foreach (var position in getAdjacent(agent._location))
-            {     
-                if (isWithinBounds(position))
-                {
-                    if (_slots[(int) position.X][(int) position.Y]._traversable)
-                    {
-                        
-                        available.Add(position);
-                    }
-                    
-                }
-            }
-            
-            return available;
-        }
-
-
-        private bool isWithinBounds(Vector2 loc) {
-            return      loc.X >= 0 
-                        &&  loc.X < _slots.Length
-                        &&  loc.Y >= 0 
-                        &&  loc.Y < _slots[0].Length;
-        }
         public SquareGrid autoMove()
         {
-         _agentList = new List<Agent>();
-         _agentList.Clear();
-            for (int i = 0; i < 40; i++)
-            {
-                for (int j = 0; j < 24; j++)
-                {
-                    switch (_slots[i][j].GetType().Name)
-                    {
-                        case nameof(Agent):
-                            var agent = (Agent)_slots[i][j];
-                            _agentList.Add(agent);
-                            move(agent);
-                            break;
-                            
-                    }
-                }
-            }
+            foreach(var agent in _agentList) agent.autoMove(_slots);
 
             UpdateGrid();
             return this;
@@ -290,7 +215,7 @@ namespace Swarms.Datatypes.Grids
             {
                 Console.WriteLine("yeet");
                 Console.WriteLine("location is: " + agent._location.X + " , " + agent._location.Y);
-                _slots[(int) agent.prevLocation.X][(int) agent.prevLocation.Y] = new Boardentity(1, true, agent.prevLocation);
+                _slots[(int) agent._prevLocation.X][(int) agent._prevLocation.Y] = new Boardentity(1, true, agent._prevLocation);
                 _slots[(int) agent._location.X][(int) agent._location.Y] = agent;
             }
         }

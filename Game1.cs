@@ -159,13 +159,6 @@ namespace Swarms
                 }
             }
 
-            if(_currentKeyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right)) {
-                foreach (var agent in _grid._agentList)
-                {
-                    agent.autoMove(_grid);
-                }
-            }
-
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
                 _grid = _grid.autoMove();
