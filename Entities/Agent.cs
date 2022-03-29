@@ -33,7 +33,6 @@ namespace Swarms.Entities
         private List<Vector2> checkAvailable(GridLocation[][] grid)
         {
             var available = getAdjacent().Where(position => isWithinBounds(position, grid) && isTraversable(position, grid)).ToList();
-            Console.WriteLine(available.Count);
             return available;
         }
         
@@ -71,7 +70,7 @@ namespace Swarms.Entities
 
         public void autoMove(GridLocation[][] grid)
         {
-            var direction = randomDirection(grid);
+           // var direction = randomDirection(grid);
             move(grid);
         }
     }

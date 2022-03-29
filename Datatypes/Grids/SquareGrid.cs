@@ -213,8 +213,6 @@ namespace Swarms.Datatypes.Grids
         {
             foreach (var agent in _agentList)
             {
-                Console.WriteLine("yeet");
-                Console.WriteLine("location is: " + agent._location.X + " , " + agent._location.Y);
                 _slots[(int) agent._prevLocation.X][(int) agent._prevLocation.Y] = new Boardentity(1, true, agent._prevLocation);
                 _slots[(int) agent._location.X][(int) agent._location.Y] = agent;
             }
