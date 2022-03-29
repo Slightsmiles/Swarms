@@ -131,7 +131,8 @@ namespace Swarms
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
-                    _grid._slots[(int)posX][(int)posY] = new Tree(position);
+                    _grid.addTree(position);
+                    //_grid._slots[(int)posX][(int)posY] = _grid.addTree(new Tree(position));
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.A))
@@ -161,7 +162,7 @@ namespace Swarms
 
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
-                _grid = _grid.autoMove();
+                _grid = _grid.TickOnce();
             } 
         }
     

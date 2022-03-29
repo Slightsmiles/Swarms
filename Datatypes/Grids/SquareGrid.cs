@@ -42,7 +42,7 @@ namespace Swarms.Datatypes.Grids
         public GridLocation[][] _slots {get; set;}
 
         public List<Agent> _agentList {get; set;}
-
+        public List<Tree> _treeList { get; set; }
         //this could just be made into a vector where X represents rows and Y represents columns but cba
         //btw i refuse to figure out what a row is and what a column is sooooooooooo WEHU
 
@@ -66,14 +66,17 @@ namespace Swarms.Datatypes.Grids
             _currentHoverSlot = new Vector2(-1,-1); // For debugging purposes
 
             _agentList = new List<Agent>();
-            
+            _treeList = new List<Tree>();
             LoadContent(graphics);
             setBaseGrid();
 
             setRiverGrid();
+            //setDenseForest();
             gridImg = null;
 
         }
+
+   
 
         public void LoadContent(GraphicsDevice graphics){
             rectTexture = new Texture2D(graphics, 1, 1);
@@ -108,6 +111,13 @@ namespace Swarms.Datatypes.Grids
             _agentList.Remove(agent);
         }
 
+        public void addTree(Vector2 pos)
+        {    
+            var tree = new Tree(new Vector2(pos.X,pos.Y));
+            _slots[(int)pos.X][(int)pos.Y] = tree;
+            _treeList.Add(tree);
+        }
+        
         public virtual bool isFilled(Vector2 slot)
         {
             var type = _slots[(int) slot.X][(int) slot.Y].GetType();
@@ -154,13 +164,31 @@ namespace Swarms.Datatypes.Grids
             for (int i = 0; i < 40; i++){
                 for (int j = 0; j<8; j++){
                     if (i % 3 == 0 && j % 2 == 0){
-                        _slots[i][j] = new Tree(new Vector2(i,j));
+                        addTree(new Vector2(i,j));
                     } 
                 }
             }
 
         }
-
+        private void setDenseForest()
+        {
+            for (int i = 13; i<23; i++ ){
+                addAgent(new Vector2(i,22));
+            }
+            for (int i = 0; i<40; i++){
+                if (i % 5 != 0){
+                    _slots[i][16] = new Obstacle(new Vector2(i,16));
+                }
+            }
+            for (int i = 0; i < 40; i++){
+                for (int j = 0; j<8; j++){
+                    addTree(new Vector2(i, j));
+                    
+                    
+                }
+            }
+        }
+        
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             //needs some actual drawing logic i guess
             if(showGrid){
@@ -200,10 +228,13 @@ namespace Swarms.Datatypes.Grids
         //---------------------------------------------------------------------------------
         // Lad os tage den næste gang vi mødes
 
-        public SquareGrid autoMove()
+        public SquareGrid TickOnce()
         {
             foreach(var agent in _agentList) agent.autoMove(_slots);
-
+            foreach (var tree in _treeList)
+            {
+                tree.TickTemp(_treeList);
+            }
             UpdateGrid();
             return this;
         }
@@ -215,6 +246,11 @@ namespace Swarms.Datatypes.Grids
             {
                 _slots[(int) agent._prevLocation.X][(int) agent._prevLocation.Y] = new Boardentity(1, true, agent._prevLocation);
                 _slots[(int) agent._location.X][(int) agent._location.Y] = agent;
+            }
+
+            foreach (var tree in _treeList)
+            {
+                _slots[(int) tree._location.X][(int) tree._location.Y] = tree;
             }
         }
            
