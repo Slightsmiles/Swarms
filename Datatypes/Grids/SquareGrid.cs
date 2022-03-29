@@ -50,7 +50,7 @@ namespace Swarms.Datatypes.Grids
         private int _columnNums; // X-dimension
 
 
-        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 48, int columnNums = 80)
+        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
