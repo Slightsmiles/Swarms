@@ -28,16 +28,15 @@ namespace Swarms.Entities
         {
             var adjacentSquares = getAdjacentSquares();
             var adjacentTrees = getAdjacentTrees(adjacentSquares, trees);
-
+            
             foreach (var tree in adjacentTrees)
             {
                 var temp = tree._temp;
                 if (temp >= 60 && temp <= 100) _temp += 1;
                 if (temp > 100) _temp += 2;
             }
+            
             _color = GetColor();
-            Console.WriteLine("color is: " + _color);
-            Console.WriteLine("temp is:" + _temp);
         }
 
         private List<Tree> getAdjacentTrees(List<Vector2> adjacentSquares, List<Tree> trees)

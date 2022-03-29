@@ -44,14 +44,13 @@ namespace Swarms.Datatypes.Grids
         public List<Agent> _agentList {get; set;}
         public List<Tree> _treeList { get; set; }
         //this could just be made into a vector where X represents rows and Y represents columns but cba
-        //btw i refuse to figure out what a row is and what a column is sooooooooooo WEHU
 
         //I mean yes but wouldn't it be better to separate this from our model logic
         private int _rowNums; // Y-dimension
         private int _columnNums; // X-dimension
 
 
-        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
+        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 48, int columnNums = 80)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
@@ -68,15 +67,15 @@ namespace Swarms.Datatypes.Grids
             _agentList = new List<Agent>();
             _treeList = new List<Tree>();
             LoadContent(graphics);
-            setBaseGrid();
 
+            setBaseGrid();
+            
             setRiverGrid();
             //setDenseForest();
             gridImg = null;
 
         }
-
-   
+        
 
         public void LoadContent(GraphicsDevice graphics){
             rectTexture = new Texture2D(graphics, 1, 1);
@@ -102,9 +101,6 @@ namespace Swarms.Datatypes.Grids
             var agent = new Agent(position);
             _slots[(int)position.X][(int)position.Y] = agent;
             _agentList.Add(agent);
-            
-            
-            Console.WriteLine($"NoOf Agents: {_agentList.Count}"); //Debug
         }
 
         public void removeAgent(Agent agent) {
@@ -133,15 +129,13 @@ namespace Swarms.Datatypes.Grids
         }
 
         // size of slot divided by number of _slots, i would say we just initialize it with these dims in the constructor.   
-        public void setBaseGrid(){
-
-            // 40/1.6 = 25, this is aspect ratio stuff, TODO: stop magic numbering trond
+        public void setBaseGrid() {
+            
             _slots = new GridLocation[_columnNums][];
-            //make sure our grid is clear initially
+            
             Array.Clear(_slots, 0, _slots.Length);
             
             for(int i = 0; i < _columnNums; i++){
-                //this might fuck shit up, but adds to rows
 
                 _slots[i] = new GridLocation[_rowNums];
                 for(int j = 0; j < _rowNums ; j++){
