@@ -90,13 +90,11 @@ namespace Swarms
         {
             GraphicsDevice.Clear(Color.WhiteSmoke);
 
-            //change the offset here
 
             _grid.drawGrid(new Vector2(0, 0), _spriteBatch, rectTexture);
 
             base.Draw(gameTime);
 
-            //TODO, look into spritebatch and drawing, i think the grid data structure is bueno, we just need to be able to draw it.
         }
 
 
@@ -107,8 +105,7 @@ namespace Swarms
                     || gLType == typeof(Tree)
                     || gLType == typeof(Obstacle);
         }
-
-        [SuppressMessage("ReSharper", "HeapView.BoxingAllocation")] //What is this @Trond? Det var på yeetums branchen
+        
         private void HandleKeyInput()
         {
             
@@ -162,7 +159,10 @@ namespace Swarms
 
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
-                _grid = _grid.TickOnce();
+                
+                    _grid = _grid.TickOnce();
+
+
             } 
         }
     

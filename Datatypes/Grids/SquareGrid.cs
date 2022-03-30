@@ -69,8 +69,8 @@ namespace Swarms.Datatypes.Grids
             LoadContent(graphics);
 
             setBaseGrid();
-            
-            setRiverGrid();
+            //setBigGrid(); //works on 48/80 grid
+            setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
             gridImg = null;
 
@@ -108,9 +108,10 @@ namespace Swarms.Datatypes.Grids
         }
 
         public void addTree(Vector2 pos)
-        {    
-            var tree = new Tree(new Vector2(pos.X,pos.Y));
-            _slots[(int)pos.X][(int)pos.Y] = tree;
+        {
+            var (x, y) = pos;
+            var tree = new Tree(new Vector2(x,y));
+            _slots[(int)x][(int)y] = tree;
             _treeList.Add(tree);
         }
         
@@ -145,8 +146,31 @@ namespace Swarms.Datatypes.Grids
 
         }
 
+        private void setBigGrid()
+        {
+
+            for (int i = (_columnNums / 3); i < _columnNums - 10; i++)
+            {
+                addAgent(new Vector2(i, 34));
+            }
+
+            for (int i = 0; i < _columnNums; i++)
+            {
+               if(i % 4 != 0) _slots[i][24] = new Obstacle(new Vector2(i,24));
+            }
+
+            for (int i = 0; i < _columnNums; i++)
+            {
+                for (int j = 0; j < 24; j++)
+                    if (i % 3 == 0 && j % 2 == 0){
+                        addTree(new Vector2(i,j));
+                    } 
+            }
+        }
+
         //Adds entities to a board in a structured fashion.
         public void setRiverGrid(){
+            
             for (int i = 13; i<23; i++ ){
                 addAgent(new Vector2(i,22));
             }
@@ -177,8 +201,6 @@ namespace Swarms.Datatypes.Grids
             for (int i = 0; i < 40; i++){
                 for (int j = 0; j<8; j++){
                     addTree(new Vector2(i, j));
-                    
-                    
                 }
             }
         }
