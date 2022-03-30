@@ -18,6 +18,7 @@ namespace Swarms.Entities
         
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
+        
         private List<Vector2> getAdjacent()
         {
             var adjacent = new List<Vector2>();
@@ -68,7 +69,7 @@ namespace Swarms.Entities
             else return direction;
         }
         
-        private void move(GridLocation[][] grid)
+        public void move(GridLocation[][] grid)
         {
             var newPos = randomDirection(grid);
             var from = _location;
@@ -77,9 +78,5 @@ namespace Swarms.Entities
 
         }
 
-        public void autoMove(GridLocation[][] grid)
-        {
-            move(grid);
-        }
     }
 }

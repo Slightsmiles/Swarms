@@ -246,7 +246,7 @@ namespace Swarms.Datatypes.Grids
 
         public SquareGrid TickOnce()
         {
-            foreach(var agent in _agentList) agent.autoMove(_slots);
+            foreach(var agent in _agentList) agent.move(_slots);
             foreach (var tree in _treeList)
             {
                 tree.TickTemp(_treeList);
