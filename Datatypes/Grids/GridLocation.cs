@@ -56,5 +56,15 @@ namespace Swarms.Datatypes.Grids
                         &&  loc.Y >= 0 
                         &&  loc.Y < grid[0].Length;
         }
+
+         public double getEuclidianDistance(Vector2 target, Vector2 agent)
+         {
+             var dist = Math.Sqrt(Math.Pow(target.X - agent.X, 2) + Math.Pow(target.Y - agent.Y, 2));
+             
+             // we allegedly want 
+             var reciprocralVal = 1 / dist;
+             
+             return dist;
+         }
     }
 }
