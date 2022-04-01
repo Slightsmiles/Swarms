@@ -70,7 +70,7 @@ namespace Swarms.Datatypes.Grids
 
             setBaseGrid();
             //setBigGrid(); //works on 48/80 grid
-            setRiverGrid(); //only works on 24/40 grid
+            //setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
             gridImg = null;
 

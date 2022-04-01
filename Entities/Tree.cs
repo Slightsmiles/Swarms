@@ -10,7 +10,7 @@ namespace Swarms.Entities
     public class Tree : Boardentity
     {
 
-        bool isBurning;
+        public bool _isBurning {get; set;}
 
         public Tree(Vector2 location) : base(-1, false, location){
             _location = location;
@@ -67,9 +67,10 @@ namespace Swarms.Entities
                 adjacent.Add(new Vector2(_location.X + i, _location.Y)); //right
                 
                 var topRight = new Vector2(_location.X +i, _location.Y+i);
-                var topLeft = new Vector2(_location.X -i, _location.Y+i );
+                var topLeft = new Vector2(_location.X -i, _location.Y +i );
                 var botLeft = new Vector2(_location.X +i, _location.Y -i);
                 var botRight = new Vector2(_location.X-i, _location.Y -i);
+                
                 adjacent.Add(topRight);
                 adjacent.Add(topLeft);
                 adjacent.Add(botLeft);

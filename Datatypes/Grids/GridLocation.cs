@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 namespace Swarms.Datatypes.Grids
 {
     //individual grid locations
@@ -29,5 +30,31 @@ namespace Swarms.Datatypes.Grids
         }
 
 
+        protected List<Vector2> getAdjacent(GridLocation[][] grid, int range = 2)
+        {
+            var adjacent = new List<Vector2>();
+
+            for (int i = -range; i  <= range; i++)
+            {
+                for (int j = -range; j <= range; j++)
+                {
+                    var loc = new Vector2(_location.X + i, _location.Y + j);
+
+                    if((i==0 && j==0) || !isWithinBounds(loc, grid) ) continue;
+                    
+                    adjacent.Add(loc);
+                }
+
+            }
+            
+            return adjacent;
+        }
+
+         private bool isWithinBounds(Vector2 loc, GridLocation[][] grid) {
+            return      loc.X >= 0 
+                        &&  loc.X < grid.Length
+                        &&  loc.Y >= 0 
+                        &&  loc.Y < grid[0].Length;
+        }
     }
 }
