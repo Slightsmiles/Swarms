@@ -17,6 +17,7 @@ namespace Swarms.Entities
             _temp = 60;
             _color = GetColor();
         }
+        public Tree(){}
 
         
         public Color GetColor()

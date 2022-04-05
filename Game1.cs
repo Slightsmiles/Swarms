@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
+using System.Xml.Serialization;
 using Swarms.Datatypes.Grids;
 using Swarms.Entities;
 
@@ -155,6 +157,17 @@ namespace Swarms
                 {
                     initGrid();
                 }
+
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.S))
+                {
+                    Console.WriteLine("writing to xml");
+                    writeXML(_grid._slots);
+                }
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
+                {
+                    Console.WriteLine("reading from xml");
+                    _grid._slots = readXML();
+                }
             }
 
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
@@ -165,7 +178,26 @@ namespace Swarms
 
             } 
         }
-    
+
+        private GridLocation[][] readXML()
+        {
+            XmlSerializer reader = new XmlSerializer(typeof(SquareGrid));
+            StreamReader file = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//someGrid.xml");
+            var _slots = (GridLocation[][]) reader.Deserialize(file);
+
+            return _slots;
+        }
+
+        public void writeXML(GridLocation[][] grid)
+        {
+            System.Xml.Serialization.XmlSerializer writer =  new System.Xml.Serialization.XmlSerializer(typeof(GridLocation[][]));
+
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//someGrid.xml";
+            System.IO.FileStream file = System.IO.File.Create(path);
+            
+            writer.Serialize(file, grid);
+            file.Close();
+        }
     }
     
 }

@@ -15,7 +15,7 @@ namespace Swarms.Entities
             _temp = defaultTemp;
             _color = Color.Black;
         }
-        
+        public Agent(){}
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
         
