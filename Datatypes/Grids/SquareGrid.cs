@@ -48,8 +48,11 @@ namespace Swarms.Datatypes.Grids
         //this could just be made into a vector where X represents rows and Y represents columns but cba
 
         //I mean yes but wouldn't it be better to separate this from our model logic
-        private int _rowNums; // Y-dimension
-        private int _columnNums; // X-dimension
+        public int _rowNums {
+            get;
+            set;
+        } // Y-dimension
+        public int _columnNums { get; set; }  // X-dimension
 
 
         public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
@@ -80,7 +83,8 @@ namespace Swarms.Datatypes.Grids
 
         public SquareGrid()
         {
-            
+            _screenHeight = 480;
+            _screenWidth = 100000;
         }
         
 

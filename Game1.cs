@@ -22,7 +22,7 @@ namespace Swarms
         public int _screenWidth {get; private set;}
         public int _screenHeight {get; private set;}
 
-        private SquareGrid _grid;
+        public SquareGrid _grid;
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
@@ -161,12 +161,14 @@ namespace Swarms
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.S))
                 {
                     Console.WriteLine("writing to xml");
-                    writeXML(_grid._slots);
+                    writeXML2(_grid);
                 }
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
                 {
                     Console.WriteLine("reading from xml");
-                    _grid._slots = readXML();
+                    var newgrid = readXML2();
+                    _grid = newgrid;
+
                 }
             }
 
@@ -178,25 +180,46 @@ namespace Swarms
 
             } 
         }
-
-        private GridLocation[][] readXML()
+/*
+        private SquareGrid readXML()
         {
             XmlSerializer reader = new XmlSerializer(typeof(SquareGrid));
             StreamReader file = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//someGrid.xml");
-            var _slots = (GridLocation[][]) reader.Deserialize(file);
-
+            var _slots = (SquareGrid) reader.Deserialize(file);
+            
             return _slots;
         }
 
-        public void writeXML(GridLocation[][] grid)
+        public void writeXML(SquareGrid grid)
         {
-            System.Xml.Serialization.XmlSerializer writer =  new System.Xml.Serialization.XmlSerializer(typeof(GridLocation[][]));
+            
+            System.Xml.Serialization.XmlSerializer writer =  new System.Xml.Serialization.XmlSerializer(typeof(SquareGrid));
 
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//someGrid.xml";
-            System.IO.FileStream file = System.IO.File.Create(path);
+            StreamWriter file = System.IO.File.Create(path);
             
             writer.Serialize(file, grid);
             file.Close();
+        }
+
+*/
+        public void writeXML2(SquareGrid grid)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid));
+
+            StreamWriter writer = new StreamWriter("testGrid.xml");
+            serializer.Serialize(writer, grid);
+            writer.Close();
+        }
+
+        public SquareGrid readXML2()
+        {
+            var mySerializer = new XmlSerializer(typeof(SquareGrid));
+            using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
+
+            var grid = (SquareGrid) mySerializer.Deserialize(myFileStream);
+
+            return grid;
         }
     }
     
