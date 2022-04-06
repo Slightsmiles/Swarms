@@ -39,10 +39,6 @@ namespace Swarms.Entities
                 if(tree._temp >= 160) _temp += 4;
                 else if(tree._temp >= 80 && tree._temp < 160) _temp += 2;
             }
-            
-            Console.WriteLine("8==================================================D");
-            Console.WriteLine($"tree pos: {_location}");
-            Console.WriteLine($"tree temperature {_temp}");
 
             _color = GetColor();
         }
@@ -52,8 +48,6 @@ namespace Swarms.Entities
                 .Where(position => grid[(int)position.X][(int)position.Y].GetType() == typeof(Tree))
                 .Select(position => (Tree) grid[(int)position.X][(int)position.Y])
                 .ToList();
-
-            Console.WriteLine($"Adjacent trees {adjacentTrees.Count}");
 
             return adjacentTrees;
         }

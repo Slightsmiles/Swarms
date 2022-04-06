@@ -70,8 +70,8 @@ namespace Swarms.Datatypes.Grids
 
             setBaseGrid();
             //setBigGrid(); //works on 48/80 grid
-            setRiverGrid(); //only works on 24/40 grid
-            //setDenseForest();
+            //setRiverGrid(); //only works on 24/40 grid
+            setDenseForest();
             gridImg = null;
 
         }
@@ -262,7 +262,6 @@ namespace Swarms.Datatypes.Grids
         {
             foreach (var agent in _agentList)
             {
-                _slots[(int) agent._prevLocation.X][(int) agent._prevLocation.Y] = new Boardentity(1, true, agent._prevLocation);
                 _slots[(int) agent._location.X][(int) agent._location.Y] = agent;
             }
 
