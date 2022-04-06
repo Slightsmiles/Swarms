@@ -9,6 +9,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using Swarms.Entities;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 
 namespace Swarms.Datatypes.Grids
@@ -21,15 +25,13 @@ namespace Swarms.Datatypes.Grids
         //UPDATE THESE IF THE HEIGHT AND WIDTH CHANGES OBVIOUSLY ;DD;D;D;D;;D;D;D DONT U... FORGET ABOUT ME.
 
         //DONT DONT DONT DONT
-        public int _screenHeight {get; private set;}
-        public int _screenWidth {get; private set;}
+        public int _screenHeight {get;  set;}
+        public int _screenWidth {get;  set;}
         
         public Vector2 rectPosition;
         public float rectSpeed = 100f;
 
-        public Texture2D rectTexture;
-        // this is supposed to represent the img in each grid square
-        public Texture2D gridImg; 
+
 
         //slotDims: Size of each slot in the grid
         //gridDims: size of the entire grid. good since we use arrays
@@ -46,8 +48,11 @@ namespace Swarms.Datatypes.Grids
         //this could just be made into a vector where X represents rows and Y represents columns but cba
 
         //I mean yes but wouldn't it be better to separate this from our model logic
-        private int _rowNums; // Y-dimension
-        private int _columnNums; // X-dimension
+        public int _rowNums {
+            get;
+            set;
+        } // Y-dimension
+        public int _columnNums { get; set; }  // X-dimension
 
 
         public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
@@ -72,14 +77,18 @@ namespace Swarms.Datatypes.Grids
             //setBigGrid(); //works on 48/80 grid
             //setRiverGrid(); //only works on 24/40 grid
             setDenseForest();
-            gridImg = null;
 
+
+        }
+
+        public SquareGrid()
+        {
         }
         
 
         public void LoadContent(GraphicsDevice graphics){
-            rectTexture = new Texture2D(graphics, 1, 1);
-            rectTexture.SetData(new[] {Color.White});
+           // rectTexture = new Texture2D(graphics, 1, 1);
+           // rectTexture.SetData(new[] {Color.White});
  
         }
 
@@ -270,7 +279,9 @@ namespace Swarms.Datatypes.Grids
                 _slots[(int) tree._location.X][(int) tree._location.Y] = tree;
             }
         }
-           
-    
+
+
+        
+        
     }
 }

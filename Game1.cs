@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
+using System.Xml.Serialization;
 using Swarms.Datatypes.Grids;
 using Swarms.Entities;
 
@@ -20,7 +22,7 @@ namespace Swarms
         public int _screenWidth {get; private set;}
         public int _screenHeight {get; private set;}
 
-        private SquareGrid _grid;
+        public SquareGrid _grid;
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
@@ -161,7 +163,19 @@ namespace Swarms
                 {
                     initGrid();
                 }
-                
+
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.S))
+                {
+                    Console.WriteLine("writing to xml");
+                    writeXML(_grid);
+                }
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
+                {
+                    Console.WriteLine("reading from xml");
+                    var newgrid = readXML();
+                    _grid = newgrid;
+
+                }
             }
 
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
@@ -172,7 +186,25 @@ namespace Swarms
 
             } 
         }
-    
+
+        public void writeXML(SquareGrid grid)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid));
+
+            StreamWriter writer = new StreamWriter("testGrid.xml");
+            serializer.Serialize(writer, grid);
+            writer.Close();
+        }
+
+        public SquareGrid readXML()
+        {
+            var mySerializer = new XmlSerializer(typeof(SquareGrid));
+            using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
+
+            var grid = (SquareGrid) mySerializer.Deserialize(myFileStream);
+
+            return grid;
+        }
     }
     
 }

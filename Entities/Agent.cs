@@ -15,7 +15,6 @@ namespace Swarms.Entities
             _temp = defaultTemp;
             _color = Color.Black;
         }
-        
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
         
@@ -30,15 +29,19 @@ namespace Swarms.Entities
         //     return adjacent;
         // }
         
-
-        private void sendMessage()
+        
+        private void broadcastMessage(List<Agent> agents, GridLocation[][] grid)
         {
-            var yeet = "beet";
+            var message = "hey dude";
+            foreach (var agent in agents)
+            {
+                agent.receiveMessage(message);
+            }
         }
 
-        private void receiveMessage()
+        private void receiveMessage(String message)
         {
-            var beet = "yeet";
+            Console.WriteLine(message);
         }
 
         public void move(GridLocation[][] grid)
@@ -57,8 +60,23 @@ namespace Swarms.Entities
                 grid[(int)_location.X][(int)_location.Y] = this;
             }
 
-            else return;
+            var adjAgents = locateAgents(adjacent, grid);
+            broadcastMessage(adjAgents, grid);
 
+        }
+
+        private List<Agent> locateAgents(List<Vector2> locs, GridLocation[][] grid)
+        {
+            var nearbyAgents = new List<Agent>();
+            foreach (var loc in locs)
+            {
+                if (grid[(int)loc.X][(int)loc.Y].GetType() == typeof(Agent))
+                {
+                    nearbyAgents.Add((Agent)grid[(int)loc.X][(int)loc.Y]);
+                }
+            }
+
+            return nearbyAgents;
         }
 
         // This is where the magic happens
