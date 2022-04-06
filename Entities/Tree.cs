@@ -28,13 +28,17 @@ namespace Swarms.Entities
 
         public void tickTemp(GridLocation[][] grid, List<Tree> trees)
         {
-            var adjacentSquares = getAdjacent(grid);
+            var adjacentSquares = getAdjacent(grid, 5);
             var adjacentTrees = getAdjacentTrees(grid, adjacentSquares, trees);
             
             foreach (var tree in adjacentTrees)
             {
-                if(tree._temp >= 160) _temp += 4;
-                else if(tree._temp >= 80 && tree._temp < 160) _temp += 2;
+                var euclidianDistance = getEuclidianDistance(tree._location, _location);
+
+                var tempFactor = Math.Pow(0.5, Math.Floor(euclidianDistance)); // The further out the smaller the temperature increase
+
+                if(tree._temp >= 160) _temp += 4 * tempFactor;
+                else if(tree._temp >= 80 && tree._temp < 160) _temp += 2 * tempFactor;
             }
 
             _color = GetColor();
@@ -48,5 +52,7 @@ namespace Swarms.Entities
 
             return adjacentTrees;
         }
+
+        
     }
 }

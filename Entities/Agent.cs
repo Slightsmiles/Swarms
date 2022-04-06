@@ -8,16 +8,19 @@ namespace Swarms.Entities
 {
     public class Agent : Boardentity
     {
-        
         public Vector2 _prevLocation { get; set; }
-        public Agent(Vector2 location) : base(-1, false, location){
+        private List<Tree> availableTargets { get; set; }
+
+        public Agent(Vector2 location) : base(-1, false, location)
+        {
             _location = location;
             _temp = defaultTemp;
             _color = Color.Black;
+            availableTargets = new List<Tree>();
         }
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
-        
+
         // private List<Vector2> getAdjacent() {
         //     var adjacent = new List<Vector2>();
 
@@ -28,8 +31,8 @@ namespace Swarms.Entities
 
         //     return adjacent;
         // }
-        
-        
+
+
         private void broadcastMessage(List<Agent> agents, GridLocation[][] grid)
         {
             var message = "hey dude";
@@ -50,19 +53,19 @@ namespace Swarms.Entities
 
             Tree burningTree = locateTree(adjacent, grid);
 
-            if(burningTree == null) {
+            if (burningTree == null)
+            {
                 var newPos = randomDirection(adjacent, grid);
                 var from = _location;
                 _location = newPos;
                 _prevLocation = from;
 
-                grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
-                grid[(int)_location.X][(int)_location.Y] = this;
+                grid[(int) _prevLocation.X][(int) _prevLocation.Y] = new Boardentity(1, true, _prevLocation);
+                grid[(int) _location.X][(int) _location.Y] = this;
             }
 
             var adjAgents = locateAgents(adjacent, grid);
             broadcastMessage(adjAgents, grid);
-
         }
 
         private List<Agent> locateAgents(List<Vector2> locs, GridLocation[][] grid)
@@ -70,9 +73,9 @@ namespace Swarms.Entities
             var nearbyAgents = new List<Agent>();
             foreach (var loc in locs)
             {
-                if (grid[(int)loc.X][(int)loc.Y].GetType() == typeof(Agent))
+                if (grid[(int) loc.X][(int) loc.Y].GetType() == typeof(Agent))
                 {
-                    nearbyAgents.Add((Agent)grid[(int)loc.X][(int)loc.Y]);
+                    nearbyAgents.Add((Agent) grid[(int) loc.X][(int) loc.Y]);
                 }
             }
 
@@ -80,7 +83,8 @@ namespace Swarms.Entities
         }
 
         // This is where the magic happens
-        private Vector2 randomDirection(List<Vector2> adjacent, GridLocation[][] grid) {
+        private Vector2 randomDirection(List<Vector2> adjacent, GridLocation[][] grid)
+        {
             List<Vector2> availableMoves = checkAvailableMoves(adjacent, grid);
             
             if(availableMoves.FirstOrDefault() == null) return _location;
@@ -88,8 +92,8 @@ namespace Swarms.Entities
             var randomize = new Random().Next(0, availableMoves.Count);                                      
 
             var direction = availableMoves[randomize];
-            
-            if(availableMoves.Count == 0) return this._location;
+
+            if (availableMoves.Count == 0) return this._location;
             else return direction;
         }
 
@@ -106,32 +110,70 @@ namespace Swarms.Entities
             return available;
         }
 
-        private bool isTraversable(Vector2 location, GridLocation[][] grid) {
+        private bool isTraversable(Vector2 location, GridLocation[][] grid)
+        {
             return grid[(int) location.X][(int) location.Y]._traversable;
         }
 
-        private Tree locateTree(List<Vector2> adjacent, GridLocation[][] grid) {
+        private Tree locateTree(List<Vector2> adjacent, GridLocation[][] grid)
+        {
             var trees = adjacent
-                .Where(postion => grid[(int)postion.X][(int)postion.Y].GetType() == typeof(Tree))
-                .Select(position => (Tree) grid[(int)position.X][(int)position.Y]).ToList();
+                .Where(postion => grid[(int) postion.X][(int) postion.Y].GetType() == typeof(Tree))
+                .Select(position => (Tree) grid[(int) position.X][(int) position.Y]).ToList();
 
             Tree muchBurningSuchTree = null;
 
             foreach(var tree in trees) {
+                availableTargets.Add(tree);
                 if(muchBurningSuchTree == null && tree._temp >= 80) muchBurningSuchTree = tree;
                 else if(muchBurningSuchTree != null&& tree._temp > muchBurningSuchTree._temp && muchBurningSuchTree._isBurning) { 
                     muchBurningSuchTree = tree;
                 }
             }
+
             return muchBurningSuchTree;
         }
 
-                public bool isSquareOccupied(GridLocation[][] grid, Vector2 position) {
-
-            var gLType = grid[(int)position.X][(int)position.Y].GetType();
-            return     gLType == typeof(Agent)
-                    || gLType == typeof(Tree)
-                    || gLType == typeof(Obstacle);
+        public bool isSquareOccupied(GridLocation[][] grid, Vector2 position)
+        {
+            var gLType = grid[(int) position.X][(int) position.Y].GetType();
+            return gLType == typeof(Agent)
+                   || gLType == typeof(Tree)
+                   || gLType == typeof(Obstacle);
+        }      
+        
+        //this is formula(4)
+        public double fromEuclidToReciprocral(Double dist)
+        {
+            return 1 / dist;
         }
+        
+        
+        //This is Qi in formula(5)
+        private double getQuality(Tree target)
+        {
+            //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
+            
+            return 0.0;
+        }
+        
+        //This is qi in formula(5), or the finished formula(5)
+        private double allQualities(Tree target)
+        {
+            var current = getQuality(target);
+            var sum = 0.0;
+            foreach (var tree in availableTargets)
+            {
+                if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
+            }
+
+            return current / sum;
+        }
+        
+        //this is formula (6), or act of computing ultility
+        
+
+         
+        
     }
 }

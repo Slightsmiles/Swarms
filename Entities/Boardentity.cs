@@ -5,7 +5,7 @@ namespace Swarms.Entities
 {
     public class Boardentity : GridLocation
     {
-        public int _temp {get; set;}
+        public double _temp {get; set;}
 
         public Boardentity(float cost, bool traversable, Vector2 location) : base(cost, location, traversable){
             

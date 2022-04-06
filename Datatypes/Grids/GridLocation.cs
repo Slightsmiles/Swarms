@@ -55,15 +55,15 @@ namespace Swarms.Datatypes.Grids
                         &&  loc.Y >= 0 
                         &&  loc.Y < grid[0].Length;
         }
+        
+        //this is formula(3)    
+        protected double getEuclidianDistance(Vector2 target, Vector2 origin)
+        {
+            var dist = Math.Sqrt(Math.Pow(target.X - origin.X, 2) + Math.Pow(target.Y - origin.Y, 2));
+             
+            return dist;
+        }
 
-         public double getEuclidianDistance(Vector2 target, Vector2 agent)
-         {
-             var dist = Math.Sqrt(Math.Pow(target.X - agent.X, 2) + Math.Pow(target.Y - agent.Y, 2));
-             
-             // we allegedly want 
-             var reciprocralVal = 1 / dist;
-             
-             return dist;
-         }
+
     }
 }
