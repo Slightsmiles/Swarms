@@ -22,7 +22,6 @@ namespace Swarms.Entities
             Console.WriteLine($"tree temp: {_temp}");
             Console.WriteLine($"tree isBurning: {_isBurning}");
         }
-        public Tree(){}
 
         
         public Color GetColor()
