@@ -23,6 +23,10 @@ namespace Swarms.Entities
             Console.WriteLine($"tree isBurning: {_isBurning}");
         }
 
+        public Tree()
+        {
+            
+        }
         
         public Color GetColor()
         {

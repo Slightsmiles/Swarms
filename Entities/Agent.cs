@@ -18,6 +18,11 @@ namespace Swarms.Entities
             _color = Color.Black;
             availableTargets = new List<Tree>();
         }
+
+        public Agent()
+        {
+            
+        }
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
 
