@@ -61,10 +61,18 @@ namespace Swarms.Datatypes.Grids
          {
              var dist = Math.Sqrt(Math.Pow(target.X - agent.X, 2) + Math.Pow(target.Y - agent.Y, 2));
              
-             // we allegedly want 
-             var reciprocralVal = 1 / dist;
-             
              return dist;
+         }
+
+         public double fromEuclidToReciprocral(Double dist)
+         {
+             return 1 / dist;
+         }
+
+         public double scalarQuality()
+         {
+            
+             return 0.0;
          }
     }
 }
