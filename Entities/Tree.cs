@@ -18,9 +18,6 @@ namespace Swarms.Entities
             _temp = temp;
             _isBurning = temp >= 80; //Maybe do the computation in agent instead of global variable?
             _color = GetColor();
-            
-            Console.WriteLine($"tree temp: {_temp}");
-            Console.WriteLine($"tree isBurning: {_isBurning}");
         }
 
         

@@ -83,6 +83,8 @@ namespace Swarms.Entities
         private Vector2 randomDirection(List<Vector2> adjacent, GridLocation[][] grid) {
             List<Vector2> availableMoves = checkAvailableMoves(adjacent, grid);
             
+            if(availableMoves.FirstOrDefault() == null) return _location;
+
             var randomize = new Random().Next(0, availableMoves.Count);                                      
 
             var direction = availableMoves[randomize];
@@ -100,7 +102,6 @@ namespace Swarms.Entities
                                                     || position.X - _location.X > 1
                                                     || position.Y - _location.Y > 1)
                                                 && !isSquareOccupied(grid, position)).ToList();
-            foreach(var loc in available) Console.WriteLine($"x: {loc.X}, y: {loc.Y}");
 
             return available;
         }
@@ -117,8 +118,10 @@ namespace Swarms.Entities
             Tree muchBurningSuchTree = null;
 
             foreach(var tree in trees) {
-                if(muchBurningSuchTree == null) muchBurningSuchTree = tree;
-                if(tree._temp > muchBurningSuchTree._temp && muchBurningSuchTree._isBurning) muchBurningSuchTree = tree;
+                if(muchBurningSuchTree == null && tree._temp >= 80) muchBurningSuchTree = tree;
+                else if(muchBurningSuchTree != null&& tree._temp > muchBurningSuchTree._temp && muchBurningSuchTree._isBurning) { 
+                    muchBurningSuchTree = tree;
+                }
             }
             return muchBurningSuchTree;
         }
