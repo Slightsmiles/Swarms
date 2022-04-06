@@ -56,22 +56,6 @@ namespace Swarms.Datatypes.Grids
                         &&  loc.Y < grid[0].Length;
         }
 
-         public double getEuclidianDistance(Vector2 target, Vector2 agent)
-         {
-             var dist = Math.Sqrt(Math.Pow(target.X - agent.X, 2) + Math.Pow(target.Y - agent.Y, 2));
-             
-             return dist;
-         }
 
-         public double fromEuclidToReciprocral(Double dist)
-         {
-             return 1 / dist;
-         }
-
-         public double scalarQuality()
-         {
-            
-             return 0.0;
-         }
     }
 }
