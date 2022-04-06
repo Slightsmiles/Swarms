@@ -70,7 +70,7 @@ namespace Swarms.Datatypes.Grids
 
             setBaseGrid();
             //setBigGrid(); //works on 48/80 grid
-            //setRiverGrid(); //only works on 24/40 grid
+            setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
             gridImg = null;
 
@@ -107,12 +107,14 @@ namespace Swarms.Datatypes.Grids
             _agentList.Remove(agent);
         }
 
-        public void addTree(Vector2 pos)
+        public void addTree(Vector2 pos, int temp = 30)
         {
             var (x, y) = pos;
-            var tree = new Tree(new Vector2(x,y));
+            var tree = new Tree(new Vector2(x,y), temp);
             _slots[(int)x][(int)y] = tree;
             _treeList.Add(tree);
+            
+            Console.WriteLine($"Num of trees {_treeList.Count}");
         }
         
         public virtual bool isFilled(Vector2 slot)
@@ -249,7 +251,7 @@ namespace Swarms.Datatypes.Grids
             foreach(var agent in _agentList) agent.move(_slots);
             foreach (var tree in _treeList)
             {
-                tree.TickTemp(_treeList);
+                tree.tickTemp(_slots, _treeList);
             }
             UpdateGrid();
             return this;
