@@ -11,6 +11,13 @@ namespace Swarms.Entities
         public Vector2 _prevLocation { get; set; }
         private List<Tree> availableTargets { get; set; }
 
+        //these are our tweakable bias parameters.
+        //Lessening alpha will lessen the bias of target quality.
+        //Lessening beta will lessen the bias of cost to target
+        // alpha, beta > 0; a,b in real numbers
+        double alpha = 1.00000;
+        double beta = 1.00000;
+        
         public Agent(Vector2 location) : base(-1, false, location)
         {
             _location = location;
@@ -157,6 +164,8 @@ namespace Swarms.Entities
              
             return dist;
         }
+        
+        
         //this is formula(4)
         public double fromEuclidToReciprocral(Double dist)
         {
@@ -179,15 +188,32 @@ namespace Swarms.Entities
             var sum = 0.0;
             foreach (var tree in availableTargets)
             {
-                if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
+               // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
+                sum += getQuality(tree); // i believe this to be correct.
             }
 
             return current / sum;
         }
         
-        //this is formula (6), or act of computing ultility
-        
+        //this is formula (6), or computation of utility
 
+        public double computeFinalProbability(Tree target)
+        {
+            
+            double qi = allQualities(target) * alpha;
+            double ni = fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)) * beta;
+            var sum = 0.0;
+            
+            foreach (var tree in availableTargets)
+            {
+                
+                sum += (allQualities(tree) * alpha) * (fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)) * beta);
+            }
+
+            var result = (qi * ni) / sum;
+          
+            return result;
+        }
          
         
     }
