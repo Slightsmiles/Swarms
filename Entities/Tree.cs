@@ -20,6 +20,10 @@ namespace Swarms.Entities
             _color = GetColor();
         }
 
+        public Tree()
+        {
+            
+        }
         
         public Color GetColor()
         {
