@@ -125,13 +125,13 @@ namespace Swarms
                 Trace.WriteLine(_grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
             }
             // Below is for adding and removing stuff
-            if (_currentKeyboardState.IsKeyDown(Keys.LeftControl))
+            if (_currentKeyboardState.IsKeyDown(Keys.LeftControl) || _currentKeyboardState.IsKeyDown(Keys.RightControl))
             {
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
+                    if(isSquareOccupied(position)) return;
                     _grid.addTree(position);
-                    //_grid._slots[(int)posX][(int)posY] = _grid.addTree(new Tree(position));
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.A))
@@ -147,8 +147,14 @@ namespace Swarms
 
                 }
 
+                if(_currentKeyboardState.IsKeyDown(Keys.B))
+                {
+                    if(isSquareOccupied(position)) return;
+                    _grid.addTree(position, 80);
+                }
+
                 //used for clearing
-                if (_currentKeyboardState.IsKeyDown(Keys.Space))
+                if (_currentKeyboardState.IsKeyDown(Keys.Back))
                 {
                     _grid._slots[(int)posX][(int)posY] = new Boardentity(1, true, position);
                 }

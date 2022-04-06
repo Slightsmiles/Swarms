@@ -29,7 +29,6 @@ namespace Swarms.Datatypes.Grids
             _traversable = traversable;
         }
 
-        public GridLocation(){}
         protected List<Vector2> getAdjacent(GridLocation[][] grid, int range = 2)
         {
             var adjacent = new List<Vector2>();

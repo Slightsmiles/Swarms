@@ -16,7 +16,6 @@ namespace Swarms.Entities
             _temp = defaultTemp;
             _color = Color.Black;
         }
-        public Agent(){}
         // -------Mulig Optimering-------
         // Måske en IEnumerable<Vector2> eller andet her for memory reasons
         
@@ -57,6 +56,9 @@ namespace Swarms.Entities
                 var from = _location;
                 _location = newPos;
                 _prevLocation = from;
+
+                grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
+                grid[(int)_location.X][(int)_location.Y] = this;
             }
 
             var adjAgents = locateAgents(adjacent, grid);
@@ -82,9 +84,7 @@ namespace Swarms.Entities
         private Vector2 randomDirection(List<Vector2> adjacent, GridLocation[][] grid) {
             List<Vector2> availableMoves = checkAvailableMoves(adjacent, grid);
             
-            var randomize = new Random().Next(0, availableMoves.Count);
-
-                                                 
+            var randomize = new Random().Next(0, availableMoves.Count);                                      
 
             var direction = availableMoves[randomize];
             
@@ -99,7 +99,9 @@ namespace Swarms.Entities
                                                 && !(position.X - _location.X < -1 
                                                     || position.Y - _location.Y < -1
                                                     || position.X - _location.X > 1
-                                                    || position.Y - _location.Y > 1)).ToList();
+                                                    || position.Y - _location.Y > 1)
+                                                && !isSquareOccupied(grid, position)).ToList();
+            foreach(var loc in available) Console.WriteLine($"x: {loc.X}, y: {loc.Y}");
 
             return available;
         }
@@ -120,6 +122,14 @@ namespace Swarms.Entities
                 if(tree._temp > muchBurningSuchTree._temp && muchBurningSuchTree._isBurning) muchBurningSuchTree = tree;
             }
             return muchBurningSuchTree;
+        }
+
+                public bool isSquareOccupied(GridLocation[][] grid, Vector2 position) {
+
+            var gLType = grid[(int)position.X][(int)position.Y].GetType();
+            return     gLType == typeof(Agent)
+                    || gLType == typeof(Tree)
+                    || gLType == typeof(Obstacle);
         }
     }
 }
