@@ -83,8 +83,6 @@ namespace Swarms.Datatypes.Grids
 
         public SquareGrid()
         {
-            _screenHeight = 480;
-            _screenWidth = 100000;
         }
         
 

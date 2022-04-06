@@ -161,12 +161,12 @@ namespace Swarms
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.S))
                 {
                     Console.WriteLine("writing to xml");
-                    writeXML2(_grid);
+                    writeXML(_grid);
                 }
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
                 {
                     Console.WriteLine("reading from xml");
-                    var newgrid = readXML2();
+                    var newgrid = readXML();
                     _grid = newgrid;
 
                 }
@@ -180,30 +180,8 @@ namespace Swarms
 
             } 
         }
-/*
-        private SquareGrid readXML()
-        {
-            XmlSerializer reader = new XmlSerializer(typeof(SquareGrid));
-            StreamReader file = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//someGrid.xml");
-            var _slots = (SquareGrid) reader.Deserialize(file);
-            
-            return _slots;
-        }
 
         public void writeXML(SquareGrid grid)
-        {
-            
-            System.Xml.Serialization.XmlSerializer writer =  new System.Xml.Serialization.XmlSerializer(typeof(SquareGrid));
-
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//someGrid.xml";
-            StreamWriter file = System.IO.File.Create(path);
-            
-            writer.Serialize(file, grid);
-            file.Close();
-        }
-
-*/
-        public void writeXML2(SquareGrid grid)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid));
 
@@ -212,7 +190,7 @@ namespace Swarms
             writer.Close();
         }
 
-        public SquareGrid readXML2()
+        public SquareGrid readXML()
         {
             var mySerializer = new XmlSerializer(typeof(SquareGrid));
             using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
