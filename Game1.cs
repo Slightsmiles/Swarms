@@ -27,8 +27,14 @@ namespace Swarms
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
 
-        public Game1()
+        public int _gridSizeX {get; set;}
+        public int _gridSizeY {get; set;}
+
+        public Game1(int gridSizeX, int gridSizeY)
         {
+            _gridSizeX = gridSizeX;
+            _gridSizeY = gridSizeY;
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -49,7 +55,7 @@ namespace Swarms
 
         protected void initGrid()
         {
-            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight);
+            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY);
 
         }
         

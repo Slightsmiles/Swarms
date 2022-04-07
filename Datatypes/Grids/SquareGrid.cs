@@ -38,7 +38,9 @@ namespace Swarms.Datatypes.Grids
         //gridOffset helps us tremendously since reasons
         //totalphysicalDims: slotDims*gridDims
         // caching for what we hover over, prolly doesnt matter to us since this aint no game
-        public Vector2 _slotDims, _gridOffset, _currentHoverSlot;
+        public Vector2 _gridOffset, _currentHoverSlot;
+
+        public float _slotDim;
 
         //this is essentially our matrix for all the squares.
         public GridLocation[][] _slots {get; set;}
@@ -48,14 +50,11 @@ namespace Swarms.Datatypes.Grids
         //this could just be made into a vector where X represents rows and Y represents columns but cba
 
         //I mean yes but wouldn't it be better to separate this from our model logic
-        public int _rowNums {
-            get;
-            set;
-        } // Y-dimension
+        public int _rowNums {get; set;} // Y-dimension
         public int _columnNums { get; set; }  // X-dimension
 
 
-        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int rowNums = 24, int columnNums = 40)
+        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
@@ -64,7 +63,7 @@ namespace Swarms.Datatypes.Grids
             _columnNums = columnNums;
 
             showGrid = true;
-            _slotDims = new Vector2(_screenWidth / _columnNums, _screenHeight / _rowNums);
+            _slotDim = Math.Min(_screenWidth / _columnNums, _screenHeight / _rowNums); //We simply pick the smallest dimension of the squares to make sure all can fit on the screen
             _gridOffset = new Vector2((int)startPos.X, (int)startPos.Y);
 
             _currentHoverSlot = new Vector2(-1,-1); // For debugging purposes
@@ -135,7 +134,7 @@ namespace Swarms.Datatypes.Grids
         public virtual Vector2 getSlotFromPixel(Vector2 pix){
             Vector2 adjustedPos = pix - _gridOffset;
 
-            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/_slotDims.X)), _slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/_slotDims.X)), _slots[0].Count()-1));
+            Vector2 tempVec = new Vector2(Math.Min(Math.Max(0,(int)(adjustedPos.X/_slotDim)), _slots.Count()-1), Math.Min(Math.Max(0, (int)(adjustedPos.Y/_slotDim)), _slots[0].Count()-1));
             
             return tempVec;
         }
@@ -218,28 +217,29 @@ namespace Swarms.Datatypes.Grids
         
         public virtual void drawGrid(Vector2 offset, SpriteBatch spriteBatch, Texture2D texture){
             //needs some actual drawing logic i guess
+
             if(showGrid){
                 spriteBatch.Begin();
                 //dimensional check, draw this out at some point 
                 for(int j = 0; j < _columnNums; j++){
                     //var yOffset = offset.Y + 50*j;
-                    var xOffset = (int)(offset.X + _slotDims.X * j);
+                    var xOffset = (int)(offset.X + _slotDim * j);
 
                     for (int k = 0; k < _rowNums; k++){
                         //Since we're using a KVADRAT XD, the offset needs to be of same size in both Y and X direction, therefore slotDims.X*k.
-                        var yOffset = (int)(offset.Y + _slotDims.X * k);
+                        var yOffset = (int)(offset.Y + _slotDim * k);
 
                         var color = _slots[j][k]._color;
-                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDims.X, (int)_slotDims.X),Color.White,2);
+                        RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDim, (int)_slotDim),Color.White,2);
                         switch(_slots[j][k].GetType().Name){
                             case nameof(Agent):
-                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDims.X, (int)_slotDims.X), color);
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
                                 break;
                             case nameof(Tree):
-                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDims.X, (int)_slotDims.X),color);
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim),color);
                                 break;
                             case nameof(Obstacle):
-                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDims.X, (int)_slotDims.X),color);
+                                RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim),color);
                                 break;  
 
                         }
