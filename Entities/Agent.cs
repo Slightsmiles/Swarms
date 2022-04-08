@@ -198,11 +198,9 @@ namespace Swarms.Entities
                 sum += Math.Pow(allQualities(tree),alpha) * Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)), beta);
             }
 
-            var result = (qi * ni) / sum;
+            var probability = (qi * ni) / sum;
           
-            return result;
+            return probability;
         }
-         
-        
     }
 }

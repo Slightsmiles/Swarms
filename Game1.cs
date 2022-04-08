@@ -30,10 +30,13 @@ namespace Swarms
         public int _gridSizeX {get; set;}
         public int _gridSizeY {get; set;}
 
-        public Game1(int gridSizeX, int gridSizeY)
+        public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
+
+            _screenHeight = screenHeight;
+            _screenWidth = screenWidth;
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -42,8 +45,6 @@ namespace Swarms
 
         protected override void Initialize()
         {
-            _screenHeight = DEFAULT_SCREEN_HEIGHT;
-            _screenWidth = DEFAULT_SCREEN_WIDTH;
 
             // TODO: Add your initialization logic here
             initSize();
