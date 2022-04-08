@@ -9,7 +9,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         public Vector2 _prevLocation { get; set; }
-        private List<Tree> availableTargets { get; set; }
+        public List<Tree> availableTargets { get; set; }
 
         //these are our tweakable bias parameters.
         //Lessening alpha will lessen the bias of target quality.
@@ -198,11 +198,9 @@ namespace Swarms.Entities
                 sum += (allQualities(tree) * alpha) * (fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)) * beta);
             }
 
-            var result = (qi * ni) / sum;
+            var probability = (qi * ni) / sum;
           
-            return result;
+            return probability;
         }
-         
-        
     }
 }

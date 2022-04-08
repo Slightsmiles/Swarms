@@ -250,11 +250,6 @@ namespace Swarms.Datatypes.Grids
             }
         }
 
-        //---------------------------------------------------------------------------------
-        //-- Jeg er ikke sikker på jeg er enig i at move logikken skal være i SquareGrid --
-        //---------------------------------------------------------------------------------
-        // Lad os tage den næste gang vi mødes
-
         public SquareGrid TickOnce()
         {
             foreach(var agent in _agentList) agent.move(_slots);
@@ -278,10 +273,6 @@ namespace Swarms.Datatypes.Grids
             {
                 _slots[(int) tree._location.X][(int) tree._location.Y] = tree;
             }
-        }
-
-
-        
-        
+        }     
     }
 }
