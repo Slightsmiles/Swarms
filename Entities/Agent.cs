@@ -9,7 +9,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         public Vector2 _prevLocation { get; set; }
-        private List<Tree> availableTargets { get; set; }
+        public List<Tree> availableTargets { get; set; }
 
         //these are our tweakable bias parameters.
         //Lessening alpha will lessen the bias of target quality.
@@ -146,7 +146,7 @@ namespace Swarms.Entities
             return muchBurningSuchTree;
         }
 
-        public bool isSquareOccupied(GridLocation[][] grid, Vector2 position)
+        private bool isSquareOccupied(GridLocation[][] grid, Vector2 position)
         {
             var gLType = grid[(int) position.X][(int) position.Y].GetType();
             return gLType == typeof(Agent)
@@ -155,7 +155,7 @@ namespace Swarms.Entities
         }      
         
         //this is formula(4)
-        public double fromEuclidToReciprocral(Double dist)
+        private double fromEuclidToReciprocral(Double dist)
         {
             return 1 / dist;
         }
@@ -188,14 +188,14 @@ namespace Swarms.Entities
         public double computeFinalProbability(Tree target)
         {
             
-            double qi = allQualities(target) * alpha;
-            double ni = fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)) * beta;
+            double qi = Math.Pow(allQualities(target), alpha);
+            double ni = Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)), beta);
             var sum = 0.0;
             
             foreach (var tree in availableTargets)
             {
                 
-                sum += (allQualities(tree) * alpha) * (fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)) * beta);
+                sum += Math.Pow(allQualities(tree),alpha) * Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)), beta);
             }
 
             var result = (qi * ni) / sum;
