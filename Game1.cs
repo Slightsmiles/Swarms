@@ -29,8 +29,15 @@ namespace Swarms
 
         public int _gridSizeX {get; set;}
         public int _gridSizeY {get; set;}
+        
+        
+        //Logging variables
+        public int _tickCounter { get; set; }
+        public Logger _logger { get; set; }
+        
+        public bool isLogging { get; set; }
 
-        public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth)
+        public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth, bool logging)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -41,6 +48,9 @@ namespace Swarms
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            isLogging = logging;
+            _logger = new Logger();
         }
 
         protected override void Initialize()
@@ -187,7 +197,39 @@ namespace Swarms
 
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
+
+                if (isLogging)
+                {
+                    for (int i = 0; i < 20; i++)
+                    {
+                        _grid = _grid.TickOnce();
+                        _tickCounter++;
+                        _logger.logLocations(_tickCounter, _grid);
+                    }
+
+                    _logger.logLocations(_tickCounter, _grid);
+
+                    for (int i = 20; i < 60; i++)
+                    {
+                        _grid = _grid.TickOnce();
+                        _logger.logLocations(_tickCounter, _grid);
+                    }
+
+                    _logger.logLocations(_tickCounter, _grid);
+
+
+                    for (int i = 60; i < 100; i++)
+                    {
+                        _grid = _grid.TickOnce();
+                        _logger.logLocations(_tickCounter, _grid);
+                    }
+                    
+                }
+                else
+                {
                     _grid = _grid.TickOnce();
+                    _tickCounter++;
+                }
             } 
         }
 
