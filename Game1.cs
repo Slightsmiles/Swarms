@@ -187,10 +187,7 @@ namespace Swarms
 
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
-                
                     _grid = _grid.TickOnce();
-
-
             } 
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Swarms.Datatypes.Grids;
+using Swarms.Utility;
 
 namespace Swarms.Entities
 {
@@ -56,14 +57,14 @@ namespace Swarms.Entities
 
         private void receiveMessage(String message)
         {
-            Console.WriteLine(message);
+            //Console.WriteLine(message);
         }
 
         public void move(GridLocation[][] grid)
         {
             var adjacent = getAdjacent(grid);
 
-            Tree burningTree = locateTree(adjacent, grid);
+            Tree burningTree = weightedDecision(adjacent, grid);
 
             if (burningTree == null)
             {
@@ -166,7 +167,7 @@ namespace Swarms.Entities
         {
             //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
             
-            return 0.0;
+            return 1.0;
         }
         
         //This is qi in formula(5), or the finished formula(5)
@@ -190,7 +191,7 @@ namespace Swarms.Entities
             
             double qi = Math.Pow(allQualities(target), alpha);
             double ni = Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)), beta);
-            var sum = 0.0;
+            double sum = 0.0;
             
             foreach (var tree in availableTargets)
             {
@@ -200,7 +201,25 @@ namespace Swarms.Entities
 
             var probability = (qi * ni) / sum;
           
+            Console.WriteLine(probability);
             return probability;
+        }
+
+        private Tree weightedDecision(List<Vector2> adjacent, GridLocation[][] grid) {
+
+            var trees = adjacent
+                .Where(postion => grid[(int) postion.X][(int) postion.Y].GetType() == typeof(Tree))
+                .Select(position => (Tree) grid[(int) position.X][(int) position.Y]).ToList();
+
+            availableTargets = trees;
+
+            var weightedRandomBag = new WeightedRandomBag<Tree>();
+
+            foreach(var tree in availableTargets) {    
+                var probability = computeFinalProbability(tree);
+                weightedRandomBag.add(tree, probability);
+            }
+            return weightedRandomBag.getRandom();
         }
     }
 }
