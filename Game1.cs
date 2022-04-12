@@ -204,6 +204,7 @@ namespace Swarms
                     {
                         _grid = _grid.TickOnce();
                         _tickCounter++;
+                        _logger.logLocations(_tickCounter, _grid);
                     }
 
                     _logger.logLocations(_tickCounter, _grid);
@@ -211,7 +212,7 @@ namespace Swarms
                     for (int i = 20; i < 60; i++)
                     {
                         _grid = _grid.TickOnce();
-                        _tickCounter++;
+                        _logger.logLocations(_tickCounter, _grid);
                     }
 
                     _logger.logLocations(_tickCounter, _grid);
@@ -220,10 +221,9 @@ namespace Swarms
                     for (int i = 60; i < 100; i++)
                     {
                         _grid = _grid.TickOnce();
-                        _tickCounter++;
+                        _logger.logLocations(_tickCounter, _grid);
                     }
-
-                    _logger.logLocations(_tickCounter, _grid);
+                    
                 }
                 else
                 {
