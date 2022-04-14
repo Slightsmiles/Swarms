@@ -128,25 +128,6 @@ namespace Swarms.Entities
             return grid[(int) location.X][(int) location.Y]._traversable;
         }
 
-        private Tree locateTree(List<Vector2> adjacent, GridLocation[][] grid)
-        {
-            var trees = adjacent
-                .Where(postion => grid[(int) postion.X][(int) postion.Y].GetType() == typeof(Tree))
-                .Select(position => (Tree) grid[(int) position.X][(int) position.Y]).ToList();
-
-            Tree muchBurningSuchTree = null;
-
-            foreach(var tree in trees) {
-                availableTargets.Add(tree);
-                if(muchBurningSuchTree == null && tree._temp >= 80) muchBurningSuchTree = tree;
-                else if(muchBurningSuchTree != null&& tree._temp > muchBurningSuchTree._temp && muchBurningSuchTree._isBurning) { 
-                    muchBurningSuchTree = tree;
-                }
-            }
-
-            return muchBurningSuchTree;
-        }
-
         private bool isSquareOccupied(GridLocation[][] grid, Vector2 position)
         {
             var gLType = grid[(int) position.X][(int) position.Y].GetType();
@@ -215,11 +196,17 @@ namespace Swarms.Entities
 
             var weightedRandomBag = new WeightedRandomBag<Tree>();
 
-            foreach(var tree in availableTargets) {    
+            foreach(var tree in availableTargets) {
+                if(!isBurning(tree)) continue;   
+                
                 var probability = computeFinalProbability(tree);
                 weightedRandomBag.add(tree, probability);
             }
             return weightedRandomBag.getRandom();
+        }
+
+        private bool isBurning(Tree tree) {
+            return tree._temp >= 80;
         }
     }
 }
