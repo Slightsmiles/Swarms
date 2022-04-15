@@ -1,14 +1,15 @@
+using Microsoft.Xna.Framework;
 namespace Swarms.Entities
 {
     public class Path
     {
-        protected Location startPoint;
-        protected Location endPoint;
+        protected Vector2 startPoint;
+        protected Vector2 endPoint;
 
-        public Location getStartPoint(){
+        public Vector2 getStartPoint(){
             return startPoint;
         }
-        public Location getEndPoint(){
+        public Vector2 getEndPoint(){
             return endPoint;
         }
     }

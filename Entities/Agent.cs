@@ -10,7 +10,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         public Vector2 _prevLocation { get; set; }
-        public Tree _target {get; private set;}
+        public Tree _target {get; set;}
         public List<Tree> availableTargets { get; set; }
 
         //these are our tweakable bias parameters.
@@ -26,6 +26,8 @@ namespace Swarms.Entities
             _temp = defaultTemp;
             _color = Color.Black;
             availableTargets = new List<Tree>();
+            
+            sendMessage += receiveMessage;
         }
 
         public Agent()
@@ -33,27 +35,27 @@ namespace Swarms.Entities
             
         }
 
-        private void broadcastMessage(List<Agent> agents, GridLocation[][] grid)
-        {
-            var message = "hey dude";
-            foreach (var agent in agents)
-            {
-                agent.receiveMessage(message);
-            }
+        public static void receiveMessage(object agent, String message) {
+            var herp = agent as Agent;
+            Console.WriteLine($"-------------------Agent: {herp._location}-------------------\n{message}");
         }
 
-        private void receiveMessage(String message)
-        {
-            //Console.WriteLine(message);
+        public event EventHandler<String> sendMessage;
+
+        protected virtual void onMessageReceived(String message) {
+            sendMessage?.Invoke(this, message);
         }
 
         public void move(GridLocation[][] grid)
         {
             var adjacent = getAdjacent(grid);
 
-            Tree burningTree = weightedDecision(adjacent, grid);
+            _target = weightedDecision(adjacent, grid);
 
-            if (burningTree == null)
+            var adjAgents = locateAgents(adjacent, grid);
+            broadcast(adjAgents);
+
+            if (_target == null)
             {
                 var newPos = randomDirection(adjacent, grid);
                 var from = _location;
@@ -63,9 +65,14 @@ namespace Swarms.Entities
                 grid[(int) _prevLocation.X][(int) _prevLocation.Y] = new Boardentity(1, true, _prevLocation);
                 grid[(int) _location.X][(int) _location.Y] = this;
             }
+        }
 
-            var adjAgents = locateAgents(adjacent, grid);
-            broadcastMessage(adjAgents, grid);
+        public void broadcast(List<Agent> agents) {
+            foreach (var agent in agents)
+            {
+                if(agent._target == null) onMessageReceived("OHNO"); 
+                else onMessageReceived($"WHOOOOOOOOOOOOAH I found something at: {agent?._target?._location}");    
+            }
         }
 
         private List<Agent> locateAgents(List<Vector2> locs, GridLocation[][] grid)
