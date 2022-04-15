@@ -73,6 +73,14 @@ namespace Swarms.Datatypes.Grids
             //setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
 
+            //TODO: Remove this for final product
+            //Weighted decision debug stuff
+
+            addAgent(new Vector2(5,5));
+            addTree(new Vector2(5,7), 160, 1);
+            addTree(new Vector2(7,5), 380, 2);
+            addTree(new Vector2(5,6), 80, 3);
+            addTree(new Vector2(6,5), 30, 4);
 
         }
 
@@ -111,14 +119,12 @@ namespace Swarms.Datatypes.Grids
             _agentList.Remove(agent);
         }
 
-        public void addTree(Vector2 pos, int temp = 30)
+        public void addTree(Vector2 pos, int temp = 30, int id = 0)
         {
             var (x, y) = pos;
-            var tree = new Tree(new Vector2(x,y), temp);
+            var tree = new Tree(new Vector2(x,y), temp, id);
             _slots[(int)x][(int)y] = tree;
             _treeList.Add(tree);
-            
-            Console.WriteLine($"Num of trees {_treeList.Count}");
         }
         
         public virtual bool isFilled(Vector2 slot)

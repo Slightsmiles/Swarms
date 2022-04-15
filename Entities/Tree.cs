@@ -11,12 +11,15 @@ namespace Swarms.Entities
     public class Tree : Boardentity
     {
 
+        public int _id {get;set;}
         public bool _isBurning {get; set;}
 
-        public Tree(Vector2 location, int temp = 30) : base(-1, false, location){
+        public Tree(Vector2 location, int temp = 30, int  id = 0) : base(-1, false, location){
+  
             _location = location;
             _temp = temp;
-            _isBurning = temp >= 80; //Maybe do the computation in agent instead of global variable?
+            _id = id;
+            _isBurning = _temp >= 80; //Maybe do the computation in agent instead of global variable?
             _color = GetColor();
         }
 
