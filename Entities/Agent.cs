@@ -10,7 +10,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         public Vector2 _prevLocation { get; set; }
-        public Tree _target {get; private set;}
+        public Tree _target {get; set;}
         public List<Tree> availableTargets { get; set; }
 
         //these are our tweakable bias parameters.
@@ -44,11 +44,7 @@ namespace Swarms.Entities
 
         private void receiveMessage(String message)
         {
-<<<<<<< HEAD
            // Console.WriteLine(message);
-=======
-            //Console.WriteLine(message);
->>>>>>> 64b396503d7735d1143409742064f8b68edfeac3
         }
 
         public void move(GridLocation[][] grid)

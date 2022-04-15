@@ -36,13 +36,13 @@ namespace Swarms
   
         public Vector2[][] logLocations(int ticks, SquareGrid grid)
         {
-           locations = new Vector2[grid._columnNums][];
-          //  Array.Clear(locations, 0, locations.Length);
+            locations = new Vector2[grid._columnNums][];
+            
             for(int i = 0; i < grid._columnNums; i++){
-                
+                locations[i] = new Vector2[grid._rowNums];
                 for(int j = 0; j < grid._rowNums ; j++)
                 { 
-                   locations[i] = new Vector2[grid._rowNums]; 
+                     
                     var entity = grid._slots[i][j];
                
                     if (entity.GetType() == typeof(Agent)){

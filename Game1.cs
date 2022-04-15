@@ -259,7 +259,7 @@ namespace Swarms
             writer.Close();
         }
 
-        public SquareGrid readXML(string path)
+        public SquareGrid readXML()
         {
             
             var mySerializer = new XmlSerializer(typeof(SquareGrid));
@@ -270,7 +270,7 @@ namespace Swarms
             return grid;
         }
 
-        public 
+      
     }
     
 }
