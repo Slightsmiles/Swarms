@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Swarms.Entities;
 
 namespace Swarms.Utility
 {
@@ -9,6 +10,10 @@ namespace Swarms.Utility
         {
             public double _accumulatedWeight {get; set;}
             public T _object {get; set;}
+            public Entry(double accumulatedWeight, T obj) {
+                _accumulatedWeight = accumulatedWeight;
+                _object = obj;
+            }
         }
 
         private List<Entry> _entries = new List<Entry>();
@@ -17,9 +22,8 @@ namespace Swarms.Utility
 
         public void add(T t, double weight) {
             _accumulatedWeight += weight;
-            var entry = new Entry();
-            entry._accumulatedWeight = _accumulatedWeight;
-            entry._object = t;
+            var entry = new Entry(_accumulatedWeight, t);
+
             _entries.Add(entry);
         }
         public T getRandom() {
@@ -27,9 +31,9 @@ namespace Swarms.Utility
 
             foreach (var entry in _entries)
             {
-                if(_accumulatedWeight >= r) return entry._object;
+                if(entry._accumulatedWeight >= r) return entry._object;
             }
-            return null;  
+            return default(T);  
         }
     }
 }

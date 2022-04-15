@@ -10,6 +10,7 @@ namespace Swarms.Entities
     public class Agent : Boardentity
     {
         public Vector2 _prevLocation { get; set; }
+        public Tree _target {get; private set;}
         public List<Tree> availableTargets { get; set; }
 
         //these are our tweakable bias parameters.
@@ -31,20 +32,6 @@ namespace Swarms.Entities
         {
             
         }
-        // -------Mulig Optimering-------
-        // Måske en IEnumerable<Vector2> eller andet her for memory reasons
-
-        // private List<Vector2> getAdjacent() {
-        //     var adjacent = new List<Vector2>();
-
-        //     adjacent.Add(new Vector2(_location.X, _location.Y - 1)); //up by a factor of i
-        //     adjacent.Add(new Vector2(_location.X, _location.Y + 1)); //down by a factor of i
-        //     adjacent.Add(new Vector2(_location.X - 1, _location.Y)); //left by a factor of i
-        //     adjacent.Add(new Vector2(_location.X + 1, _location.Y)); //right by a factor of 
-
-        //     return adjacent;
-        // }
-
 
         private void broadcastMessage(List<Agent> agents, GridLocation[][] grid)
         {
@@ -83,14 +70,8 @@ namespace Swarms.Entities
 
         private List<Agent> locateAgents(List<Vector2> locs, GridLocation[][] grid)
         {
-            var nearbyAgents = new List<Agent>();
-            foreach (var loc in locs)
-            {
-                if (grid[(int) loc.X][(int) loc.Y].GetType() == typeof(Agent))
-                {
-                    nearbyAgents.Add((Agent) grid[(int) loc.X][(int) loc.Y]);
-                }
-            }
+            var nearbyAgents = locs.Where(pos => grid[(int)pos.X][(int)pos.Y].GetType() == typeof(Agent))
+                                   .Select(pos => (Agent)grid[(int)pos.X][(int)pos.Y]).ToList();
 
             return nearbyAgents;
         }
@@ -182,7 +163,6 @@ namespace Swarms.Entities
 
             var probability = (qi * ni) / sum;
           
-            Console.WriteLine(probability);
             return probability;
         }
 

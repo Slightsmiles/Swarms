@@ -1,6 +1,6 @@
 namespace Swarms.Entities
 {
-    public class Location
+    public struct Location
     {
         public int x {get; set;}
         public int y {get; set;}
