@@ -1,12 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Diagnostics.CodeAnalysis;
+
 using System.IO;
-using System.Threading;
+
 using System.Xml.Serialization;
 using Swarms.Datatypes.Grids;
 using Swarms.Entities;
@@ -34,10 +34,15 @@ namespace Swarms
         //Logging variables
         public int _tickCounter { get; set; }
         public Logger _logger { get; set; }
-        
-        public bool isLogging { get; set; }
+        public int lowTest { get; set; }
+        public int midTest { get; set; }
+        public int highTest { get; set; }
+        public bool IsLogging { get; set; }
+        public SquareGrid startingGrid {get; set;}
 
-        public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth, bool logging)
+        public int totalSims = 1;
+
+        public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth, bool logging, int lower, int mid, int high)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -49,24 +54,32 @@ namespace Swarms
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            isLogging = logging;
-            _logger = new Logger();
+            // Logging
+            IsLogging = logging;
+            lowTest = 40;
+            midTest = 80;
+            highTest = 120;
+            _logger = new Logger(lowTest, midTest, highTest);
+           
         }
 
         protected override void Initialize()
         {
-
-            // TODO: Add your initialization logic here
             initSize();
+            // TODO: Add your initialization logic here
+            
             initGrid();
+            
             
             LoadContent();
             base.Initialize();
         }
 
+
         protected void initGrid()
         {
-            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY);
+            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging);
+            
 
         }
         
@@ -198,35 +211,39 @@ namespace Swarms
             if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
 
-                if (isLogging)
-                {
-                    for (int i = 0; i < 20; i++)
+                if (IsLogging){
+                    for(int x = 0; x<totalSims; x++){
+                    for (int i = 0; i < lowTest; i++)
                     {
                         _grid = _grid.TickOnce();
-                        _tickCounter++;
-                        _logger.logLocations(_tickCounter, _grid);
+
                     }
 
-                    _logger.logLocations(_tickCounter, _grid);
-
-                    for (int i = 20; i < 60; i++)
-                    {
-                        _grid = _grid.TickOnce();
-                        _logger.logLocations(_tickCounter, _grid);
-                    }
-
-                    _logger.logLocations(_tickCounter, _grid);
-
-
-                    for (int i = 60; i < 100; i++)
-                    {
-                        _grid = _grid.TickOnce();
-                        _logger.logLocations(_tickCounter, _grid);
-                    }
+                    _logger.logLocations(lowTest, _grid);
                     
+                    for (int i = lowTest; i < midTest; i++)
+                    {
+                        _grid = _grid.TickOnce();
+
+                    }
+
+                    _logger.logLocations(midTest, _grid);
+
+
+                    for (int i = midTest; i < highTest; i++)
+                    {
+                        _grid = _grid.TickOnce();
+
+
+                    }
+                    _logger.logLocations(highTest, _grid);
+                    Initialize();  
+                    }
+                _logger.serialize();
                 }
                 else
                 {
+                    Console.WriteLine("moving");
                     _grid = _grid.TickOnce();
                     _tickCounter++;
                 }
@@ -242,8 +259,9 @@ namespace Swarms
             writer.Close();
         }
 
-        public SquareGrid readXML()
+        public SquareGrid readXML(string path)
         {
+            
             var mySerializer = new XmlSerializer(typeof(SquareGrid));
             using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
 
@@ -251,6 +269,8 @@ namespace Swarms
 
             return grid;
         }
+
+        public 
     }
     
 }
