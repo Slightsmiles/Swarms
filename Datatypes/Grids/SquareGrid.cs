@@ -1,18 +1,11 @@
-using System.Diagnostics;
-using System.Net;
 using System;
-using System.Reflection.Emit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Globalization;
 using Swarms.Entities;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
+
 
 
 namespace Swarms.Datatypes.Grids
@@ -54,7 +47,7 @@ namespace Swarms.Datatypes.Grids
         public int _columnNums { get; set; }  // X-dimension
 
 
-        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums)
+        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums, bool isLogging)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
@@ -71,8 +64,11 @@ namespace Swarms.Datatypes.Grids
             _agentList = new List<Agent>();
             _treeList = new List<Tree>();
             LoadContent(graphics);
-
+            
             setBaseGrid();
+            if(isLogging){
+                setSimulationGrid();
+            }
             //setBigGrid(); //works on 48/80 grid
             //setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
@@ -161,7 +157,17 @@ namespace Swarms.Datatypes.Grids
             }
 
         }
+        public void setSimulationGrid(){
 
+                addAgent(new Vector2(0,1));
+                addAgent(new Vector2(10,10));
+                addAgent(new Vector2(5,5));
+                addAgent(new Vector2(4,4));
+                addAgent(new Vector2(15,15));
+                addAgent(new Vector2(20,20));
+                addAgent(new Vector2(0,10));
+
+        }
         private void setBigGrid()
         {
 

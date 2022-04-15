@@ -12,24 +12,35 @@ namespace Swarms
             var screenHeight =  480;
             var screenWidth = 800;
             var logging = false;
+            var lower = 40;
+            var mid = 80;
+            var high = 120;
             
-            if(args.Length != 0) {
-                x = Int32.Parse(args[0]);
-                y = Int32.Parse(args[1]);
-                 
-                if(args.Length > 2) {
-                    screenHeight = Int32.Parse(args[2]);
-                    screenWidth = Int32.Parse(args[3]);
+            if(args.Length != 0)
+            { 
+            
+                logging = bool.Parse(args[0]);
+                lower = Int32.Parse(args[1]);
+                mid = Int32.Parse(args[2]);
+                high = Int32.Parse(args[3]);
+
+
+                if (args.Length > 4)
+                {
+                    x = Int32.Parse(args[4]);
+                    y = Int32.Parse(args[5]);
+                }
+
+                if(args.Length > 6) {
+                    screenHeight = Int32.Parse(args[6]);
+                    screenWidth = Int32.Parse(args[7]);
                 }
 
                
-                if (args.Length > 4)
-                {
-                    logging = bool.Parse(args[4]);
-                }
+              
             }
 
-            using (var game = new Game1(x, y, screenHeight, screenWidth, logging))
+            using (var game = new Game1(x, y, screenHeight, screenWidth, logging, lower, mid, high))
                 game.Run();
         }
     }
