@@ -33,22 +33,26 @@ namespace Swarms
             
         }
 
-  
+        public void initStuff(){
+
+        }
         public Vector2[][] logLocations(int ticks, SquareGrid grid)
         {
             locations = new Vector2[grid._columnNums][];
             
             for(int i = 0; i < grid._columnNums; i++){
                 locations[i] = new Vector2[grid._rowNums];
+
                 for(int j = 0; j < grid._rowNums ; j++)
                 { 
-                     
                     var entity = grid._slots[i][j];
                
                     if (entity.GetType() == typeof(Agent)){
                         Console.WriteLine("found a thiung"); 
                         locations[i][j] = entity._location;
+                        
                 }
+                else locations[i][j] = new Vector2(-1,-1);
                 }
                 
             }
@@ -57,7 +61,6 @@ namespace Swarms
             if(ticks == _mid) _logsMid.Add(locations);
             if(ticks == _max) _logsMax.Add(locations);                
             
-            //serialize(_logs, ticks);
             return locations;
         }
 
@@ -71,6 +74,7 @@ namespace Swarms
             XmlSerializer serializer = new XmlSerializer(typeof(List<Vector2[][]>));
 
             StreamWriter writer = new StreamWriter("testData"+ _min + ".xml");
+            //need to serialize trees aswell and deserialize
             serializer.Serialize(writer, _logsMin);
             writer.Close();
         }

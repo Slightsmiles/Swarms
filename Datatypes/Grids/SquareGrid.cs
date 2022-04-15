@@ -67,6 +67,7 @@ namespace Swarms.Datatypes.Grids
             
             setBaseGrid();
             if(isLogging){
+                //need to add trees and obstacles correctly.
                 setSimulationGrid();
             }
             //setBigGrid(); //works on 48/80 grid
