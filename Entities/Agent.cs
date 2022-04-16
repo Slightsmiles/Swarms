@@ -9,8 +9,9 @@ namespace Swarms.Entities
 {
     public class Agent : Boardentity
     {
+        public Receiver _receiver { get; set; }
         public Vector2 _prevLocation { get; set; }
-        public Tree _target {get; set;}
+        public Tree _target { get; set; }
         public List<Tree> availableTargets { get; set; }
 
         //these are our tweakable bias parameters.
@@ -19,31 +20,38 @@ namespace Swarms.Entities
         // alpha, beta > 0; a,b in real numbers
         double alpha = 1.00000;
         double beta = 1.00000;
-        
+
         public Agent(Vector2 location) : base(-1, false, location)
         {
+            _receiver = new Receiver();
             _location = location;
             _temp = defaultTemp;
             _color = Color.Black;
             availableTargets = new List<Tree>();
-            
-            sendMessage += receiveMessage;
+
+            _receiver.messageReceive += receiveMessage;
         }
 
         public Agent()
         {
-            
+
         }
+        //=====================================================================================================================================
+        //=====================================================Messaging stuff=================================================================
+        //=====================================================================================================================================
 
-        public static void receiveMessage(object agent, String message) {
-            var herp = agent as Agent;
-            Console.WriteLine($"-------------------Agent: {herp._location}-------------------\n{message}");
+        public void receiveMessage(object s, Agent message)
+        {
+            var sender = s as Agent;
+            Console.WriteLine($"--------------Receiver: {_location}--------------\n WHOOOAH, I: {sender._location} found some stuff at: {sender?._target?._location}");
         }
-
-        public event EventHandler<String> sendMessage;
-
-        protected virtual void onMessageReceived(String message) {
-            sendMessage?.Invoke(this, message);
+        public void sendMessage(List<Agent> receivers)
+        {
+            foreach (var r in receivers)
+            {
+                var receiver = r as Agent;
+                receiver.receiveMessage(this, receiver);
+            }
         }
 
         public void move(GridLocation[][] grid)
@@ -53,7 +61,6 @@ namespace Swarms.Entities
             _target = weightedDecision(adjacent, grid);
 
             var adjAgents = locateAgents(adjacent, grid);
-            broadcast(adjAgents);
 
             if (_target == null)
             {
@@ -62,18 +69,14 @@ namespace Swarms.Entities
                 _location = newPos;
                 _prevLocation = from;
 
-                grid[(int) _prevLocation.X][(int) _prevLocation.Y] = new Boardentity(1, true, _prevLocation);
-                grid[(int) _location.X][(int) _location.Y] = this;
+                grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
+                grid[(int)_location.X][(int)_location.Y] = this;
             }
+
+            else sendMessage(adjAgents);
         }
 
-        public void broadcast(List<Agent> agents) {
-            foreach (var agent in agents)
-            {
-                if(agent._target == null) onMessageReceived("OHNO"); 
-                else onMessageReceived($"WHOOOOOOOOOOOOAH I found something at: {agent?._target?._location}");    
-            }
-        }
+
 
         private List<Agent> locateAgents(List<Vector2> locs, GridLocation[][] grid)
         {
@@ -87,10 +90,10 @@ namespace Swarms.Entities
         private Vector2 randomDirection(List<Vector2> adjacent, GridLocation[][] grid)
         {
             List<Vector2> availableMoves = checkAvailableMoves(adjacent, grid);
-            
-            if(availableMoves.FirstOrDefault() == null) return _location;
 
-            var randomize = new Random().Next(0, availableMoves.Count);                                      
+            if (availableMoves.FirstOrDefault() == null) return _location;
+
+            var randomize = new Random().Next(0, availableMoves.Count);
 
             var direction = availableMoves[randomize];
 
@@ -102,7 +105,7 @@ namespace Swarms.Entities
         {
             var available = adjacent.Where(position =>
                                                 isTraversable(position, grid)
-                                                && !(position.X - _location.X < -1 
+                                                && !(position.X - _location.X < -1
                                                     || position.Y - _location.Y < -1
                                                     || position.X - _location.X > 1
                                                     || position.Y - _location.Y > 1)
@@ -113,32 +116,32 @@ namespace Swarms.Entities
 
         private bool isTraversable(Vector2 location, GridLocation[][] grid)
         {
-            return grid[(int) location.X][(int) location.Y]._traversable;
+            return grid[(int)location.X][(int)location.Y]._traversable;
         }
 
         private bool isSquareOccupied(GridLocation[][] grid, Vector2 position)
         {
-            var gLType = grid[(int) position.X][(int) position.Y].GetType();
+            var gLType = grid[(int)position.X][(int)position.Y].GetType();
             return gLType == typeof(Agent)
                    || gLType == typeof(Tree)
                    || gLType == typeof(Obstacle);
-        }      
-        
+        }
+
         //this is formula(4)
         private double fromEuclidToReciprocral(Double dist)
         {
             return 1 / dist;
         }
-        
-        
+
+
         //This is Qi in formula(5)
         private double getQuality(Tree target)
         {
             //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
-            
+
             return 1.0;
         }
-        
+
         //This is qi in formula(5), or the finished formula(5)
         private double allQualities(Tree target)
         {
@@ -146,54 +149,73 @@ namespace Swarms.Entities
             var sum = 0.0;
             foreach (var tree in availableTargets)
             {
-               // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
+                // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
                 sum += getQuality(tree); // i believe this to be correct.
             }
 
             return current / sum;
         }
-        
+
         //this is formula (6), or computation of utility
 
         public double computeFinalProbability(Tree target)
         {
-            
+
             double qi = Math.Pow(allQualities(target), alpha);
             double ni = Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)), beta);
             double sum = 0.0;
-            
+
             foreach (var tree in availableTargets)
             {
-                
-                sum += Math.Pow(allQualities(tree),alpha) * Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)), beta);
+
+                sum += Math.Pow(allQualities(tree), alpha) * Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)), beta);
             }
 
             var probability = (qi * ni) / sum;
-          
+
             return probability;
         }
 
-        private Tree weightedDecision(List<Vector2> adjacent, GridLocation[][] grid) {
+        private Tree weightedDecision(List<Vector2> adjacent, GridLocation[][] grid)
+        {
 
             var trees = adjacent
-                .Where(postion => grid[(int) postion.X][(int) postion.Y].GetType() == typeof(Tree))
-                .Select(position => (Tree) grid[(int) position.X][(int) position.Y]).ToList();
+                .Where(postion => grid[(int)postion.X][(int)postion.Y].GetType() == typeof(Tree))
+                .Select(position => (Tree)grid[(int)position.X][(int)position.Y]).ToList();
 
             availableTargets = trees;
 
             var weightedRandomBag = new WeightedRandomBag<Tree>();
 
-            foreach(var tree in availableTargets) {
-                if(!isBurning(tree)) continue;   
-                
+            foreach (var tree in availableTargets)
+            {
+                if (!isBurning(tree)) continue;
+
                 var probability = computeFinalProbability(tree);
                 weightedRandomBag.add(tree, probability);
             }
             return weightedRandomBag.getRandom();
         }
 
-        private bool isBurning(Tree tree) {
+        private bool isBurning(Tree tree)
+        {
             return tree._temp >= 80;
+        }
+
+        private class Sender
+        {
+
+        }
+
+        public class Receiver
+        {
+
+            public event EventHandler<Agent> messageReceive;
+
+            protected virtual void onMessageReceived(Agent agent)
+            {
+                messageReceive?.Invoke(this, agent);
+            }
         }
     }
 }

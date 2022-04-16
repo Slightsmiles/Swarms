@@ -76,11 +76,11 @@ namespace Swarms.Datatypes.Grids
             //TODO: Remove this for final product
             //Weighted decision debug stuff
 
-            /* addAgent(new Vector2(5,5));
+            addAgent(new Vector2(5,5));
             addTree(new Vector2(5,7), 160, 1);
             addTree(new Vector2(7,5), 380, 2);
             addTree(new Vector2(5,6), 80, 3);
-            addTree(new Vector2(6,5), 30, 4); */
+            addTree(new Vector2(6,5), 30, 4);
 
         }
 
