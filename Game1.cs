@@ -271,24 +271,17 @@ namespace Swarms
             return grid;
         }
 
-
+        Type[] types = {typeof(Boardentity), typeof(Agent), typeof(Obstacle),typeof(Tree)};
         public void readSimData(){
             
-            var mySerializer = new XmlSerializer(typeof(Vector2[][][]));
+            var mySerializer = new XmlSerializer(typeof(GridLocation[][][]), types);
             var path = "testData40.xml";
             using var myFileStream = new FileStream(path, FileMode.Open);
 
-            var data = (Vector2[][][]) mySerializer.Deserialize(myFileStream); 
+            var data = (GridLocation[][][]) mySerializer.Deserialize(myFileStream); 
             
-            var realdata = data[1];
-            initGrid();
-            for(int i=0; i<40; i++){
-                for(int j=0; j<_grid._rowNums; j++){
-                    if (realdata[i][j].X != -1){
-                        _grid.addAgent(realdata[i][j]);
-                    }
-                }
-            }
+            var realData = data[0]; 
+            _grid._slots = realData;
 
         }
     }

@@ -15,5 +15,7 @@ namespace Swarms.Entities
             _location = loc;
             _color = Color.Aqua;
         }
+
+        public Obstacle(){}
     }
 }
