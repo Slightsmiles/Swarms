@@ -11,7 +11,9 @@ namespace Swarms.Entities
     {
         public Vector2 _prevLocation { get; set; }
         public Tree _target { get; set; }
-        public List<Tree> availableTargets { get; set; }
+        public List<Tree> _availableTargets { get; set; }
+
+        public Vector2 _destination { get; set; }
 
         //these are our tweakable bias parameters.
         //Lessening alpha will lessen the bias of target quality.
@@ -22,10 +24,12 @@ namespace Swarms.Entities
 
         public Agent(Vector2 location) : base(-1, false, location)
         {
+
             _location = location;
             _temp = defaultTemp;
             _color = Color.Black;
-            availableTargets = new List<Tree>();
+            _availableTargets = new List<Tree>();
+            _destination = new Vector2(-1, -1);
 
             messageReceive += receiveMessage;
         }
@@ -35,8 +39,9 @@ namespace Swarms.Entities
 
         }
 
-        public void move(GridLocation[][] grid)
+        public void move(SquareGrid squareGrid)
         {
+            var grid = squareGrid._slots;
             var adjacent = getAdjacent(grid);
 
             _target = weightedDecision(adjacent, grid);
@@ -45,16 +50,24 @@ namespace Swarms.Entities
 
             if (_target == null)
             {
-                var newPos = randomDirection(adjacent, grid);
+                Vector2 newPos = _location;
+
+                Console.WriteLine($"I: {_location} want to go here: {_destination}");
+                if (_destination.X == -1 || _destination.Y == -1)   newPos = randomDirection(adjacent, grid);
+                else if (_location.X - _destination.X > 0)          newPos = new Vector2((_location.X - 1), _location.Y);
+                else if (_location.X - _destination.X < 1)          newPos = new Vector2((_location.X + 1), _location.Y);
+                else if (_location.Y - _destination.Y > 0)          newPos = new Vector2(_location.X, (_location.Y - 1));
+                else if (_location.Y - _destination.Y < 1)          newPos = new Vector2(_location.X, (_location.Y + 1));
                 var from = _location;
                 _location = newPos;
                 _prevLocation = from;
 
                 grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
                 grid[(int)_location.X][(int)_location.Y] = this;
+
             }
 
-            else sendMessage(adjAgents);
+            else sendMessage(squareGrid._agentList, grid);
         }
 
 
@@ -128,7 +141,7 @@ namespace Swarms.Entities
         {
             var current = getQuality(target);
             var sum = 0.0;
-            foreach (var tree in availableTargets)
+            foreach (var tree in _availableTargets)
             {
                 // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
                 sum += getQuality(tree); // i believe this to be correct.
@@ -146,7 +159,7 @@ namespace Swarms.Entities
             double ni = Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)), beta);
             double sum = 0.0;
 
-            foreach (var tree in availableTargets)
+            foreach (var tree in _availableTargets)
             {
 
                 sum += Math.Pow(allQualities(tree), alpha) * Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)), beta);
@@ -164,11 +177,11 @@ namespace Swarms.Entities
                 .Where(postion => grid[(int)postion.X][(int)postion.Y].GetType() == typeof(Tree))
                 .Select(position => (Tree)grid[(int)position.X][(int)position.Y]).ToList();
 
-            availableTargets = trees;
+            _availableTargets = trees;
 
             var weightedRandomBag = new WeightedRandomBag<Tree>();
 
-            foreach (var tree in availableTargets)
+            foreach (var tree in _availableTargets)
             {
                 if (!isBurning(tree)) continue;
 
@@ -187,12 +200,13 @@ namespace Swarms.Entities
         //=====================================================Messaging stuff=================================================================
         //=====================================================================================================================================
 
-        public void receiveMessage(object s, Agent message)
+        public void receiveMessage(object s, Agent receiver)
         {
             var sender = s as Agent;
+            receiver._destination = sender._location;
             Console.WriteLine($"--------------Receiver: {_location}--------------\n WHOOOAH, I: {sender._location} found some stuff at: {sender?._target?._location}");
         }
-        public void sendMessage(List<Agent> receivers)
+        public void sendMessage(List<Agent> receivers, GridLocation[][] grid)
         {
             foreach (var r in receivers)
             {

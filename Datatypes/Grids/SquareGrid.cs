@@ -77,12 +77,12 @@ namespace Swarms.Datatypes.Grids
             //TODO: Remove this for final product
             //Weighted decision debug stuff
 
-            addAgent(new Vector2(5,5));
+            /* addAgent(new Vector2(5,5));
             addTree(new Vector2(5,7), 160, 1);
             addTree(new Vector2(7,5), 380, 2);
             addTree(new Vector2(5,6), 80, 3);
             addTree(new Vector2(6,5), 30, 4);
-
+ */
         }
 
         public SquareGrid()
@@ -265,7 +265,7 @@ namespace Swarms.Datatypes.Grids
 
         public SquareGrid TickOnce()
         {
-            foreach(var agent in _agentList) agent.move(_slots);
+            foreach(var agent in _agentList) agent.move(this);
             foreach (var tree in _treeList)
             {
                 tree.tickTemp(_slots, _treeList);
