@@ -11,12 +11,12 @@ namespace Swarms
     public class Logger
     {
         
-        public List<Vector2[][]> _logsMin {get; set;}
+        public List<GridLocation[][]> _logsMin {get; set;}
         
-        public List<Vector2[][]> _logsMid {get; set;}
+        public List<GridLocation[][]> _logsMid {get; set;}
 
-        public List<Vector2[][]> _logsMax {get; set;}
-        public Vector2[][] locations;
+        public List<GridLocation[][]> _logsMax {get; set;}
+        public GridLocation[][] locations;
         public int _min {get; set;}
         public int _mid {get; set;}
         public int _max {get; set;}
@@ -24,40 +24,28 @@ namespace Swarms
 
         public Logger(int min, int mid, int max)
         {
-            _logsMin = new List<Vector2[][]>();
-            _logsMid = new List<Vector2[][]>();
-            _logsMax = new List<Vector2[][]>();
+            _logsMin = new List<GridLocation[][]>();
+            _logsMid = new List<GridLocation[][]>();
+            _logsMax = new List<GridLocation[][]>();
             _min = min;
             _mid = mid;
             _max = max;
             
         }
 
-  
-        public Vector2[][] logLocations(int ticks, SquareGrid grid)
+
+
+        public void initStuff(){
+
+        }
+        public GridLocation[][] logLocations(int ticks, SquareGrid grid)
         {
-            locations = new Vector2[grid._columnNums][];
-            
-            for(int i = 0; i < grid._columnNums; i++){
-                locations[i] = new Vector2[grid._rowNums];
-                for(int j = 0; j < grid._rowNums ; j++)
-                { 
-                     
-                    var entity = grid._slots[i][j];
-               
-                    if (entity.GetType() == typeof(Agent)){
-                        Console.WriteLine("found a thiung"); 
-                        locations[i][j] = entity._location;
-                }
-                }
-                
-            }
+            locations = grid._slots;
             
             if(ticks == _min) _logsMin.Add(locations);
             if(ticks == _mid) _logsMid.Add(locations);
             if(ticks == _max) _logsMax.Add(locations);                
             
-            //serialize(_logs, ticks);
             return locations;
         }
 
@@ -66,17 +54,20 @@ namespace Swarms
             serializeMid();
             serializeMax();
         }
-
+        Type[] types = {typeof(Boardentity), typeof(Agent), typeof(Obstacle),typeof(Tree)};
         public void serializeMin(){
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Vector2[][]>));
+            
+            XmlSerializer serializer = new XmlSerializer(typeof(List<GridLocation[][]>), types);
 
             StreamWriter writer = new StreamWriter("testData"+ _min + ".xml");
+            //need to serialize trees aswell and deserialize
+        
             serializer.Serialize(writer, _logsMin);
             writer.Close();
         }
 
         public void serializeMid(){
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Vector2[][]>));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<GridLocation[][]>), types);
 
             StreamWriter writer = new StreamWriter("testData"+ _mid + ".xml");
             serializer.Serialize(writer, _logsMid);
@@ -84,7 +75,7 @@ namespace Swarms
         }
 
         public void serializeMax(){
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Vector2[][]>));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<GridLocation[][]>), types);
 
             StreamWriter writer = new StreamWriter("testData"+ _max + ".xml");
             serializer.Serialize(writer, _logsMax);

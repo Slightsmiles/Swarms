@@ -40,7 +40,7 @@ namespace Swarms
         public bool IsLogging { get; set; }
         public SquareGrid startingGrid { get; set; }
 
-        public int totalSims = 1;
+        public int totalSims = 50;
 
         public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth, bool logging, int lower, int mid, int high)
         {
@@ -207,9 +207,10 @@ namespace Swarms
                 }
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
                 {
-                    Console.WriteLine("reading from xml");
-                    var newgrid = readXML();
-                    _grid = newgrid;
+                    readSimData();
+                    //Console.WriteLine("reading from xml");
+                   // var newgrid = readXML();
+                   // _grid = newgrid;
 
                 }
             }
@@ -281,7 +282,19 @@ namespace Swarms
             return grid;
         }
 
+        Type[] types = {typeof(Boardentity), typeof(Agent), typeof(Obstacle),typeof(Tree)};
+        public void readSimData(){
+            
+            var mySerializer = new XmlSerializer(typeof(GridLocation[][][]), types);
+            var path = "testData40.xml";
+            using var myFileStream = new FileStream(path, FileMode.Open);
 
+            var data = (GridLocation[][][]) mySerializer.Deserialize(myFileStream); 
+            
+            var realData = data[0]; 
+            _grid._slots = realData;
+
+        }
     }
 
 }
