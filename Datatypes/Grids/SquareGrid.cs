@@ -71,7 +71,7 @@ namespace Swarms.Datatypes.Grids
                 setSimulationGrid();
             }
             //setBigGrid(); //works on 48/80 grid
-            //setRiverGrid(); //only works on 24/40 grid
+            setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
 
             //TODO: Remove this for final product

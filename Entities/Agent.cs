@@ -54,10 +54,6 @@ namespace Swarms.Entities
 
                 Console.WriteLine($"I: {_location} want to go here: {_destination}");
                 if (_destination.X == -1 || _destination.Y == -1)   newPos = randomDirection(adjacent, grid);
-                else if (_location.X - _destination.X > 0)          newPos = new Vector2((_location.X - 1), _location.Y);
-                else if (_location.X - _destination.X < 1)          newPos = new Vector2((_location.X + 1), _location.Y);
-                else if (_location.Y - _destination.Y > 0)          newPos = new Vector2(_location.X, (_location.Y - 1));
-                else if (_location.Y - _destination.Y < 1)          newPos = new Vector2(_location.X, (_location.Y + 1));
                 var from = _location;
                 _location = newPos;
                 _prevLocation = from;
