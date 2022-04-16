@@ -9,7 +9,6 @@ namespace Swarms.Entities
 {
     public class Agent : Boardentity
     {
-        public Receiver _receiver { get; set; }
         public Vector2 _prevLocation { get; set; }
         public Tree _target { get; set; }
         public List<Tree> availableTargets { get; set; }
@@ -23,35 +22,17 @@ namespace Swarms.Entities
 
         public Agent(Vector2 location) : base(-1, false, location)
         {
-            _receiver = new Receiver();
             _location = location;
             _temp = defaultTemp;
             _color = Color.Black;
             availableTargets = new List<Tree>();
 
-            _receiver.messageReceive += receiveMessage;
+            messageReceive += receiveMessage;
         }
 
         public Agent()
         {
 
-        }
-        //=====================================================================================================================================
-        //=====================================================Messaging stuff=================================================================
-        //=====================================================================================================================================
-
-        public void receiveMessage(object s, Agent message)
-        {
-            var sender = s as Agent;
-            Console.WriteLine($"--------------Receiver: {_location}--------------\n WHOOOAH, I: {sender._location} found some stuff at: {sender?._target?._location}");
-        }
-        public void sendMessage(List<Agent> receivers)
-        {
-            foreach (var r in receivers)
-            {
-                var receiver = r as Agent;
-                receiver.receiveMessage(this, receiver);
-            }
         }
 
         public void move(GridLocation[][] grid)
@@ -202,20 +183,30 @@ namespace Swarms.Entities
             return tree._temp >= 80;
         }
 
-        private class Sender
-        {
+        //=====================================================================================================================================
+        //=====================================================Messaging stuff=================================================================
+        //=====================================================================================================================================
 
+        public void receiveMessage(object s, Agent message)
+        {
+            var sender = s as Agent;
+            Console.WriteLine($"--------------Receiver: {_location}--------------\n WHOOOAH, I: {sender._location} found some stuff at: {sender?._target?._location}");
         }
-
-        public class Receiver
+        public void sendMessage(List<Agent> receivers)
         {
-
-            public event EventHandler<Agent> messageReceive;
-
-            protected virtual void onMessageReceived(Agent agent)
+            foreach (var r in receivers)
             {
-                messageReceive?.Invoke(this, agent);
+                var receiver = r as Agent;
+                receiver.receiveMessage(this, receiver);
             }
         }
+
+        public event EventHandler<Agent> messageReceive;
+
+        protected virtual void onMessageReceived(Agent agent)
+        {
+            messageReceive?.Invoke(this, agent);
+        }
+
     }
 }
