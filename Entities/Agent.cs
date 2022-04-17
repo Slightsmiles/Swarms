@@ -30,8 +30,6 @@ namespace Swarms.Entities
             _color = Color.Black;
             _availableTargets = new List<Tree>();
             _destination = new Vector2(-1, -1);
-
-            messageReceive += receiveMessage;
         }
 
         public Agent()
@@ -204,19 +202,10 @@ namespace Swarms.Entities
         }
         public void sendMessage(List<Agent> receivers, GridLocation[][] grid)
         {
-            foreach (var r in receivers)
+            foreach (var receiver in receivers)
             {
-                var receiver = r as Agent;
                 receiver.receiveMessage(this, receiver);
             }
         }
-
-        public event EventHandler<Agent> messageReceive;
-
-        protected virtual void onMessageReceived(Agent agent)
-        {
-            messageReceive?.Invoke(this, agent);
-        }
-
     }
 }
