@@ -44,12 +44,11 @@ namespace Swarms.Entities
             var grid = squareGrid._slots;
             var adjacent = getAdjacent(grid);
 
-            _target = weightedDecision(adjacent, grid);
-
             var adjAgents = locateAgents(adjacent, grid);
 
             if (_target == null)
             {
+                _target = weightedDecision(adjacent, grid);
                 Vector2 newPos = _location;
 
                 Console.WriteLine($"I: {_location} want to go here: {_destination}");

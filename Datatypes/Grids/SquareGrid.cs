@@ -71,7 +71,7 @@ namespace Swarms.Datatypes.Grids
                 setSimulationGrid();
             }
             //setBigGrid(); //works on 48/80 grid
-            setRiverGrid(); //only works on 24/40 grid
+            //setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
 
             //TODO: Remove this for final product
@@ -81,8 +81,8 @@ namespace Swarms.Datatypes.Grids
             addTree(new Vector2(5,7), 160, 1);
             addTree(new Vector2(7,5), 380, 2);
             addTree(new Vector2(5,6), 80, 3);
-            addTree(new Vector2(6,5), 30, 4);
- */
+            addTree(new Vector2(6,5), 30, 4); */
+
         }
 
         public SquareGrid()

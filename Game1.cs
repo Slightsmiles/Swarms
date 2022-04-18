@@ -42,7 +42,8 @@ namespace Swarms
 
         public int totalSims = 50;
 
-        public Game1(int gridSizeX, int gridSizeY, int screenHeight, int screenWidth, bool logging, int lower, int mid, int high)
+        public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, 
+                        bool logging = false, int lower = 40, int mid = 80, int high = 120)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -56,9 +57,9 @@ namespace Swarms
 
             // Logging
             IsLogging = logging;
-            lowTest = 40;
-            midTest = 80;
-            highTest = 120;
+            lowTest = lower;
+            midTest = mid;
+            highTest = high;
             _logger = new Logger(lowTest, midTest, highTest);
 
         }
@@ -209,8 +210,8 @@ namespace Swarms
                 {
                     readSimData();
                     //Console.WriteLine("reading from xml");
-                   // var newgrid = readXML();
-                   // _grid = newgrid;
+                    // var newgrid = readXML();
+                    // _grid = newgrid;
 
                 }
             }
@@ -282,16 +283,17 @@ namespace Swarms
             return grid;
         }
 
-        Type[] types = {typeof(Boardentity), typeof(Agent), typeof(Obstacle),typeof(Tree)};
-        public void readSimData(){
-            
+        Type[] types = { typeof(Boardentity), typeof(Agent), typeof(Obstacle), typeof(Tree) };
+        public void readSimData()
+        {
+
             var mySerializer = new XmlSerializer(typeof(GridLocation[][][]), types);
             var path = "testData40.xml";
             using var myFileStream = new FileStream(path, FileMode.Open);
 
-            var data = (GridLocation[][][]) mySerializer.Deserialize(myFileStream); 
-            
-            var realData = data[0]; 
+            var data = (GridLocation[][][])mySerializer.Deserialize(myFileStream);
+
+            var realData = data[0];
             _grid._slots = realData;
 
         }
