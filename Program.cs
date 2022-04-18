@@ -7,21 +7,55 @@ namespace Swarms
         [STAThread]
         static void Main(String[] args)
         {
-            var x = 40;
-            var y = 24;
-            var screenHeight =  480;
-            var screenWidth = 800;
-            var logging = false;
-            var lower = 40;
-            var mid = 80;
-            var high = 120;
+            var _x = 40;
+            var _y = 24;
+            var _screenHeight =  480;
+            var _screenWidth = 800;
+            var _logging = false;
+            var _lower = 40;
+            var _mid = 80;
+            var _high = 120;
             
             if(args.Length != 0)
             { 
-            
-                logging = bool.Parse(args[0]);
-                lower = Int32.Parse(args[1]);
-                mid = Int32.Parse(args[2]);
+                for (int i = 0; i < args.Length; i++)
+                {
+                    var arg = args[i].Split(":");
+                    
+                    switch (arg[0])
+                    {
+                        case "x":
+                            _x = Int32.Parse(arg[1]);
+                            break;
+                        case "y":
+                            _y = Int32.Parse(arg[1]);
+                            break;
+                        case "sw": 
+                            _screenWidth = Int32.Parse(arg[1]);
+                            break;
+                        case "sh": 
+                            _screenHeight = Int32.Parse(arg[1]);
+                            break;
+                        case "log":
+                            _logging = bool.Parse(arg[1]);
+                            break;
+                        case "low":
+                            _lower = Int32.Parse(arg[1]);
+                            break;
+                        case "mid":
+                            _mid = Int32.Parse(arg[1]);
+                            break;
+                        case "high":
+                            _high = Int32.Parse(arg[1]);
+                            break;
+
+                    }
+                }
+                /* logging = bool.Parse(args[0]);
+                
+                //what are these?
+                lower = Int32.Parse(args[1]);  
+                mid = Int32.Parse(args[2]);    
                 high = Int32.Parse(args[3]);
 
 
@@ -34,13 +68,11 @@ namespace Swarms
                 if(args.Length > 6) {
                     screenHeight = Int32.Parse(args[6]);
                     screenWidth = Int32.Parse(args[7]);
-                }
-
-               
-              
+                }        
+               */
             }
 
-            using (var game = new Game1(x, y, screenHeight, screenWidth, logging, lower, mid, high))
+            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _logging, _lower, _mid, _high))
                 game.Run();
         }
     }
