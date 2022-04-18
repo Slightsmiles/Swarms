@@ -168,7 +168,7 @@ namespace Swarms.Entities
             double ni = Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(target._location, this._location)), beta);
             double sum = 0.0;
 
-            foreach (var tree in _availableTargets)
+            foreach (var tree in _possibleTargets)
             {
 
                 sum += Math.Pow(allQualities(tree), alpha) * Math.Pow(fromEuclidToReciprocral(getEuclidianDistance(tree._location, _location)), beta);
@@ -240,18 +240,19 @@ namespace Swarms.Entities
             else if (_target == null && _possibleTargets.Any())
             {
                 var tree = weightedDecision();
-                if(tree == null){
-                    sendMessage(squareGrid._agentList);
-                    return;
-                }
+                /*  if(tree == null){
+                     sendMessage(squareGrid._agentList);
+                     return;
+                 } */
                 //Here we check if any agents already have this tree as a target, we allow 2 agents per tree
                 var sameTargetCounter = 0;
                 foreach (var agent in squareGrid._agentList)
                 {
-                    if(agent._target == null) continue;
+                    if (agent._target == null) continue;
                     else if (agent._target._location == tree._location && agent._location != _location) sameTargetCounter++;
                 }
-                /* if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET) */ _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
+                /* if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET) */
+                _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
                 move(grid, roamTowardsTree(grid));
 
@@ -261,7 +262,7 @@ namespace Swarms.Entities
             {
                 move(grid, randomDirection(adjacentSquares, grid));
             }
-            
+
             sendMessage(squareGrid._agentList);
 
         }
@@ -284,16 +285,21 @@ namespace Swarms.Entities
         private Vector2 roamTowardsTree(GridLocation[][] grid)
         {
             var pos = new Vector2();
-
-            if (_destination.X - _location.X < 0) pos = new Vector2(_location.X - 1, _location.Y);
-            else if (_destination.X - _location.X > 1) pos = new Vector2(_location.X + 1, _location.Y);
-            else if (_destination.Y - _location.Y < 0) pos = new Vector2(_location.X, _location.Y - 1);
-            else if (_destination.Y - _location.Y > 1) pos = new Vector2(_location.X, _location.Y + 1);
-
             var herp = new List<Vector2>();
+
+            if (_destination.X - _location.X < 0) herp.Add(new Vector2(_location.X - 1, _location.Y));
+            if (_destination.X - _location.X > 1) herp.Add(new Vector2(_location.X + 1, _location.Y));
+            if (_destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X, _location.Y - 1));
+            if (_destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X, _location.Y + 1));
+            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X - 1, _location.Y - 1));
+            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X - 1, _location.Y + 1));
+            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X + 1, _location.Y - 1));
+            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X + 1, _location.Y + 1));
+
             herp.Add(pos);
             var availableMove = checkAvailableMoves(herp, grid);
-            if(!availableMove.Any()) return _location;
+
+            if (!availableMove.Any()) return _location;
             return pos;
         }
 
