@@ -232,7 +232,6 @@ namespace Swarms.Entities
             {
                 _possibleTargets.Add(tree);
             }
-
             if (_target != null)
             {
                 Extinguish();
@@ -284,21 +283,22 @@ namespace Swarms.Entities
         }
         private Vector2 roamTowardsTree(GridLocation[][] grid)
         {
-            var herp = new List<Vector2>();
+            var pos = new Vector2();
+            var moves = new List<Vector2>();
 
-            if (_destination.X - _location.X < 0) herp.Add(new Vector2(_location.X - 1, _location.Y));
-            if (_destination.X - _location.X > 1)  herp.Add(new Vector2(_location.X + 1, _location.Y));
-            if (_destination.Y - _location.Y < 0)  herp.Add(new Vector2(_location.X, _location.Y - 1));
-            if (_destination.Y - _location.Y > 1)  herp.Add(new Vector2(_location.X, _location.Y + 1));
-            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X - 1, _location.Y - 1));
-            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X - 1, _location.Y + 1));
-            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X + 1, _location.Y - 1));
-            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X + 1, _location.Y + 1));
+            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X - 1, _location.Y - 1));
+            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X - 1, _location.Y + 1));
+            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X + 1, _location.Y - 1));
+            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X + 1, _location.Y + 1));
+            if (_destination.X - _location.X < 0) moves.Add(new Vector2(_location.X - 1, _location.Y));
+            if (_destination.X - _location.X > 1)  moves.Add(new Vector2(_location.X + 1, _location.Y));
+            if (_destination.Y - _location.Y < 0)  moves.Add(new Vector2(_location.X, _location.Y - 1));
+            if (_destination.Y - _location.Y > 1)  moves.Add(new Vector2(_location.X, _location.Y + 1));
 
-           
-            var availableMove = checkAvailableMoves(herp, grid);
-            if(!availableMove.Any()) return _location;
-            return availableMove.First();
+            moves.Where(pos => !isPathObstructed(pos, grid) || pos == _prevLocation);
+            
+            if(!moves.Any()) return _location;
+            return moves.First();
         }
 
         private void move(GridLocation[][] grid, Vector2 newPos)
@@ -311,5 +311,8 @@ namespace Swarms.Entities
             grid[(int)_location.X][(int)_location.Y] = this;
         }
 
+        private bool isPathObstructed(Vector2 pos, GridLocation[][] grid) {
+            return isSquareOccupied(grid, pos) || !isTraversable(pos, grid);
+        }
     }
 }
