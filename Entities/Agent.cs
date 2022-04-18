@@ -13,7 +13,7 @@ namespace Swarms.Entities
         public Tree _target { get; set; }
         public List<Tree> _availableTargets { get; set; }
 
-        public HashSet<Vector2> _possibleTargets { get; set; } = new HashSet<Vector2>();
+        public HashSet<Tree> _possibleTargets { get; set; } = new HashSet<Tree>();
 
         public Vector2 _destination { get; set; }
 
@@ -150,7 +150,7 @@ namespace Swarms.Entities
         {
             var current = getQuality(target);
             var sum = 0.0;
-            foreach (var tree in _availableTargets)
+            foreach (var tree in _possibleTargets)
             {
                 // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
                 sum += getQuality(tree); // i believe this to be correct.
@@ -179,14 +179,12 @@ namespace Swarms.Entities
             return probability;
         }
 
-        private Tree weightedDecision(List<Vector2> adjacent, GridLocation[][] grid)
+        private Tree weightedDecision()
         {
-
-            _availableTargets = locateTrees(adjacent,grid);
 
             var weightedRandomBag = new WeightedRandomBag<Tree>();
 
-            foreach (var tree in _availableTargets)
+            foreach (var tree in _possibleTargets)
             {
                 if (!isBurning(tree)) continue;
 
@@ -232,9 +230,8 @@ namespace Swarms.Entities
             //adds all nearby trees to available targets
             foreach (var tree in adjacentTrees)
             {
-                _possibleTargets.Add(tree._location);
+                _possibleTargets.Add(tree);
             }
-            _possibleTargets.UnionWith(_availableTargets.Select(tree => tree._location));
 
             if (_target != null)
             {
@@ -242,18 +239,21 @@ namespace Swarms.Entities
             }
             else if (_target == null && _possibleTargets.Any())
             {
-                var tree = weightedDecision(_possibleTargets.ToList(), grid);
+                var tree = weightedDecision();
+                if(tree == null){
+                    sendMessage(squareGrid._agentList);
+                    return;
+                }
                 //Here we check if any agents already have this tree as a target, we allow 2 agents per tree
                 var sameTargetCounter = 0;
                 foreach (var agent in squareGrid._agentList)
                 {
                     if(agent._target == null) continue;
-                    else if (agent._target._location == _target._location && agent._location != _location) sameTargetCounter++;
+                    else if (agent._target._location == tree._location && agent._location != _location) sameTargetCounter++;
                 }
-
                 /* if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET) */ _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
-                move(grid, roamTowardsTree());
+                move(grid, roamTowardsTree(grid));
 
             }
             //If agent isn't "working" on a tree, and has no nearby trees it roams randomly for 1 tick
@@ -281,16 +281,19 @@ namespace Swarms.Entities
 
 
         }
-        private Vector2 roamTowardsTree( )
+        private Vector2 roamTowardsTree(GridLocation[][] grid)
         {
             var pos = new Vector2();
 
             if (_destination.X - _location.X < 0) pos = new Vector2(_location.X - 1, _location.Y);
-            else if (_destination.X - _location.X > 0) pos = new Vector2(_location.X + 1, _location.Y);
+            else if (_destination.X - _location.X > 1) pos = new Vector2(_location.X + 1, _location.Y);
             else if (_destination.Y - _location.Y < 0) pos = new Vector2(_location.X, _location.Y - 1);
-            else if (_destination.Y - _location.Y > 0) pos = new Vector2(_location.X, _location.Y + 1);
+            else if (_destination.Y - _location.Y > 1) pos = new Vector2(_location.X, _location.Y + 1);
 
-
+            var herp = new List<Vector2>();
+            herp.Add(pos);
+            var availableMove = checkAvailableMoves(herp, grid);
+            if(!availableMove.Any()) return _location;
             return pos;
         }
 
