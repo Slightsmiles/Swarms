@@ -13,8 +13,8 @@ namespace Swarms.Entities
         public Tree _target { get; set; }
         public List<Tree> _availableTargets { get; set; }
 
-        public HashSet<Vector2> _possibleTargets {get; set;} = new HashSet<Vector2>();
- 
+        public HashSet<Vector2> _possibleTargets { get; set; } = new HashSet<Vector2>();
+
         public Vector2 _destination { get; set; }
 
         //these are our tweakable bias parameters.
@@ -42,31 +42,31 @@ namespace Swarms.Entities
 
         }
 
-        public void move(SquareGrid squareGrid)
-        {
-            var grid = squareGrid._slots;
-            var adjacent = getAdjacent(grid);
+        /*   public void move(SquareGrid squareGrid)
+          {
+              var grid = squareGrid._slots;
+              var adjacent = getAdjacent(grid);
 
-            var adjAgents = locateAgents(adjacent, grid);
+              var adjAgents = locateAgents(adjacent, grid);
 
-            if (_target == null)
-            {
-                _target = weightedDecision(adjacent, grid);
-                Vector2 newPos = _location;
+              if (_target == null)
+              {
+                  _target = weightedDecision(adjacent, grid);
+                  Vector2 newPos = _location;
 
-                Console.WriteLine($"I: {_location} want to go here: {_destination}");
-                if (_destination.X == -1 || _destination.Y == -1)   newPos = randomDirection(adjacent, grid);
-                var from = _location;
-                _location = newPos;
-                _prevLocation = from;
+                  Console.WriteLine($"I: {_location} want to go here: {_destination}");
+                  if (_destination.X == -1 || _destination.Y == -1) newPos = randomDirection(adjacent, grid);
+                  var from = _location;
+                  _location = newPos;
+                  _prevLocation = from;
 
-                grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
-                grid[(int)_location.X][(int)_location.Y] = this;
+                  grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
+                  grid[(int)_location.X][(int)_location.Y] = this;
 
-            }
+              }
 
-            else sendMessage(squareGrid._agentList);
-        }
+              else sendMessage(squareGrid._agentList);
+          } */
 
 
 
@@ -78,12 +78,13 @@ namespace Swarms.Entities
             return nearbyAgents;
         }
 
-        private List<Tree> locateTrees(List<Vector2> adjacent, GridLocation[][] grid){
-            
+        private List<Tree> locateTrees(List<Vector2> adjacent, GridLocation[][] grid)
+        {
+
             var trees = adjacent
                 .Where(postion => grid[(int)postion.X][(int)postion.Y].GetType() == typeof(Tree))
                 .Select(position => (Tree)grid[(int)position.X][(int)position.Y]).ToList();
-            
+
 
             return trees;
         }
@@ -93,14 +94,13 @@ namespace Swarms.Entities
         {
             List<Vector2> availableMoves = checkAvailableMoves(adjacent, grid);
 
-            if (availableMoves.FirstOrDefault() == null) return _location;
+            if (!availableMoves.Any() || availableMoves.Count == 0) return _location;
 
             var randomize = new Random().Next(0, availableMoves.Count);
 
             var direction = availableMoves[randomize];
 
-            if (availableMoves.Count == 0) return this._location;
-            else return direction;
+            return direction;
         }
 
         private List<Vector2> checkAvailableMoves(List<Vector2> adjacent, GridLocation[][] grid)
@@ -141,8 +141,8 @@ namespace Swarms.Entities
         {
             //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
             var noisedTemp = noise.addTemperatureNoise(target._temp);
-            return noisedTemp/100;
-            
+            return noisedTemp / 100;
+
         }
 
         //This is qi in formula(5), or the finished formula(5)
@@ -182,11 +182,7 @@ namespace Swarms.Entities
         private Tree weightedDecision(List<Vector2> adjacent, GridLocation[][] grid)
         {
 
-            var trees = adjacent
-                .Where(postion => grid[(int)postion.X][(int)postion.Y].GetType() == typeof(Tree))
-                .Select(position => (Tree)grid[(int)position.X][(int)position.Y]).ToList();
-
-            _availableTargets = trees;
+            _availableTargets = locateTrees(adjacent,grid);
 
             var weightedRandomBag = new WeightedRandomBag<Tree>();
 
@@ -214,7 +210,7 @@ namespace Swarms.Entities
         {
             _possibleTargets.UnionWith(sender._possibleTargets);
 
-            
+
         }
         public void sendMessage(List<Agent> receivers)
         {
@@ -226,53 +222,87 @@ namespace Swarms.Entities
 
 
         // WEIRD STUFF LNMAO
-        public void toRuleThemAll(SquareGrid squareGrid){
-            
+        public void toRuleThemAll(SquareGrid squareGrid)
+        {
+
             var grid = squareGrid._slots;
             var adjacentSquares = getAdjacent(grid);
+            var adjacentTrees = locateTrees(adjacentSquares, grid);
 
             //adds all nearby trees to available targets
-            foreach (var tree in _availableTargets){
+            foreach (var tree in adjacentTrees)
+            {
                 _possibleTargets.Add(tree._location);
             }
-           
-            if(_target != null){
+            _possibleTargets.UnionWith(_availableTargets.Select(tree => tree._location));
+
+            if (_target != null)
+            {
                 Extinguish();
             }
-            //If agent isn't "working" on a tree, and has no nearby trees it roams randomly for 1 tick
-            else if(_target == null && !_possibleTargets.Any()){
-                _location = randomDirection(adjacentSquares, grid);  
-            }
-            else if (_target == null && _possibleTargets.Any()){
+            else if (_target == null && _possibleTargets.Any())
+            {
                 var tree = weightedDecision(_possibleTargets.ToList(), grid);
-                
                 //Here we check if any agents already have this tree as a target, we allow 2 agents per tree
                 var sameTargetCounter = 0;
                 foreach (var agent in squareGrid._agentList)
                 {
-                    if (agent._target._location == _target._location && agent._location != _location) sameTargetCounter++;
+                    if(agent._target == null) continue;
+                    else if (agent._target._location == _target._location && agent._location != _location) sameTargetCounter++;
                 }
 
-                if(getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET ) _target=tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
+                /* if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET) */ _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
-                //_location = roamTowardsTree(destination);
+                move(grid, roamTowardsTree());
+
             }
-             sendMessage(squareGrid._agentList);
+            //If agent isn't "working" on a tree, and has no nearby trees it roams randomly for 1 tick
+            else if (_target == null && !_possibleTargets.Any())
+            {
+                move(grid, randomDirection(adjacentSquares, grid));
+            }
             
+            sendMessage(squareGrid._agentList);
+
         }
 
-        public void Extinguish(){
+        public void Extinguish()
+        {
 
             var targetTemp = _target.getTemp();
             var noisedTemp = noise.addTemperatureNoise(targetTemp);
-            if (noisedTemp < 75){ 
-            _target = null;
-            return;
+            if (noisedTemp < 75)
+            {
+                _target = null;
+                return;
             }
 
             _target.extinguishTick();
-            
+
 
         }
+        private Vector2 roamTowardsTree( )
+        {
+            var pos = new Vector2();
+
+            if (_destination.X - _location.X < 0) pos = new Vector2(_location.X - 1, _location.Y);
+            else if (_destination.X - _location.X > 0) pos = new Vector2(_location.X + 1, _location.Y);
+            else if (_destination.Y - _location.Y < 0) pos = new Vector2(_location.X, _location.Y - 1);
+            else if (_destination.Y - _location.Y > 0) pos = new Vector2(_location.X, _location.Y + 1);
+
+
+            return pos;
+        }
+
+        private void move(GridLocation[][] grid, Vector2 newPos)
+        {
+            var from = _location;
+            _location = newPos;
+            _prevLocation = from;
+
+            grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
+            grid[(int)_location.X][(int)_location.Y] = this;
+        }
+
     }
 }

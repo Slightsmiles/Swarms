@@ -266,7 +266,7 @@ namespace Swarms.Datatypes.Grids
         public SquareGrid TickOnce()
         {
             
-            foreach(var agent in _agentList) agent.move(this);
+            foreach(var agent in _agentList) agent.toRuleThemAll(this);
             foreach (var tree in _treeList)
             {
                 tree.tickTemp(_slots, _treeList);
