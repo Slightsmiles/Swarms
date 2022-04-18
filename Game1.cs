@@ -19,18 +19,18 @@ namespace Swarms
         private const int DEFAULT_SCREEN_WIDTH = 800;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public int _screenWidth {get; private set;}
-        public int _screenHeight {get; private set;}
+        public int _screenWidth { get; private set; }
+        public int _screenHeight { get; private set; }
 
         public SquareGrid _grid;
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
 
-        public int _gridSizeX {get; set;}
-        public int _gridSizeY {get; set;}
-        
-        
+        public int _gridSizeX { get; set; }
+        public int _gridSizeY { get; set; }
+
+
         //Logging variables
         public int _tickCounter { get; set; }
         public Logger _logger { get; set; }
@@ -38,7 +38,7 @@ namespace Swarms
         public int midTest { get; set; }
         public int highTest { get; set; }
         public bool IsLogging { get; set; }
-        public SquareGrid startingGrid {get; set;}
+        public SquareGrid startingGrid { get; set; }
 
         public int totalSims = 50;
 
@@ -60,17 +60,17 @@ namespace Swarms
             midTest = 80;
             highTest = 120;
             _logger = new Logger(lowTest, midTest, highTest);
-           
+
         }
 
         protected override void Initialize()
         {
             initSize();
             // TODO: Add your initialization logic here
-            
+
             initGrid();
-            
-            
+
+
             LoadContent();
             base.Initialize();
         }
@@ -79,10 +79,10 @@ namespace Swarms
         protected void initGrid()
         {
             _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging);
-            
+
 
         }
-        
+
         protected void initSize()
         {
             GraphicsDevice.PresentationParameters.BackBufferWidth = _screenWidth;
@@ -112,7 +112,7 @@ namespace Swarms
         protected override void Update(GameTime gameTime)
         {
             HandleKeyInput();
-            
+
             _grid.Update();
             // TODO: Add your update logic here
             base.Update(gameTime);
@@ -130,17 +130,18 @@ namespace Swarms
         }
 
 
-        public bool isSquareOccupied(Vector2 position) {
+        public bool isSquareOccupied(Vector2 position)
+        {
 
             var gLType = _grid._slots[(int)position.X][(int)position.Y].GetType();
-            return     gLType == typeof(Agent)
+            return gLType == typeof(Agent)
                     || gLType == typeof(Tree)
                     || gLType == typeof(Obstacle);
         }
-        
+
         private void HandleKeyInput()
         {
-            
+
             _previousKeyboardState = _currentKeyboardState;
             _currentKeyboardState = Keyboard.GetState();
             var position = _grid.getSlotFromPixel(new Vector2(Mouse.GetState().X, Mouse.GetState().Y));
@@ -157,18 +158,23 @@ namespace Swarms
             // Below is for adding and removing stuff
             if (_currentKeyboardState.IsKeyDown(Keys.LeftControl) || _currentKeyboardState.IsKeyDown(Keys.RightControl))
             {
+                if (_currentKeyboardState.IsKeyDown(Keys.Space))
+                {
+
+                    handleSpacebar();
+                }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
-                    if(isSquareOccupied(position)) return;
+                    if (isSquareOccupied(position)) return;
                     _grid.addTree(position);
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.A))
                 {
-                    if(isSquareOccupied(position)) return;
+                    if (isSquareOccupied(position)) return;
                     else _grid.addAgent(position);
-                    
+
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.R))
@@ -177,9 +183,9 @@ namespace Swarms
 
                 }
 
-                if(_currentKeyboardState.IsKeyDown(Keys.B))
+                if (_currentKeyboardState.IsKeyDown(Keys.B))
                 {
-                    if(isSquareOccupied(position)) return;
+                    if (isSquareOccupied(position)) return;
                     _grid.addTree(position, 80);
                 }
 
@@ -209,11 +215,19 @@ namespace Swarms
                 }
             }
 
-            if(_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
+            if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
 
-                if (IsLogging){
-                    for(int x = 0; x<totalSims; x++){
+                handleSpacebar();
+            }
+        }
+
+        public void handleSpacebar()
+        {
+            if (IsLogging)
+            {
+                for (int x = 0; x < totalSims; x++)
+                {
                     for (int i = 0; i < lowTest; i++)
                     {
                         _grid = _grid.TickOnce();
@@ -221,7 +235,7 @@ namespace Swarms
                     }
 
                     _logger.logLocations(lowTest, _grid);
-                    
+
                     for (int i = lowTest; i < midTest; i++)
                     {
                         _grid = _grid.TickOnce();
@@ -238,19 +252,16 @@ namespace Swarms
 
                     }
                     _logger.logLocations(highTest, _grid);
-                    Initialize();  
-                    }
+                    Initialize();
+                }
                 _logger.serialize();
-                }
-                else
-                {
-                    Console.WriteLine("moving");
-                    _grid = _grid.TickOnce();
-                    _tickCounter++;
-                }
-            } 
+            }
+            else
+            {
+                _grid = _grid.TickOnce();
+                _tickCounter++;
+            }
         }
-
         public void writeXML(SquareGrid grid)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid));
@@ -262,11 +273,11 @@ namespace Swarms
 
         public SquareGrid readXML()
         {
-            
+
             var mySerializer = new XmlSerializer(typeof(SquareGrid));
             using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
 
-            var grid = (SquareGrid) mySerializer.Deserialize(myFileStream);
+            var grid = (SquareGrid)mySerializer.Deserialize(myFileStream);
 
             return grid;
         }
@@ -285,5 +296,5 @@ namespace Swarms
 
         }
     }
-    
+
 }
