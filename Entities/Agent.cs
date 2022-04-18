@@ -13,8 +13,8 @@ namespace Swarms.Entities
         public Tree _target { get; set; }
         public List<Tree> _availableTargets { get; set; }
 
-        public HashSet<Vector2> _possibleTargets {get; set;}
-
+        public HashSet<Vector2> _possibleTargets {get; set;} = new HashSet<Vector2>();
+ 
         public Vector2 _destination { get; set; }
 
         //these are our tweakable bias parameters.
@@ -73,6 +73,16 @@ namespace Swarms.Entities
                                    .Select(pos => (Agent)grid[(int)pos.X][(int)pos.Y]).ToList();
 
             return nearbyAgents;
+        }
+
+        private List<Tree> locateTrees(List<Vector2> adjacent, GridLocation[][] grid){
+            
+            var trees = adjacent
+                .Where(postion => grid[(int)postion.X][(int)postion.Y].GetType() == typeof(Tree))
+                .Select(position => (Tree)grid[(int)position.X][(int)position.Y]).ToList();
+            
+
+            return trees;
         }
 
         // This is where the magic happens
@@ -197,7 +207,8 @@ namespace Swarms.Entities
 
         public void receiveMessage(Agent sender, Agent receiver)
         {
-            _possibleTargets.Add(sender._target._location);
+            _possibleTargets.UnionWith(sender._possibleTargets);
+
             
         }
         public void sendMessage(List<Agent> receivers)
@@ -212,9 +223,14 @@ namespace Swarms.Entities
             
             var grid = squareGrid._slots;
             var adjacentSquares = getAdjacent(grid);
-            
-            if(_target == null){
-
+            _possibleTargets.
+            if(_target == null && !_possibleTargets.Any()){
+                _location = randomDirection(adjacentSquares, grid);
+            }
+            else if (_target == null && _possibleTargets.Any()){
+                var tree = weightedDecision(_possibleTargets.ToList(), grid);
+                _destination = tree._location;
+                //_location = roamTowardsTree();
             }
             else sendMessage(squareGrid._agentList);
 
