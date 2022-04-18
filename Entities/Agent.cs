@@ -290,7 +290,7 @@ namespace Swarms.Entities
         {
             var weightedMoves = new WeightedRandomBag<Vector2>();
             var moves = new List<Vector2>();
-
+            rand = new Random();
             if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X - 1, _location.Y - 1));
             if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X - 1, _location.Y + 1));
             if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X + 1, _location.Y - 1));
@@ -301,29 +301,17 @@ namespace Swarms.Entities
             if (_destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X, _location.Y + 1));
 
             moves = moves.Where(pos => !isPathObstructed(pos, grid)).ToList();
-            var allMoves = checkAvailableMoves(adjacent, grid)/* .Where(pos => !moves.Contains(pos)) */;
 
-            var x = moves.Count();
-            var y = allMoves.Count();
-            if(y == 0) y = 1;
-            double z = (x * 4) / y;
-            double a = (1 - z) / y;
-
-            foreach (var move in moves)
-            {
-                weightedMoves.add(move, z);
-            }
-            foreach (var move in allMoves)
-            {
-                weightedMoves.add(move, a);
-            }
-            if (!moves.Any())
-            {
-                _destination = weightedDecision()._location;
-                return _location;
+            if (!moves.Any()){
+                var allMoves = checkAvailableMoves(adjacent, grid);
+                if (allMoves.Count == 0) return _location;
+                return allMoves[rand.Next(allMoves.Count)];
             }
 
-            return weightedMoves.getRandom();
+
+            /* .Where(pos => !moves.Contains(pos)) */;
+
+            return moves[rand.Next(moves.Count)];
         }
 
         private void move(GridLocation[][] grid, Vector2 newPos)
