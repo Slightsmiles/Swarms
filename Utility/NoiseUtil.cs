@@ -12,9 +12,9 @@ namespace Swarms.Utility
 
         }
 
-        public double addTemperatureNoise(double temp){
+        public double withNoise(double temp){
             var random = new Random();
-            var factor = random.Next(6);
+            var factor = temp/10;
             if(random.Next(1) == 1) return temp += factor;
             else return temp -= factor;
         }

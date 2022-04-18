@@ -140,7 +140,7 @@ namespace Swarms.Entities
         private double getQuality(Tree target)
         {
             //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
-            var noisedTemp = noise.addTemperatureNoise(target._temp);
+            var noisedTemp = noise.withNoise(target._temp);
             return noisedTemp / 100;
 
         }
@@ -196,7 +196,7 @@ namespace Swarms.Entities
 
         private bool isBurning(Tree tree)
         {
-            var noisedTemp = noise.addTemperatureNoise(tree._temp);
+            var noisedTemp = noise.withNoise(tree._temp);
             return noisedTemp >= 80;
         }
 
@@ -264,14 +264,14 @@ namespace Swarms.Entities
             }
             
             sendMessage(squareGrid._agentList);
-
+ 
         }
 
         public void Extinguish()
         {
 
             var targetTemp = _target.getTemp();
-            var noisedTemp = noise.addTemperatureNoise(targetTemp);
+            var noisedTemp = noise.withNoise(targetTemp);
             if (noisedTemp < 75)
             {
                 _target = null;
@@ -286,12 +286,12 @@ namespace Swarms.Entities
         {
 
             var herp = new List<Vector2>();
-
+            
             if (_destination.X - _location.X < 0) herp.Add(new Vector2(_location.X - 1, _location.Y));
             if (_destination.X - _location.X > 1)  herp.Add(new Vector2(_location.X + 1, _location.Y));
             if (_destination.Y - _location.Y < 0)  herp.Add(new Vector2(_location.X, _location.Y - 1));
             if (_destination.Y - _location.Y > 1)  herp.Add(new Vector2(_location.X, _location.Y + 1));
-
+            
            
             var availableMove = checkAvailableMoves(herp, grid);
             if(!availableMove.Any()) return _location;

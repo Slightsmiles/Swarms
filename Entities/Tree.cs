@@ -71,7 +71,7 @@ namespace Swarms.Entities
                 
                 return;
             }
-            _temp -= 15;
+            _temp -= 10;
         }
 
     }
