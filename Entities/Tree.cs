@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Globalization;
 using System;
 using System.Collections.Generic;
@@ -39,7 +38,7 @@ namespace Swarms.Entities
 
         public void tickTemp(GridLocation[][] grid, List<Tree> trees)
         {
-            var adjacentSquares = getAdjacent(grid, 5);
+            var adjacentSquares = getAdjacent(grid, 4);
             var adjacentTrees = getAdjacentTrees(grid, adjacentSquares, trees);
             
             foreach (var tree in adjacentTrees)
@@ -71,7 +70,7 @@ namespace Swarms.Entities
                 
                 return;
             }
-            _temp -= 15;
+            _temp -= 10;
         }
 
     }

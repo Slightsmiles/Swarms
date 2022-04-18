@@ -140,7 +140,7 @@ namespace Swarms.Entities
         private double getQuality(Tree target)
         {
             //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
-            var noisedTemp = noise.addTemperatureNoise(target._temp);
+            var noisedTemp = noise.withNoise(target._temp);
             return noisedTemp / 100;
 
         }
@@ -196,23 +196,25 @@ namespace Swarms.Entities
 
         private bool isBurning(Tree tree)
         {
-            var noisedTemp = noise.addTemperatureNoise(tree._temp);
+            var noisedTemp = noise.withNoise(tree._temp);
             return noisedTemp >= 80;
         }
 
         //=====================================================================================================================================
         //=====================================================Messaging stuff=================================================================
         //=====================================================================================================================================
-
+        static Random rand = new Random();
         public void receiveMessage(Agent sender, Agent receiver)
         {
-            _possibleTargets.UnionWith(sender._possibleTargets);
-
-
+            if (rand.Next(100) != 1) _possibleTargets.UnionWith(sender._possibleTargets);
+            
         }
         public void sendMessage(List<Agent> receivers)
         {
-            foreach (var receiver in receivers)
+            
+            
+            
+            foreach (var receiver in receivers.OrderBy(a => rand.Next(receivers.Count())))
             {
                 receiver.receiveMessage(this, receiver);
             }
@@ -234,6 +236,7 @@ namespace Swarms.Entities
             }
             if (_target != null)
             {
+                Console.WriteLine(this._location + " " +_target._location);
                 Extinguish();
             }
             else if (_target == null && _possibleTargets.Any())
@@ -251,7 +254,8 @@ namespace Swarms.Entities
                     if (agent._target == null) continue;
                     else if (agent._target._location == tree._location && agent._location != _location) sameTargetCounter++;
                 }
-                 if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET)  _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
+                 if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET){
+                 _target = tree;}         //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
                 move(grid, roamTowardsTree(grid));
 
@@ -263,14 +267,14 @@ namespace Swarms.Entities
             }
 
             sendMessage(squareGrid._agentList);
-
+ 
         }
 
         public void Extinguish()
         {
 
             var targetTemp = _target.getTemp();
-            var noisedTemp = noise.addTemperatureNoise(targetTemp);
+            var noisedTemp = noise.withNoise(targetTemp);
             if (noisedTemp < 75)
             {
                 _target = null;

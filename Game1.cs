@@ -187,7 +187,7 @@ namespace Swarms
                 if (_currentKeyboardState.IsKeyDown(Keys.B))
                 {
                     if (isSquareOccupied(position)) return;
-                    _grid.addTree(position, 80);
+                    _grid.addTree(position, 180);
                 }
 
                 //used for clearing
