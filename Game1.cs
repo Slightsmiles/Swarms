@@ -26,6 +26,7 @@ namespace Swarms
 
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
+
         public int _gridSizeX {get; set;}
         public int _gridSizeY {get; set;}
         
