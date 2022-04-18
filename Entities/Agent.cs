@@ -240,10 +240,11 @@ namespace Swarms.Entities
             else if (_target == null && _possibleTargets.Any())
             {
                 var tree = weightedDecision();
-                /*  if(tree == null){
-                     sendMessage(squareGrid._agentList);
-                     return;
-                 } */
+                if(tree == null){
+                    move(grid, randomDirection(adjacentSquares, grid));
+                    sendMessage(squareGrid._agentList);
+                    return;
+                }
                 //Here we check if any agents already have this tree as a target, we allow 2 agents per tree
                 var sameTargetCounter = 0;
                 foreach (var agent in squareGrid._agentList)
@@ -251,8 +252,7 @@ namespace Swarms.Entities
                     if (agent._target == null) continue;
                     else if (agent._target._location == tree._location && agent._location != _location) sameTargetCounter++;
                 }
-                /* if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET) */
-                _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
+                 if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET)  _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
                 move(grid, roamTowardsTree(grid));
 
@@ -284,23 +284,21 @@ namespace Swarms.Entities
         }
         private Vector2 roamTowardsTree(GridLocation[][] grid)
         {
-            var pos = new Vector2();
             var herp = new List<Vector2>();
 
             if (_destination.X - _location.X < 0) herp.Add(new Vector2(_location.X - 1, _location.Y));
-            if (_destination.X - _location.X > 1) herp.Add(new Vector2(_location.X + 1, _location.Y));
-            if (_destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X, _location.Y - 1));
-            if (_destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X, _location.Y + 1));
+            if (_destination.X - _location.X > 1)  herp.Add(new Vector2(_location.X + 1, _location.Y));
+            if (_destination.Y - _location.Y < 0)  herp.Add(new Vector2(_location.X, _location.Y - 1));
+            if (_destination.Y - _location.Y > 1)  herp.Add(new Vector2(_location.X, _location.Y + 1));
             if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X - 1, _location.Y - 1));
             if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X - 1, _location.Y + 1));
             if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) herp.Add(new Vector2(_location.X + 1, _location.Y - 1));
             if (_destination.X - _location.X > 1 && _destination.Y - _location.Y > 1) herp.Add(new Vector2(_location.X + 1, _location.Y + 1));
 
-            herp.Add(pos);
+           
             var availableMove = checkAvailableMoves(herp, grid);
-
-            if (!availableMove.Any()) return _location;
-            return pos;
+            if(!availableMove.Any()) return _location;
+            return availableMove.First();
         }
 
         private void move(GridLocation[][] grid, Vector2 newPos)
