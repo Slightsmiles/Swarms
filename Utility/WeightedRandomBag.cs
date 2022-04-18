@@ -4,7 +4,7 @@ using Swarms.Entities;
 
 namespace Swarms.Utility
 {
-    public class WeightedRandomBag<T> where T : class 
+    public class WeightedRandomBag<T>
     {
         private class Entry
         {
