@@ -24,8 +24,17 @@ namespace Swarms.Utility
 
         public Vector2 withNoise(Vector2 from){
 
-            //
-
+            if(from.X != -1 && from.Y != -1 && from.Y != 0 && from.X != 0)
+            switch (random.Next(40)){
+                case 10:
+                    return new Vector2(from.X+1,from.Y);
+                case 20:
+                    return new Vector2(from.X-1,from.Y);
+                case 30:
+                    return new Vector2(from.X,from.Y+1);
+                case 40:
+                    return new Vector2(from.X+1,from.Y-1);
+            }
             return from;
             
 

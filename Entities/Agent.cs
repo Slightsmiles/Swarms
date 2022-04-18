@@ -152,8 +152,8 @@ namespace Swarms.Entities
             var sum = 0.0;
             foreach (var tree in _possibleTargets)
             {
-                // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
-                sum += getQuality(tree); // i believe this to be correct.
+                if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
+               // sum += getQuality(tree); // i believe this to be correct.
             }
 
             return current / sum;
@@ -257,7 +257,7 @@ namespace Swarms.Entities
                 }
                  if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET){
                  _target = tree;}         //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
-                _destination = tree._location;
+                _destination = noise.withNoise(tree._location);
                 move(grid, roamTowardsTree(grid));
 
             }
