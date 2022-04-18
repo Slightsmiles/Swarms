@@ -14,7 +14,7 @@ namespace Swarms.Entities
         public int _id {get;set;}
         public bool _isBurning {get; set;}
 
-        public Tree(Vector2 location, int temp = 30, int  id = 0) : base(-1, false, location){
+        public Tree(Vector2 location, double temp = 30, int  id = 0) : base(-1, false, location){
   
             _location = location;
             _temp = temp;
@@ -31,6 +31,10 @@ namespace Swarms.Entities
         public Color GetColor()
         {
             return _temp >= 80 ? Color.Red : Color.LawnGreen;
+        }
+
+        public double getTemp(){
+            return _temp;
         }
 
         public void tickTemp(GridLocation[][] grid, List<Tree> trees)
@@ -60,6 +64,13 @@ namespace Swarms.Entities
             return adjacentTrees;
         }
 
-        
+        public void extinguishTick(){
+             if(_temp < 75){
+                
+                return;
+            }
+            _temp -= 15;
+        }
+
     }
 }

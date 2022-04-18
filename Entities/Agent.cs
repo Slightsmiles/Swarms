@@ -23,9 +23,12 @@ namespace Swarms.Entities
         // alpha, beta > 0; a,b in real numbers
         double alpha = 1.00000;
         double beta = 1.00000;
-
+        NoiseUtil noise;
+        public static int MAXAGENTSPERTARGET = 2;
+        public static int EXTINGUISHABLEDISTANCE = 2;
         public Agent(Vector2 location) : base(-1, false, location)
         {
+            noise = new NoiseUtil();
 
             _location = location;
             _temp = defaultTemp;
@@ -137,8 +140,9 @@ namespace Swarms.Entities
         private double getQuality(Tree target)
         {
             //Here we want to decide how an agent checks the quality of a target. That is we need to figure out how we simulate the sensoral input
-
-            return 1.0;
+            var noisedTemp = noise.addTemperatureNoise(target._temp);
+            return noisedTemp/100;
+            
         }
 
         //This is qi in formula(5), or the finished formula(5)
@@ -198,7 +202,8 @@ namespace Swarms.Entities
 
         private bool isBurning(Tree tree)
         {
-            return tree._temp >= 80;
+            var noisedTemp = noise.addTemperatureNoise(tree._temp);
+            return noisedTemp >= 80;
         }
 
         //=====================================================================================================================================
@@ -219,31 +224,55 @@ namespace Swarms.Entities
             }
         }
 
+
+        // WEIRD STUFF LNMAO
         public void toRuleThemAll(SquareGrid squareGrid){
             
             var grid = squareGrid._slots;
             var adjacentSquares = getAdjacent(grid);
-            _possibleTargets.
-            if(_target == null && !_possibleTargets.Any()){
-                _location = randomDirection(adjacentSquares, grid);
+
+            //adds all nearby trees to available targets
+            foreach (var tree in _availableTargets){
+                _possibleTargets.Add(tree._location);
+            }
+           
+            if(_target != null){
+                Extinguish();
+            }
+            //If agent isn't "working" on a tree, and has no nearby trees it roams randomly for 1 tick
+            else if(_target == null && !_possibleTargets.Any()){
+                _location = randomDirection(adjacentSquares, grid);  
             }
             else if (_target == null && _possibleTargets.Any()){
                 var tree = weightedDecision(_possibleTargets.ToList(), grid);
-                _destination = tree._location;
-                //_location = roamTowardsTree();
-            }
-            else sendMessage(squareGrid._agentList);
-
-            if(_possibleTargets.Any()){
                 
-                var tree = weightedDecision(_possibleTargets.ToList(), grid);
-                //roamTowardsTree();
+                //Here we check if any agents already have this tree as a target, we allow 2 agents per tree
+                var sameTargetCounter = 0;
+                foreach (var agent in squareGrid._agentList)
+                {
+                    if (agent._target._location == _target._location && agent._location != _location) sameTargetCounter++;
+                }
 
-            } 
+                if(getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET ) _target=tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
+                _destination = tree._location;
+                //_location = roamTowardsTree(destination);
+            }
+             sendMessage(squareGrid._agentList);
+            
+        }
+
+        public void Extinguish(){
+
+            var targetTemp = _target.getTemp();
+            var noisedTemp = noise.addTemperatureNoise(targetTemp);
+            if (noisedTemp < 75){ 
+            _target = null;
+            return;
+            }
+
+            _target.extinguishTick();
             
 
-
-            
         }
     }
 }
