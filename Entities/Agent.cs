@@ -150,8 +150,8 @@ namespace Swarms.Entities
             var sum = 0.0;
             foreach (var tree in _possibleTargets)
             {
-                // if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
-                sum += getQuality(tree); // i believe this to be correct.
+                if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
+               // sum += getQuality(tree); // i believe this to be correct.
             }
 
             return current / sum;
