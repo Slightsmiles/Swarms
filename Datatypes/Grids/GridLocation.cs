@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using Swarms.Entities;
 namespace Swarms.Datatypes.Grids
 {
     //individual grid locations
@@ -53,6 +54,8 @@ namespace Swarms.Datatypes.Grids
             
             return adjacent;
         }
+
+       
 
          private bool isWithinBounds(Vector2 loc, GridLocation[][] grid) {
             return      loc.X >= 0 

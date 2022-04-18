@@ -13,6 +13,8 @@ namespace Swarms.Entities
         public Tree _target { get; set; }
         public List<Tree> _availableTargets { get; set; }
 
+        public HashSet<Vector2> _possibleTargets {get; set;}
+
         public Vector2 _destination { get; set; }
 
         //these are our tweakable bias parameters.
@@ -61,7 +63,7 @@ namespace Swarms.Entities
 
             }
 
-            else sendMessage(squareGrid._agentList, grid);
+            else sendMessage(squareGrid._agentList);
         }
 
 
@@ -194,18 +196,39 @@ namespace Swarms.Entities
         //=====================================================Messaging stuff=================================================================
         //=====================================================================================================================================
 
-        public void receiveMessage(object s, Agent receiver)
+        public void receiveMessage(Agent sender, Agent receiver)
         {
-            var sender = s as Agent;
-            receiver._destination = sender._location;
-            Console.WriteLine($"--------------Receiver: {_location}--------------\n WHOOOAH, I: {sender._location} found some stuff at: {sender?._target?._location}");
+            _possibleTargets.Add(sender._target._location);
+            
         }
-        public void sendMessage(List<Agent> receivers, GridLocation[][] grid)
+        public void sendMessage(List<Agent> receivers)
         {
             foreach (var receiver in receivers)
             {
                 receiver.receiveMessage(this, receiver);
             }
+        }
+
+        public void toRuleThemAll(SquareGrid squareGrid){
+            
+            var grid = squareGrid._slots;
+            var adjacentSquares = getAdjacent(grid);
+            
+            if(_target == null){
+
+            }
+            else sendMessage(squareGrid._agentList);
+
+            if(_possibleTargets.Any()){
+                
+                var tree = weightedDecision(_possibleTargets.ToList(), grid);
+                //roamTowardsTree();
+
+            } 
+            
+
+
+            
         }
     }
 }
