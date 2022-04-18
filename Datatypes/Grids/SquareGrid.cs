@@ -262,16 +262,16 @@ namespace Swarms.Datatypes.Grids
                 spriteBatch.End();
             }
         }
-
+        public static Random rand = new Random();
         public SquareGrid TickOnce()
         {
 
-            foreach(var agent in _agentList){
+            foreach(var agent in _agentList.OrderBy(a => rand.Next(_agentList.Count()))){
                 agent.toRuleThemAll(this);
                 UpdateGrid();
             }
              
-            foreach (var tree in _treeList)
+            foreach (var tree in _treeList.OrderBy(a => rand.Next(_treeList.Count())))
             {
                 tree.tickTemp(_slots, _treeList);
                // UpdateGrid();

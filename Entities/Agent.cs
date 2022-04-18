@@ -203,16 +203,18 @@ namespace Swarms.Entities
         //=====================================================================================================================================
         //=====================================================Messaging stuff=================================================================
         //=====================================================================================================================================
-
+        static Random rand = new Random();
         public void receiveMessage(Agent sender, Agent receiver)
         {
-            _possibleTargets.UnionWith(sender._possibleTargets);
-
-
+            if (rand.Next(100) != 1) _possibleTargets.UnionWith(sender._possibleTargets);
+            
         }
         public void sendMessage(List<Agent> receivers)
         {
-            foreach (var receiver in receivers)
+            
+            
+            
+            foreach (var receiver in receivers.OrderBy(a => rand.Next(receivers.Count())))
             {
                 receiver.receiveMessage(this, receiver);
             }
@@ -235,6 +237,7 @@ namespace Swarms.Entities
 
             if (_target != null)
             {
+                Console.WriteLine(this._location + " " +_target._location);
                 Extinguish();
             }
             else if (_target == null && _possibleTargets.Any())
@@ -252,7 +255,8 @@ namespace Swarms.Entities
                     if(agent._target == null) continue;
                     else if (agent._target._location == tree._location && agent._location != _location) sameTargetCounter++;
                 }
-                 if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET)  _target = tree;       //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
+                 if (getEuclidianDistance(tree._location, _location) <= EXTINGUISHABLEDISTANCE && sameTargetCounter < MAXAGENTSPERTARGET){
+                 _target = tree;}         //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
                 move(grid, roamTowardsTree(grid));
 
