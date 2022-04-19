@@ -208,10 +208,10 @@ namespace Swarms
                 }
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
                 {
-                    readSimData();
+                    //readSimData();
                     //Console.WriteLine("reading from xml");
-                    // var newgrid = readXML();
-                    // _grid = newgrid;
+                     var newgrid = readXML();
+                     _grid = newgrid;
 
                 }
             }
@@ -265,7 +265,7 @@ namespace Swarms
         }
         public void writeXML(SquareGrid grid)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid));
+            XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid), types);
 
             StreamWriter writer = new StreamWriter("testGrid.xml");
             serializer.Serialize(writer, grid);
@@ -275,7 +275,7 @@ namespace Swarms
         public SquareGrid readXML()
         {
 
-            var mySerializer = new XmlSerializer(typeof(SquareGrid));
+            var mySerializer = new XmlSerializer(typeof(SquareGrid), types);
             using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
 
             var grid = (SquareGrid)mySerializer.Deserialize(myFileStream);
