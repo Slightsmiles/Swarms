@@ -23,7 +23,7 @@ namespace Swarms
         public int _screenHeight { get; private set; }
 
         public SquareGrid _grid;
-
+        public int[][] toMap {get; set;}
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
 
@@ -40,6 +40,8 @@ namespace Swarms
         public bool IsLogging { get; set; }
         public SquareGrid startingGrid { get; set; }
 
+        public Heatmapper _mapper {get; set;}
+        public bool IsMapping {get; set;}
         public int totalSims = 50;
 
         public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, 
@@ -61,6 +63,11 @@ namespace Swarms
             midTest = mid;
             highTest = high;
             _logger = new Logger(lowTest, midTest, highTest);
+
+            _mapper = new Heatmapper();
+            IsMapping = false;
+
+
 
         }
 
@@ -123,8 +130,9 @@ namespace Swarms
         {
             GraphicsDevice.Clear(Color.WhiteSmoke);
 
-
-            _grid.drawGrid(new Vector2(0, 0), _spriteBatch, rectTexture);
+            if(IsMapping) _grid.drawHeatMap(new Vector2(0,0), _spriteBatch, toMap);
+            else {_grid.drawGrid(new Vector2(0, 0), _spriteBatch, rectTexture);}
+            
 
             base.Draw(gameTime);
 
@@ -214,6 +222,11 @@ namespace Swarms
                      _grid = newgrid;
 
                 }
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.M)){
+                    toMap = _mapper.countOccurences(readSimData());
+                    IsMapping = true;
+                    
+                }
             }
 
             if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
@@ -276,7 +289,7 @@ namespace Swarms
         {
 
             var mySerializer = new XmlSerializer(typeof(SquareGrid), types);
-            using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
+            using var myFileStream = new FileStream("CenterWithQualityBias.xml", FileMode.Open);
 
             var grid = (SquareGrid)mySerializer.Deserialize(myFileStream);
 
@@ -284,17 +297,22 @@ namespace Swarms
         }
 
         Type[] types = { typeof(Boardentity), typeof(Agent), typeof(Obstacle), typeof(Tree) };
-        public void readSimData()
+        public GridLocation[][][] readSimData()
         {
 
             var mySerializer = new XmlSerializer(typeof(GridLocation[][][]), types);
-            var path = "testData40.xml";
+            var path = "testData120.xml";
             using var myFileStream = new FileStream(path, FileMode.Open);
 
             var data = (GridLocation[][][])mySerializer.Deserialize(myFileStream);
 
-            var realData = data[0];
-            _grid._slots = realData;
+            return data;
+            //var realData = data[0];
+            //_grid._slots = realData;
+
+        }
+
+        public void showHeatMap(){
 
         }
     }

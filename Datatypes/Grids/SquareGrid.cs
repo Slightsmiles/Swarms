@@ -262,6 +262,21 @@ namespace Swarms.Datatypes.Grids
                 spriteBatch.End();
             }
         }
+        private Heatmapper heatmapper = new Heatmapper();
+        public virtual void drawHeatMap(Vector2 offset, SpriteBatch spriteBatch, int[][] array){
+            spriteBatch.Begin();
+            for (int i = 0; i < _columnNums; i++)
+            {
+                var xOffset = (int)(offset.X + _slotDim * i);
+                for(int j=0; j< _rowNums; j++){
+                     var yOffset = (int)(offset.Y + _slotDim * j);
+                        var color = heatmapper.HeatMap(array[i][j],0,20);
+
+                        RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
+                }
+            }
+            spriteBatch.End();
+        }
         public static Random rand = new Random();
         public SquareGrid TickOnce()
         {

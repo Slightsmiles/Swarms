@@ -82,34 +82,5 @@ namespace Swarms
             writer.Close();
         }
 
-
-      /*  public void serialize(List<Vector2[][]> logs, int ticks)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Vector2[][]>));
-
-            StreamWriter writer = new StreamWriter("test" + ticks + ".xml");
-            // If file already exists, deserialize, add to collection and then serialize.
-            // else just serialize
-            // how to check if file already exists?????
-
-            if (File.Exists("test"+ ticks + ".xml"))
-            {
-                writer.Close();
-            
-                
-                deserialize(ticks);
-                serializer.Serialize(writer, _logs);
-            }
-            else
-            {
-                
-                serializer.Serialize(writer, logs);
-            }
-            
-           
-        }
-*/
-    
-
     }
 }

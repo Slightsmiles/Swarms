@@ -22,7 +22,7 @@ namespace Swarms.Entities
         // alpha, beta > 0; a,b in real numbers
         double alpha = 0.50000;
         double beta = 1.0;
-        NoiseUtil noise;
+        NoiseUtil noise = new NoiseUtil();
         public static int MAXAGENTSPERTARGET = 2;
         public static int EXTINGUISHABLEDISTANCE = 2;
         public Agent(Vector2 location) : base(-1, false, location)
