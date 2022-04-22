@@ -13,6 +13,8 @@ namespace Swarms.Entities
         public int _id {get;set;}
         public bool _isBurning {get; set;}
 
+        public static int _spreadRange = 3;
+
         public Tree(Vector2 location, double temp = 30, int  id = 0) : base(-1, false, location){
   
             _location = location;
@@ -38,7 +40,7 @@ namespace Swarms.Entities
 
         public void tickTemp(GridLocation[][] grid, List<Tree> trees)
         {
-            var adjacentSquares = getAdjacent(grid, 4);
+            var adjacentSquares = getAdjacent(grid, _spreadRange);
             var adjacentTrees = getAdjacentTrees(grid, adjacentSquares, trees);
             
             foreach (var tree in adjacentTrees)

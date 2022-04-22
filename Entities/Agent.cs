@@ -16,15 +16,17 @@ namespace Swarms.Entities
 
         public Vector2 _destination { get; set; }
 
+        public int _communicationRange {get; set; } = 8;
+
         //these are our tweakable bias parameters.
         //Lessening alpha will lessen the bias of target quality.
         //Lessening beta will lessen the bias of cost to target
         // alpha, beta > 0; a,b in real numbers
-        public double alpha = 1.0;
-        public double beta = 1.0;
+        public double alpha {get; set;} = 1.0;
+        public double beta {get; set;} = 1.0;
         NoiseUtil noise = new NoiseUtil();
-        public static int MAXAGENTSPERTARGET = 2;
-        public static int EXTINGUISHABLEDISTANCE = 2;
+        public int MAXAGENTSPERTARGET  {get; set;} = 2;
+        public int EXTINGUISHABLEDISTANCE {get; set;} = 2;
         public Agent(Vector2 location) : base(-1, false, location)
         {
             noise = new NoiseUtil();
@@ -73,6 +75,7 @@ namespace Swarms.Entities
             var nearbyAgents = locs.Where(pos => grid[(int)pos.X][(int)pos.Y].GetType() == typeof(Agent))
                                    .Select(pos => (Agent)grid[(int)pos.X][(int)pos.Y]).ToList();
 
+            Console.WriteLine(nearbyAgents.Count());
             return nearbyAgents;
         }
 
@@ -224,7 +227,7 @@ namespace Swarms.Entities
         {
 
             var grid = squareGrid._slots;
-            var adjacentSquares = getAdjacent(grid);
+            var adjacentSquares = getAdjacent(grid, 4); //This variable determines the range that Agents can sensor a tree
             var adjacentTrees = locateTrees(adjacentSquares, grid);
 
             //adds all nearby trees to available targets
@@ -243,7 +246,7 @@ namespace Swarms.Entities
                 if (tree == null)
                 {
                     move(grid, randomDirection(adjacentSquares, grid));
-                    sendMessage(squareGrid._agentList);
+                    sendMessage(locateAgents(getAdjacent(grid, _communicationRange), grid));
                     return;
                 }
                 //Here we check if any agents already have this tree as a target, we allow 2 agents per tree
@@ -267,7 +270,7 @@ namespace Swarms.Entities
                 move(grid, randomDirection(adjacentSquares, grid));
             }
 
-            sendMessage(squareGrid._agentList);
+            sendMessage(locateAgents(getAdjacent(grid, _communicationRange), grid));
 
         }
 
