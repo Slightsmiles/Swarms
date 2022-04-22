@@ -199,7 +199,7 @@ namespace Swarms
                 }
 
                 //used for clearing
-                if (_currentKeyboardState.IsKeyDown(Keys.Back))
+                if (_currentKeyboardState.IsKeyDown(Keys.D))
                 {
                     _grid._slots[(int)posX][(int)posY] = new Boardentity(1, true, position);
                 }

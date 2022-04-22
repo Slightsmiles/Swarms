@@ -68,7 +68,7 @@ namespace Swarms.Datatypes.Grids
             setBaseGrid();
             if(isLogging){
                 //need to add trees and obstacles correctly.
-                setSimulationGrid();
+               // setSimulationGrid();
             }
             //setBigGrid(); //works on 48/80 grid
             //setRiverGrid(); //only works on 24/40 grid
@@ -270,7 +270,7 @@ namespace Swarms.Datatypes.Grids
                 var xOffset = (int)(offset.X + _slotDim * i);
                 for(int j=0; j< _rowNums; j++){
                      var yOffset = (int)(offset.Y + _slotDim * j);
-                        var color = heatmapper.HeatMap(array[i][j],0,20);
+                        var color = heatmapper.HeatMap(array[i][j],0,30);
 
                         RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
                 }
