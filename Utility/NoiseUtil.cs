@@ -8,7 +8,7 @@ namespace Swarms.Utility
 {
     public class NoiseUtil
     {
-        public double tempFactor;
+        public double tempFactor {get; set;} = 20;
         static Random random = new Random();
         public NoiseUtil()
         {
@@ -17,9 +17,9 @@ namespace Swarms.Utility
 
         public double withNoise(double temp)
         {
-            var factor = temp / 10;
-            if (random.Next(2) == 1) return temp += factor;
-            else return temp -= factor;
+            var tempDiff = temp / tempFactor;
+            if (random.Next(2) == 1) return temp += tempDiff;
+            else return temp -= tempDiff;
         }
 
         public Vector2 withNoise(Vector2 from){

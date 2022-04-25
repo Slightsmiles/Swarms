@@ -75,7 +75,7 @@ namespace Swarms.Entities
             var nearbyAgents = locs.Where(pos => grid[(int)pos.X][(int)pos.Y].GetType() == typeof(Agent))
                                    .Select(pos => (Agent)grid[(int)pos.X][(int)pos.Y]).ToList();
 
-            Console.WriteLine(nearbyAgents.Count());
+
             return nearbyAgents;
         }
 
@@ -198,6 +198,7 @@ namespace Swarms.Entities
         private bool isBurning(Tree tree)
         {
             var noisedTemp = noise.withNoise(tree._temp);
+            Console.WriteLine(noisedTemp >= 80);
             return noisedTemp >= 80;
         }
 
@@ -237,7 +238,6 @@ namespace Swarms.Entities
             }
             if (_target != null)
             {
-                Console.WriteLine(this._location + " " + _target._location);
                 Extinguish();
             }
             else if (_target == null && _possibleTargets.Any())
