@@ -37,15 +37,15 @@ namespace Swarms
         public int lowTest { get; set; }
         public int midTest { get; set; }
         public int highTest { get; set; }
-        public bool IsLogging { get; set; }
+        public bool IsLogging { get; set;  }
         public SquareGrid startingGrid { get; set; }
 
         public Heatmapper _mapper {get; set;}
         public bool IsMapping {get; set;}
-        public int totalSims = 50;
+        public int totalSims = 100;
 
         public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, 
-                        bool logging = false, int lower = 40, int mid = 80, int high = 120)
+                        bool logging = true, int lower = 10, int mid = 80, int high = 120)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -58,7 +58,7 @@ namespace Swarms
             IsMouseVisible = true;
 
             // Logging
-            IsLogging = logging;
+            IsLogging = true;
             lowTest = lower;
             midTest = mid;
             highTest = high;
@@ -75,18 +75,18 @@ namespace Swarms
         {
             initSize();
             // TODO: Add your initialization logic here
-
+            LoadContent();
             initGrid();
 
 
-            LoadContent();
+            
             base.Initialize();
         }
 
 
         protected void initGrid()
         {
-            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging);
+            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging, _font);
 
 
         }
@@ -99,10 +99,12 @@ namespace Swarms
         }
         //currently unused in SquareGrid class, even though we pass it as argument
         Texture2D rectTexture;
+
+        SpriteFont _font;
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _font = Content.Load<SpriteFont>("File");
             rectTexture = new Texture2D(GraphicsDevice, 1, 1);
             rectTexture.SetData(new[] { Color.White });
             // TODO: use this.Content to load your game content here
@@ -167,10 +169,10 @@ namespace Swarms
             // Below is for adding and removing stuff
             if (_currentKeyboardState.IsKeyDown(Keys.LeftControl) || _currentKeyboardState.IsKeyDown(Keys.RightControl))
             {
-                if (_currentKeyboardState.IsKeyDown(Keys.Space))
+                if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
                 {
-
-                    handleSpacebar();
+                    Console.WriteLine("yeet");
+                    handleSpacebar();   
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
@@ -240,8 +242,10 @@ namespace Swarms
         {
             if (IsLogging)
             {
+                var tempgrid = _grid;
                 for (int x = 0; x < totalSims; x++)
                 {
+                    _grid = tempgrid;
                     for (int i = 0; i < lowTest; i++)
                     {
                         _grid = _grid.TickOnce();
@@ -249,7 +253,7 @@ namespace Swarms
                     }
 
                     _logger.logLocations(lowTest, _grid);
-
+                    
                     for (int i = lowTest; i < midTest; i++)
                     {
                         _grid = _grid.TickOnce();
@@ -258,7 +262,7 @@ namespace Swarms
 
                     _logger.logLocations(midTest, _grid);
 
-
+                    
                     for (int i = midTest; i < highTest; i++)
                     {
                         _grid = _grid.TickOnce();
@@ -266,7 +270,7 @@ namespace Swarms
 
                     }
                     _logger.logLocations(highTest, _grid);
-                    Initialize();
+                    _grid = tempgrid;
                 }
                 _logger.serialize();
             }

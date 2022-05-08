@@ -12,7 +12,7 @@ namespace Swarms
             var _screenHeight =  480;
             var _screenWidth = 800;
             var _logging = false;
-            var _lower = 40;
+            var _lower = 10;
             var _mid = 80;
             var _high = 120;
             

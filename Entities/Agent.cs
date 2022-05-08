@@ -198,7 +198,6 @@ namespace Swarms.Entities
         private bool isBurning(Tree tree)
         {
             var noisedTemp = noise.withNoise(tree._temp);
-            Console.WriteLine(noisedTemp >= 80);
             return noisedTemp >= 80;
         }
 
