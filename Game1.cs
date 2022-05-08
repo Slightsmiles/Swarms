@@ -44,7 +44,7 @@ namespace Swarms
         public bool IsMapping {get; set;}
         public int totalSims = 100;
 
-        public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, 
+        public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, bool isMapping = false, 
                         bool logging = true, int lower = 10, int mid = 80, int high = 120)
         {
             _gridSizeX = gridSizeX;
@@ -65,7 +65,7 @@ namespace Swarms
             _logger = new Logger(lowTest, midTest, highTest);
 
             _mapper = new Heatmapper();
-            IsMapping = false;
+            IsMapping = isMapping;
 
 
 
@@ -309,7 +309,6 @@ namespace Swarms
             using var myFileStream = new FileStream(path, FileMode.Open);
 
             var data = (GridLocation[][][])mySerializer.Deserialize(myFileStream);
-
             return data;
             //var realData = data[0];
             //_grid._slots = realData;

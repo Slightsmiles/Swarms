@@ -42,34 +42,6 @@ namespace Swarms.Entities
 
         }
 
-        /*   public void move(SquareGrid squareGrid)
-          {
-              var grid = squareGrid._slots;
-              var adjacent = getAdjacent(grid);
-
-              var adjAgents = locateAgents(adjacent, grid);
-
-              if (_target == null)
-              {
-                  _target = weightedDecision(adjacent, grid);
-                  Vector2 newPos = _location;
-
-                  Console.WriteLine($"I: {_location} want to go here: {_destination}");
-                  if (_destination.X == -1 || _destination.Y == -1) newPos = randomDirection(adjacent, grid);
-                  var from = _location;
-                  _location = newPos;
-                  _prevLocation = from;
-
-                  grid[(int)_prevLocation.X][(int)_prevLocation.Y] = new Boardentity(1, true, _prevLocation);
-                  grid[(int)_location.X][(int)_location.Y] = this;
-
-              }
-
-              else sendMessage(squareGrid._agentList);
-          } */
-
-
-
         private List<Agent> locateAgents(List<Vector2> locs, GridLocation[][] grid)
         {
             var nearbyAgents = locs.Where(pos => grid[(int)pos.X][(int)pos.Y].GetType() == typeof(Agent))
