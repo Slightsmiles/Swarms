@@ -45,7 +45,7 @@ namespace Swarms
         public int totalSims = 50;
 
         public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, 
-                        bool logging = false, int lower = 40, int mid = 80, int high = 120)
+                        bool logging = false, bool isMapping = false, int lower = 40, int mid = 80, int high = 120)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -65,7 +65,7 @@ namespace Swarms
             _logger = new Logger(lowTest, midTest, highTest);
 
             _mapper = new Heatmapper();
-            IsMapping = false;
+            IsMapping = isMapping;
 
 
 

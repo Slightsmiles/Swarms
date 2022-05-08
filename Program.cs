@@ -15,6 +15,7 @@ namespace Swarms
             var _lower = 40;
             var _mid = 80;
             var _high = 120;
+            var _isMapping = false;
             
             if(args.Length != 0)
             { 
@@ -48,6 +49,10 @@ namespace Swarms
                         case "high":
                             _high = Int32.Parse(arg[1]);
                             break;
+                        case "isMapping" :
+                            _isMapping = bool.Parse(arg[1]);
+                            break;
+                            
 
                     }
                 }
@@ -72,7 +77,7 @@ namespace Swarms
                */
             }
 
-            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _logging, _lower, _mid, _high))
+            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _logging, _isMapping, _lower, _mid, _high))
                 game.Run();
         }
     }
