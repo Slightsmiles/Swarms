@@ -49,32 +49,8 @@ namespace Swarms
                         case "high":
                             _high = Int32.Parse(arg[1]);
                             break;
-                        case "isMapping" :
-                            _isMapping = bool.Parse(arg[1]);
-                            break;
-                            
-
                     }
                 }
-                /* logging = bool.Parse(args[0]);
-                
-                //what are these?
-                lower = Int32.Parse(args[1]);  
-                mid = Int32.Parse(args[2]);    
-                high = Int32.Parse(args[3]);
-
-
-                if (args.Length > 4)
-                {
-                    x = Int32.Parse(args[4]);
-                    y = Int32.Parse(args[5]);
-                }
-
-                if(args.Length > 6) {
-                    screenHeight = Int32.Parse(args[6]);
-                    screenWidth = Int32.Parse(args[7]);
-                }        
-               */
             }
 
             using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _logging, _isMapping, _lower, _mid, _high))

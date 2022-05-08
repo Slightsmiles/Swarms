@@ -305,7 +305,6 @@ namespace Swarms
             using var myFileStream = new FileStream(path, FileMode.Open);
 
             var data = (GridLocation[][][])mySerializer.Deserialize(myFileStream);
-
             return data;
             //var realData = data[0];
             //_grid._slots = realData;
