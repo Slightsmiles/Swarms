@@ -175,27 +175,97 @@ namespace Swarms.Datatypes.Grids
         public void setSimulationGrid()
         {
 
+            //initTenAgents();
+           // initTwentyAgents(23); //These two initTwentyAgents call will make 40 agents in total :)
+          //  initTwentyAgents(22);
+           // InitTopLeftTreeCluster();
+          //  initBotMidTreeCluster();
+          //  initTopRightTreeCluster();
+
+          initSurrounded();
+
+
+
+        }
+
+
+        public void initSurrounded(){
+            InitTopLeftTreeCluster();
+            initBotMidTreeCluster();
+            initTopRightTreeCluster();
+            initSurroundedAgents();
+
+
+
+        }
+
+        private void initSurroundedAgents()
+        {
+            addAgent(new Vector2(18,9));
+            addAgent(new Vector2(18,8));
+            addAgent(new Vector2(18,7));
+            addAgent(new Vector2(19,6));
+            addAgent(new Vector2(19,7));
+            addAgent(new Vector2(19,8));
+            addAgent(new Vector2(19,9));
+            addAgent(new Vector2(20,9));
+            addAgent(new Vector2(20,8));
+            addAgent(new Vector2(20,7));
+
+        }
+
+        public void InitTopLeftTreeCluster(){
+
+            addTree(new Vector2(3,3));
+            addTree(new Vector2(4,3));
+            addTree(new Vector2(5,3));
+            addTree(new Vector2(5,4));
+            addTree(new Vector2(5,5));
+            addTree(new Vector2(4,5));
+            addTree(new Vector2(3,5));
+            addTree(new Vector2(3,4));
+        }  
+        private void initTopRightTreeCluster()
+        {
+            addTree(new Vector2(34,3));
+            addTree(new Vector2(35,3));
+            addTree(new Vector2(36,3));
+            addTree(new Vector2(36,4));
+            addTree(new Vector2(36,5));
+            addTree(new Vector2(35,5));
+            addTree(new Vector2(34,5));
+            addTree(new Vector2(34,4));
+        }
+
+        private void initBotMidTreeCluster()
+        {
+            addTree(new Vector2(18,18));
+            addTree(new Vector2(19,18));
+            addTree(new Vector2(20,18));
+            addTree(new Vector2(20,19));
+            addTree(new Vector2(20,20));
+            addTree(new Vector2(19,20));
+            addTree(new Vector2(18,20));
+            addTree(new Vector2(18,19));
+        }
+
+
+
+        public void initTenAgents(){
             for (int i = 14; i < 24; i++)
             {
                 addAgent(new Vector2(i, 23));
             }
-
-            addTree(new Vector2(3, 3));
-            addTree(new Vector2(4, 3));
-            addTree(new Vector2(4, 4));
-            addTree(new Vector2(3, 4));
-            addTree(new Vector2(34, 3));
-            addTree(new Vector2(34, 3));
-            addTree(new Vector2(34, 4));
-            addTree(new Vector2(34, 5));
-            addTree(new Vector2(35, 5));
-            addTree(new Vector2(36, 5));
-            addTree(new Vector2(36, 4));
-            addTree(new Vector2(36, 3));
-            addTree(new Vector2(35, 3));
-
+        }
+        public void initTwentyAgents(int yPos){
+            for (int i = 9; i < 29; i++)
+            {
+                addAgent(new Vector2(i, yPos));
+            }
         }
 
+
+      
         private void setBigGrid()
         {
 
