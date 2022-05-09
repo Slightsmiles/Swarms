@@ -30,6 +30,7 @@ namespace Swarms
 
         public int _gridSizeX { get; set; }
         public int _gridSizeY { get; set; }
+        public String _testDataPath{get;set;}
 
 
         //Logging variables
@@ -48,7 +49,7 @@ namespace Swarms
         public GraphicsDevice _graphicsDev {get; set;}
 
         public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, bool isMapping = false, 
-                        bool logging = true, int lower = 10, int mid = 80, int high = 120)
+                        bool logging = true, int lower = 10, int mid = 80, int high = 120, String path = "testData120.xml")
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -68,7 +69,7 @@ namespace Swarms
 
             _mapper = new Heatmapper();
             IsMapping = isMapping;
-
+            _testDataPath = path; 
 
 
         }
@@ -251,8 +252,8 @@ namespace Swarms
                     {
                         _logger.logLocations(i, _grid);
                         _grid = _grid.TickOnce();
-                    }
-                    _logger.logLocations(highTest, _grid);
+                    }/* 
+                    _logger.logLocations(highTest, _grid); */
                     _grid = tempgrid;
                 }
                 _logger.serialize();
@@ -288,8 +289,7 @@ namespace Swarms
         {
 
             var mySerializer = new XmlSerializer(typeof(int[][]), types);
-            var path = "testData10.xml";
-            using var myFileStream = new FileStream(path, FileMode.Open);
+            using var myFileStream = new FileStream(_testDataPath, FileMode.Open);
 
             var data = (int[][])mySerializer.Deserialize(myFileStream);
             return data;
