@@ -293,14 +293,10 @@ namespace Swarms
 
             var data = (int[][])mySerializer.Deserialize(myFileStream);
             return data;
-            //var realData = data[0];
-            //_grid._slots = realData;
+
 
         }
 
-        public void showHeatMap(){
-
-        }
     }
 
 }
