@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Trond/Desktop/bachelor/Swarms/Content/File.spritefont</SourceFile>
-  <SourceTime>2022-05-09T18:50:16.2266699+02:00</SourceTime>
-  <DestFile>C:/Users/Trond/Desktop/bachelor/Swarms/Content/bin/DesktopGL/Content/File.xnb</DestFile>
-  <DestTime>2022-05-09T18:50:17.3087319+02:00</DestTime>
+  <SourceFile>/home/simon/Projects/Swarms/Content/File.spritefont</SourceFile>
+  <SourceTime>2022-05-09T19:01:05.7413162+02:00</SourceTime>
+  <DestFile>/home/simon/Projects/Swarms/Content/bin/DesktopGL/Content/File.xnb</DestFile>
+  <DestTime>2022-05-09T19:01:12.3002553+02:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
-  <ImporterTime>2020-08-10T18:17:54+02:00</ImporterTime>
+  <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
-  <ProcessorTime>2020-08-10T18:17:54+02:00</ProcessorTime>
+  <ProcessorTime>2020-08-10T16:17:54+02:00</ProcessorTime>
   <Parameters>
     <Key>PremultiplyAlpha</Key>
     <Value>True</Value>
