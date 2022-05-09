@@ -69,11 +69,11 @@ namespace Swarms.Datatypes.Grids
             LoadContent(graphics);
 
             setBaseGrid();
-            if (isLogging)
+           /*  if (isLogging)
             {
                 //need to add trees and obstacles correctly.
                 setSimulationGrid();
-            }
+            } */
             //setBigGrid(); //works on 48/80 grid
             //setRiverGrid(); //only works on 24/40 grid
             //setDenseForest();
@@ -308,7 +308,7 @@ namespace Swarms.Datatypes.Grids
             }
         }
         private Heatmapper heatmapper = new Heatmapper();
-        public virtual void drawHeatMap(Vector2 offset, SpriteBatch spriteBatch, int[][] array)
+        public virtual void drawHeatMap(Vector2 offset, SpriteBatch spriteBatch, int[][] array, int totalSims)
         {
             spriteBatch.Begin();
             for (int i = 0; i < _columnNums; i++)
@@ -317,7 +317,7 @@ namespace Swarms.Datatypes.Grids
                 for (int j = 0; j < _rowNums; j++)
                 {
                     var yOffset = (int)(offset.Y + _slotDim * j);
-                    var color = heatmapper.HeatMap(array[i][j], 0, 100);
+                    var color = heatmapper.HeatMap(array[i][j], 0, totalSims);
 
                     RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDim, (int)_slotDim), Color.White, 2);
 

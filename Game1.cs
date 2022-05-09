@@ -135,7 +135,7 @@ namespace Swarms
         {
             GraphicsDevice.Clear(Color.WhiteSmoke);
 
-            if(IsMapping) _grid.drawHeatMap(new Vector2(0,0), _spriteBatch, toMap);
+            if(IsMapping) _grid.drawHeatMap(new Vector2(0,0), _spriteBatch, toMap, totalSims);
             else {_grid.drawGrid(new Vector2(0, 0), _spriteBatch, rectTexture);}
             
 
@@ -288,7 +288,7 @@ namespace Swarms
         {
 
             var mySerializer = new XmlSerializer(typeof(int[][]), types);
-            var path = "testData120.xml";
+            var path = "testData10.xml";
             using var myFileStream = new FileStream(path, FileMode.Open);
 
             var data = (int[][])mySerializer.Deserialize(myFileStream);
