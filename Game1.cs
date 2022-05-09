@@ -43,7 +43,7 @@ namespace Swarms
 
         public Heatmapper _mapper {get; set;}
         public bool IsMapping {get; set;}
-        public int totalSims = 10;
+        public int totalSims = 100;
 
         public GraphicsDevice _graphicsDev {get; set;}
 
