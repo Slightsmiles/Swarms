@@ -51,6 +51,7 @@ namespace Swarms
         }
         public Color HeatMap(decimal value, decimal min, decimal max)
         {
+            if (value < 0) return Color.Blue;
             if(value == 0) return Color.WhiteSmoke;
             decimal val = (value - min) / (max - min);
             return new Color
