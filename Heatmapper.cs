@@ -19,7 +19,7 @@ namespace Swarms
 
         public Heatmapper() { }
 
-        public int[][] countOccurences(GridLocation[][][] grids)
+      /*   public int[][] countOccurences(GridLocation[][][] grids)
         {
             var mapped = new int[40][];
             var newmapped = fillArray(mapped);
@@ -35,8 +35,8 @@ namespace Swarms
 
             }
 
-            return mapped;
-        }
+            return newmapped;
+        } */
 
         public int[][] fillArray(int[][] array){
             for(int i = 0; i< array.Length; i++){
@@ -51,6 +51,7 @@ namespace Swarms
         }
         public Color HeatMap(decimal value, decimal min, decimal max)
         {
+            if(value == 0) return Color.WhiteSmoke;
             decimal val = (value - min) / (max - min);
             return new Color
             {

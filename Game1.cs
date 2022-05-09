@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 using System.IO;
 
@@ -42,7 +43,9 @@ namespace Swarms
 
         public Heatmapper _mapper {get; set;}
         public bool IsMapping {get; set;}
-        public int totalSims = 100;
+        public int totalSims = 10;
+
+        public GraphicsDevice _graphicsDev {get; set;}
 
         public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, bool isMapping = false, 
                         bool logging = true, int lower = 10, int mid = 80, int high = 120)
@@ -58,11 +61,10 @@ namespace Swarms
             IsMouseVisible = true;
 
             // Logging
-            IsLogging = true;
+            IsLogging = logging;
             lowTest = lower;
             midTest = mid;
-            highTest = high;
-            _logger = new Logger(lowTest, midTest, highTest);
+            highTest = high; 
 
             _mapper = new Heatmapper();
             IsMapping = isMapping;
@@ -78,6 +80,7 @@ namespace Swarms
             LoadContent();
             initGrid();
 
+            _logger = new Logger(lowTest, midTest, highTest, _grid);
 
             
             base.Initialize();
@@ -169,11 +172,11 @@ namespace Swarms
             // Below is for adding and removing stuff
             if (_currentKeyboardState.IsKeyDown(Keys.LeftControl) || _currentKeyboardState.IsKeyDown(Keys.RightControl))
             {
-                if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
+                /* if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
                 {
                     Console.WriteLine("yeet");
                     handleSpacebar();   
-                }
+                } */
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
@@ -225,7 +228,7 @@ namespace Swarms
 
                 }
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.M)){
-                    toMap = _mapper.countOccurences(readSimData());
+                    toMap = readSimData();
                     IsMapping = true;
                     
                 }
@@ -233,7 +236,6 @@ namespace Swarms
 
             if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
-
                 handleSpacebar();
             }
         }
@@ -242,32 +244,13 @@ namespace Swarms
         {
             if (IsLogging)
             {
-                var tempgrid = _grid;
                 for (int x = 0; x < totalSims; x++)
                 {
-                    _grid = tempgrid;
-                    for (int i = 0; i < lowTest; i++)
+                    var tempgrid = new SquareGrid(new Vector2(), _grid._graphics, _grid._screenWidth, _grid._screenHeight, _grid._columnNums, _grid._rowNums, true, _grid._font);
+                    for (int i = 0; i <= highTest; i++)
                     {
+                        _logger.logLocations(i, _grid);
                         _grid = _grid.TickOnce();
-
-                    }
-
-                    _logger.logLocations(lowTest, _grid);
-                    
-                    for (int i = lowTest; i < midTest; i++)
-                    {
-                        _grid = _grid.TickOnce();
-
-                    }
-
-                    _logger.logLocations(midTest, _grid);
-
-                    
-                    for (int i = midTest; i < highTest; i++)
-                    {
-                        _grid = _grid.TickOnce();
-
-
                     }
                     _logger.logLocations(highTest, _grid);
                     _grid = tempgrid;
@@ -301,14 +284,14 @@ namespace Swarms
         }
 
         Type[] types = { typeof(Boardentity), typeof(Agent), typeof(Obstacle), typeof(Tree) };
-        public GridLocation[][][] readSimData()
+        public int[][] readSimData()
         {
 
-            var mySerializer = new XmlSerializer(typeof(GridLocation[][][]), types);
+            var mySerializer = new XmlSerializer(typeof(int[][]), types);
             var path = "testData120.xml";
             using var myFileStream = new FileStream(path, FileMode.Open);
 
-            var data = (GridLocation[][][])mySerializer.Deserialize(myFileStream);
+            var data = (int[][])mySerializer.Deserialize(myFileStream);
             return data;
             //var realData = data[0];
             //_grid._slots = realData;

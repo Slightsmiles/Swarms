@@ -24,6 +24,8 @@ namespace Swarms.Datatypes.Grids
         public Vector2 rectPosition;
         public float rectSpeed = 100f;
 
+        public GraphicsDevice _graphics {get; set;}
+
 
 
         //slotDims: Size of each slot in the grid
@@ -45,7 +47,7 @@ namespace Swarms.Datatypes.Grids
         //I mean yes but wouldn't it be better to separate this from our model logic
         public int _rowNums { get; set; } // Y-dimension
         public int _columnNums { get; set; }  // X-dimension
-        private SpriteFont _font;
+        public SpriteFont _font {get;set;}
 
         public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums, bool isLogging, SpriteFont font)
         {
@@ -63,6 +65,7 @@ namespace Swarms.Datatypes.Grids
 
             _agentList = new List<Agent>();
             _treeList = new List<Tree>();
+            _graphics = graphics;
             LoadContent(graphics);
 
             setBaseGrid();
@@ -314,7 +317,7 @@ namespace Swarms.Datatypes.Grids
                 for (int j = 0; j < _rowNums; j++)
                 {
                     var yOffset = (int)(offset.Y + _slotDim * j);
-                    var color = heatmapper.HeatMap(array[i][j], 0, 1000);
+                    var color = heatmapper.HeatMap(array[i][j], 0, 10);
 
                     
                     RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);

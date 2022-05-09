@@ -11,7 +11,7 @@ namespace Swarms
             var _y = 24;
             var _screenHeight =  480;
             var _screenWidth = 800;
-            var _logging = false;
+            var _logging = true;
             var _lower = 10;
             var _mid = 80;
             var _high = 120;
@@ -53,7 +53,7 @@ namespace Swarms
                 }
             }
 
-            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _logging, _isMapping, _lower, _mid, _high))
+            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _isMapping, _logging, _lower, _mid, _high))
                 game.Run();
         }
     }
