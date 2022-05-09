@@ -16,6 +16,8 @@ namespace Swarms
         public List<int[]> _logsMid { get; set; }
 
         public List<int[]> _logsMax { get; set; }
+
+        public int burningTrees {get; set;}
     
         public GridLocation[][] locations;
         public int _min { get; set; }
@@ -33,7 +35,6 @@ namespace Swarms
             initCounterArrays(_logsMin, grid);
             initCounterArrays(_logsMid, grid);
             initCounterArrays(_logsMax, grid);
-
         }
        /*  public Logger(int min, int mid, int max, SquareGrid grid)
         {
@@ -65,7 +66,12 @@ namespace Swarms
 
             return;
         }
-
+        private void logTreeStates(SquareGrid grid) {
+            foreach (var tree in grid._treeList)
+            {
+                if(tree._temp >= 80) burningTrees += 1;
+            }
+        }
         private void increment(SquareGrid grid, List<int[]> counters)
         {
             foreach (var agent in grid._agentList)

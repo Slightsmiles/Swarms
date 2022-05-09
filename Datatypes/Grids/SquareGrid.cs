@@ -395,7 +395,7 @@ namespace Swarms.Datatypes.Grids
                     RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDim, (int)_slotDim), Color.White, 2);
 
                     RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
-                    if (array[i][j] != 0) spriteBatch.DrawString(_font, array[i][j].ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.Black);
+                    if (array[i][j] != 0) spriteBatch.DrawString(_font, array[i][j].ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.WhiteSmoke);
 
 
                 }
