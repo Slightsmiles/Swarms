@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/home/simon/Projects/Swarms/Content/File.spritefont</SourceFile>
-  <SourceTime>2022-05-08T18:24:15.8766892+02:00</SourceTime>
-  <DestFile>/home/simon/Projects/Swarms/Content/bin/DesktopGL/Content/File.xnb</DestFile>
-  <DestTime>2022-05-08T18:24:21.5246379+02:00</DestTime>
+  <SourceFile>C:/Users/Trond/Desktop/Swarms/Content/File.spritefont</SourceFile>
+  <SourceTime>2022-05-09T14:15:50.9702312+02:00</SourceTime>
+  <DestFile>C:/Users/Trond/Desktop/Swarms/Content/bin/DesktopGL/Content/File.xnb</DestFile>
+  <DestTime>2022-05-09T14:16:03.0533002+02:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
