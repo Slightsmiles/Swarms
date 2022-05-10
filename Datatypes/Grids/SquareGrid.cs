@@ -48,8 +48,8 @@ namespace Swarms.Datatypes.Grids
         public int _rowNums { get; set; } // Y-dimension
         public int _columnNums { get; set; }  // X-dimension
         public SpriteFont _font { get; set; }
-
-        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums, bool isLogging, SpriteFont font)
+        public bool _onlyRandomMoves {get; set;}
+        public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums, bool isLogging, SpriteFont font, bool onlyRandomMoves)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
@@ -62,6 +62,7 @@ namespace Swarms.Datatypes.Grids
             _gridOffset = new Vector2((int)startPos.X, (int)startPos.Y);
 
             _currentHoverSlot = new Vector2(-1, -1); // For debugging purposes
+            _onlyRandomMoves = onlyRandomMoves;
 
             _agentList = new List<Agent>();
             _treeList = new List<Tree>();
@@ -469,7 +470,7 @@ namespace Swarms.Datatypes.Grids
 
             foreach (var agent in _agentList.OrderBy(a => rand.Next(_agentList.Count())))
             {
-                agent.toRuleThemAll(this);
+                agent.toRuleThemAll(this, _onlyRandomMoves);
                 //UpdateGrid();
             }
 
