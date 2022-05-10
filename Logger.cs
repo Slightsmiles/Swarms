@@ -39,6 +39,12 @@ namespace Swarms
             initCounterArrays(_logsMin, grid);
             initCounterArrays(_logsMid, grid);
             initCounterArrays(_logsMax, grid);
+            foreach (var tree in grid._treeList) 
+            {
+                _logsMin[(int)tree._location.X][(int)tree._location.Y] = -1;
+                _logsMid[(int)tree._location.X][(int)tree._location.Y] = -1;
+                _logsMax[(int)tree._location.X][(int)tree._location.Y] = -1;
+            }
         }
         /*  public Logger(int min, int mid, int max, SquareGrid grid)
          {
