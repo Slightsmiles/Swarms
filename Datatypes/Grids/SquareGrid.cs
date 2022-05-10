@@ -173,10 +173,10 @@ namespace Swarms.Datatypes.Grids
         {
 
             //initTenAgents();
-          //  initTwentyAgents(23);
+            //  initTwentyAgents(23);
             //These two initTwentyAgents call will make 40 agents in total :)
-           // initTwentyAgents(22);
-          //  initTwentyAgents(21);
+            // initTwentyAgents(22);
+            //  initTwentyAgents(21);
             // InitTopLeftTreeCluster();
             //  initBotMidTreeCluster();
             //  initTopRightTreeCluster();
@@ -395,8 +395,9 @@ namespace Swarms.Datatypes.Grids
                     RectangleSprite.DrawRectangle(spriteBatch, new Rectangle(xOffset, yOffset, (int)_slotDim, (int)_slotDim), Color.White, 2);
 
                     RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
-                    if (array[i][j] != 0) spriteBatch.DrawString(_font, array[i][j].ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.WhiteSmoke);
-
+                    
+                    decimal percentOfAgents = Math.Round((((decimal)array[i][j]) / ((decimal)_agentList.Count * (decimal)totalSims)) * 100, 1);
+                    if (array[i][j] != 0) spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.WhiteSmoke);
 
                 }
             }
