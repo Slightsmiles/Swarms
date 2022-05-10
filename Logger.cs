@@ -105,7 +105,7 @@ namespace Swarms
 
             foreach (var tree in grid._treeList)
             {
-                if (tree._temp >= 80)
+                if (tree._temp < 80)
                 {
                     counters[(int)tree._location.X][(int)tree._location.Y] -= 1;
                 }
