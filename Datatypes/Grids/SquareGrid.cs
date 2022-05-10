@@ -173,21 +173,57 @@ namespace Swarms.Datatypes.Grids
         public void setSimulationGrid()
         {
 
-         //   initTenAgents();
-           initTwentyAgents(23);
+           // initTenAgents();
+        //   initTwentyAgents(23);
             //These two initTwentyAgents call will make 40 agents in total :)
-             initTwentyAgents(22);
+        //     initTwentyAgents(22);
             //  initTwentyAgents(21);
              InitTopLeftTreeCluster();
             //  initBotMidTreeCluster();
-           // initTopRightTreeCluster();
-
+            initTopRightTreeCluster();
+            initBotLeftTreeCluster();
+            initbotRightTreeCluster();
             //initSurrounded();
+
+            initCenterAgents();
 
 
 
         }
 
+        private void initCenterAgents()
+        {
+            for (int i = 9; i< 15; i++){
+                for(int j = 17; j<23; j++)
+                addAgent(new Vector2(j, i));
+            }
+            
+        }
+
+        private void initbotRightTreeCluster()
+        {
+            addTree(new Vector2(34, 18));
+            addTree(new Vector2(35, 18));
+            addTree(new Vector2(36, 18));
+            addTree(new Vector2(36, 19));
+            addTree(new Vector2(36, 20));
+            addTree(new Vector2(35, 20));
+            addTree(new Vector2(34, 20));
+            addTree(new Vector2(34, 19));
+        }
+
+
+        private void initBotLeftTreeCluster()
+        {
+            addTree(new Vector2(3, 18));
+            addTree(new Vector2(4, 18));
+            addTree(new Vector2(5, 18));
+            addTree(new Vector2(5, 19));
+            addTree(new Vector2(5, 20));
+            addTree(new Vector2(4, 20));
+            addTree(new Vector2(3, 20));
+            addTree(new Vector2(3, 19));
+        }
 
         public void initSurrounded()
         {
