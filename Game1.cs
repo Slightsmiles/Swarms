@@ -256,7 +256,7 @@ namespace Swarms
                     _logger.logLocations(highTest, _grid); */
                     _grid = tempgrid;
                 }
-                _logger.serialize();
+                _logger.serialize(_grid._agentList.Count * totalSims);
             }
             else
             {

@@ -17,13 +17,17 @@ namespace Swarms
 
         public List<int[]> _logsMax { get; set; }
 
-        public int burningTrees {get; set;}
-    
+        public int burningTrees { get; set; }
+
         public GridLocation[][] locations;
         public int _min { get; set; }
         public int _mid { get; set; }
         public int _max { get; set; }
-        public int burnCounter {get; set;}
+        public int burnCounter { get; set; }
+
+        public int allocatedTargetsMin { get; set; }
+        public int allocatedTargetsMid { get; set; }
+        public int allocatedTargetsMax { get; set; }
         public Logger(int min, int mid, int max, SquareGrid grid)
         {
             _logsMin = new List<int[]>(grid._columnNums);
@@ -36,17 +40,17 @@ namespace Swarms
             initCounterArrays(_logsMid, grid);
             initCounterArrays(_logsMax, grid);
         }
-       /*  public Logger(int min, int mid, int max, SquareGrid grid)
-        {
-            _logsMin = new int[grid._columnNums][];
+        /*  public Logger(int min, int mid, int max, SquareGrid grid)
+         {
+             _logsMin = new int[grid._columnNums][];
 
-            _logsMid = new int[grid._columnNums][];
-            _logsMax = new int[grid._columnNums][];
-            _min = min;
-            _mid = mid;
-            _max = max;
+             _logsMid = new int[grid._columnNums][];
+             _logsMax = new int[grid._columnNums][];
+             _min = min;
+             _mid = mid;
+             _max = max;
 
-        } */
+         } */
 
 
 
@@ -54,20 +58,42 @@ namespace Swarms
         {
             for (int i = 0; i < counterArray.Capacity; i++)
             {
-               counterArray.Insert(i, new int[grid._rowNums]); 
+                counterArray.Insert(i, new int[grid._rowNums]);
             }
         }
         public void logLocations(int ticks, SquareGrid grid)
         {
 
-            if (ticks == _min) increment(grid, _logsMin);
-            if (ticks == _mid) increment(grid, _logsMid);
-            if (ticks == _max) increment(grid, _logsMax);
+            if (ticks == _min)
+            {
+                foreach (var agent in grid._agentList)
+                {
+                    if (agent._target != null) allocatedTargetsMin += 1;
+                }
+                increment(grid, _logsMin);
+            }
+            if (ticks == _mid)
+            {
+                foreach (var agent in grid._agentList)
+                {
+                    if (agent._target != null) allocatedTargetsMid += 1;
+                }
+                increment(grid, _logsMid);
+            }
+            if (ticks == _max)
+            {
+                foreach (var agent in grid._agentList)
+                {
+                    if (agent._target != null) allocatedTargetsMax += 1;
+                }
+                increment(grid, _logsMax);
+            }
 
             return;
         }
 
-        private void logTrees(){
+        private void logTrees()
+        {
 
         }
         private void increment(SquareGrid grid, List<int[]> counters)
@@ -77,18 +103,23 @@ namespace Swarms
                 counters[(int)agent._location.X][(int)agent._location.Y] += 1;
             }
 
-            foreach (var tree in grid._treeList){
-                if (tree._temp >= 80){
-                    counters[(int)tree._location.X][(int)tree._location.Y] -=  1;
+            foreach (var tree in grid._treeList)
+            {
+                if (tree._temp >= 80)
+                {
+                    counters[(int)tree._location.X][(int)tree._location.Y] -= 1;
                 }
             }
         }
 
-        public void serialize()
+        public void serialize(int totalAgents)
         {
             serializeMin();
             serializeMid();
             serializeMax();
+            Console.WriteLine($"Allocated targets MIN: {((float)allocatedTargetsMin / (float)totalAgents) * 100}");
+            Console.WriteLine($"Allocated targets MID: {((float)allocatedTargetsMid / (float)totalAgents) * 100}");
+            Console.WriteLine($"Allocated targets MAX: {((float)allocatedTargetsMax / (float)totalAgents) * 100}");
         }
         Type[] types = { typeof(Boardentity), typeof(Agent), typeof(Obstacle), typeof(Tree) };
         public void serializeMin()
