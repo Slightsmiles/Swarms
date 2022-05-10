@@ -46,10 +46,12 @@ namespace Swarms
         public bool IsMapping {get; set;}
         public int totalSims = 100;
 
+        public bool _onlyRandomMoves {get; set;}
+
         public GraphicsDevice _graphicsDev {get; set;}
 
         public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, bool isMapping = false, 
-                        bool logging = true, int lower = 10, int mid = 80, int high = 120, String path = "testData120.xml")
+                        bool logging = true, int lower = 10, int mid = 80, int high = 120, String path = "testData120.xml", bool onlyRandomMoves = false)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -70,7 +72,7 @@ namespace Swarms
             _mapper = new Heatmapper();
             IsMapping = isMapping;
             _testDataPath = path; 
-
+            _onlyRandomMoves = onlyRandomMoves;
 
         }
 
@@ -90,7 +92,8 @@ namespace Swarms
 
         protected void initGrid()
         {
-            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging, _font);
+            Console.WriteLine(_onlyRandomMoves);
+            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging, _font, _onlyRandomMoves);
 
 
         }
@@ -173,9 +176,8 @@ namespace Swarms
             // Below is for adding and removing stuff
             if (_currentKeyboardState.IsKeyDown(Keys.LeftControl) || _currentKeyboardState.IsKeyDown(Keys.RightControl))
             {
-                /* if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
+                /* if (_currentKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    Console.WriteLine("yeet");
                     handleSpacebar();   
                 } */
 
@@ -247,7 +249,7 @@ namespace Swarms
             {
                 for (int x = 0; x < totalSims; x++)
                 {
-                    var tempgrid = new SquareGrid(new Vector2(), _grid._graphics, _grid._screenWidth, _grid._screenHeight, _grid._columnNums, _grid._rowNums, true, _grid._font);
+                    var tempgrid = new SquareGrid(new Vector2(), _grid._graphics, _grid._screenWidth, _grid._screenHeight, _grid._columnNums, _grid._rowNums, true, _grid._font, _onlyRandomMoves);
                     for (int i = 0; i <= highTest; i++)
                     {
                         _logger.logLocations(i, _grid);

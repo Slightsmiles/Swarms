@@ -17,6 +17,7 @@ namespace Swarms
             var _high = 200;
             var _isMapping = false;
             var _testDataPath = "testData200.xml";
+            var _onlyRandomMoves = false;
             
             if(args.Length != 0)
             { 
@@ -53,11 +54,14 @@ namespace Swarms
                         case "ds":
                             _testDataPath = arg[1];
                             break;
+                        case "rm" :
+                            _onlyRandomMoves = bool.Parse(arg[1]);
+                            break;
                     }
                 }
             }
 
-            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _isMapping, _logging, _lower, _mid, _high, _testDataPath))
+            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _isMapping, _logging, _lower, _mid, _high, _testDataPath, _onlyRandomMoves))
                 game.Run();
         }
     }

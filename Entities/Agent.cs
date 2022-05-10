@@ -16,17 +16,17 @@ namespace Swarms.Entities
 
         public Vector2 _destination { get; set; }
 
-        public int _communicationRange {get; set; } = 8;
+        public int _communicationRange { get; set; } = 8;
 
         //these are our tweakable bias parameters.
         //Lessening alpha will lessen the bias of target quality.
         //Lessening beta will lessen the bias of cost to target
         // alpha, beta > 0; a,b in real numbers
-        public double alpha {get; set;} = 0.1;
-        public double beta {get; set;} = 10.0;
+        public double alpha { get; set; } = 0.1;
+        public double beta { get; set; } = 10.0;
         NoiseUtil noise = new NoiseUtil();
-        public int MAXAGENTSPERTARGET  {get; set;} = 2;
-        public int EXTINGUISHABLEDISTANCE {get; set;} = 2;
+        public int MAXAGENTSPERTARGET { get; set; } = 2;
+        public int EXTINGUISHABLEDISTANCE { get; set; } = 2;
         public Agent(Vector2 location) : base(-1, false, location)
         {
             noise = new NoiseUtil();
@@ -126,7 +126,7 @@ namespace Swarms.Entities
             foreach (var tree in _possibleTargets)
             {
                 if (!tree.Equals(target)) sum += getQuality(tree); //this line might be wrong
-               // sum += getQuality(tree); // i believe this to be correct.
+                                                                   // sum += getQuality(tree); // i believe this to be correct.
             }
 
             return current / sum;
@@ -195,9 +195,8 @@ namespace Swarms.Entities
 
 
         // WEIRD STUFF LNMAO
-        public void toRuleThemAll(SquareGrid squareGrid)
+        public void toRuleThemAll(SquareGrid squareGrid, bool onlyRandomMoves)
         {
-
             var grid = squareGrid._slots;
             var adjacentSquares = getAdjacent(grid, 4); //This variable determines the range that Agents can sensor a tree
             var adjacentTrees = locateTrees(adjacentSquares, grid);
@@ -232,7 +231,7 @@ namespace Swarms.Entities
                     _target = tree;
                 }         //THIS IS MAGIC NUMBERING IN TERMS OF DISTANCE
                 _destination = tree._location;
-                move(grid, roamTowardsTree(adjacentSquares, grid));
+                move(grid, roamTowardsTree(adjacentSquares, grid, onlyRandomMoves));
 
             }
             //If agent isn't "working" on a tree, and has no nearby trees it roams randomly for 1 tick
@@ -260,23 +259,31 @@ namespace Swarms.Entities
 
 
         }
-        private Vector2 roamTowardsTree(List<Vector2> adjacent, GridLocation[][] grid)
+        private Vector2 roamTowardsTree(List<Vector2> adjacent, GridLocation[][] grid, bool onlyRandomMoves)
         {
             var weightedMoves = new WeightedRandomBag<Vector2>();
             var moves = new List<Vector2>();
             rand = new Random();
-            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X - 1, _location.Y - 1));
-            if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X - 1, _location.Y + 1));
-            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X + 1, _location.Y - 1));
-            if (_destination.X - _location.X > 1 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X + 1, _location.Y + 1));
-            if (_destination.X - _location.X < 0) moves.Add(new Vector2(_location.X - 1, _location.Y));
-            if (_destination.X - _location.X > 1) moves.Add(new Vector2(_location.X + 1, _location.Y));
-            if (_destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X, _location.Y - 1));
-            if (_destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X, _location.Y + 1));
+            if (!onlyRandomMoves)
+            {
+                if (_destination.X - _location.X < 0 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X - 1, _location.Y - 1));
+                if (_destination.X - _location.X < 0 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X - 1, _location.Y + 1));
+                if (_destination.X - _location.X > 1 && _destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X + 1, _location.Y - 1));
+                if (_destination.X - _location.X > 1 && _destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X + 1, _location.Y + 1));
+                if (_destination.X - _location.X < 0) moves.Add(new Vector2(_location.X - 1, _location.Y));
+                if (_destination.X - _location.X > 1) moves.Add(new Vector2(_location.X + 1, _location.Y));
+                if (_destination.Y - _location.Y < 0) moves.Add(new Vector2(_location.X, _location.Y - 1));
+                if (_destination.Y - _location.Y > 1) moves.Add(new Vector2(_location.X, _location.Y + 1));
+            }
+            else
+            {
+                return randomDirection(adjacent, grid);
+            }
 
             moves = moves.Where(pos => !isPathObstructed(pos, grid)).ToList();
 
-            if (!moves.Any()){
+            if (!moves.Any())
+            {
                 var allMoves = checkAvailableMoves(adjacent, grid);
                 if (allMoves.Count == 0) return _location;
                 return allMoves[rand.Next(allMoves.Count)];
