@@ -12,11 +12,11 @@ namespace Swarms
             var _screenHeight =  720;
             var _screenWidth = 1280;
             var _logging = true;
-            var _lower = 10;
-            var _mid = 80;
-            var _high = 120;
+            var _lower = 50;
+            var _mid = 100;
+            var _high = 200;
             var _isMapping = false;
-            var _testDataPath = "testData120.xml";
+            var _testDataPath = "testData200.xml";
             
             if(args.Length != 0)
             { 

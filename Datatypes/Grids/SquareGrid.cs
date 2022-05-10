@@ -172,10 +172,10 @@ namespace Swarms.Datatypes.Grids
         public void setSimulationGrid()
         {
 
-            initTenAgents();
-            // initTwentyAgents(23);
+         //   initTenAgents();
+           initTwentyAgents(23);
             //These two initTwentyAgents call will make 40 agents in total :)
-           //  initTwentyAgents(22);
+             initTwentyAgents(22);
             //  initTwentyAgents(21);
              InitTopLeftTreeCluster();
             //  initBotMidTreeCluster();
