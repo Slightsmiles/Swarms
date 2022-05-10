@@ -22,8 +22,8 @@ namespace Swarms.Entities
         //Lessening alpha will lessen the bias of target quality.
         //Lessening beta will lessen the bias of cost to target
         // alpha, beta > 0; a,b in real numbers
-        public double alpha {get; set;} = 1.0;
-        public double beta {get; set;} = 1.0;
+        public double alpha {get; set;} = 10.0;
+        public double beta {get; set;} = 10.0;
         NoiseUtil noise = new NoiseUtil();
         public int MAXAGENTSPERTARGET  {get; set;} = 2;
         public int EXTINGUISHABLEDISTANCE {get; set;} = 2;

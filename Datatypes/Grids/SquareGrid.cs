@@ -172,14 +172,14 @@ namespace Swarms.Datatypes.Grids
         public void setSimulationGrid()
         {
 
-            //initTenAgents();
-              initTwentyAgents(23);
+            initTenAgents();
+            // initTwentyAgents(23);
             //These two initTwentyAgents call will make 40 agents in total :)
-            // initTwentyAgents(22);
+           //  initTwentyAgents(22);
             //  initTwentyAgents(21);
              InitTopLeftTreeCluster();
             //  initBotMidTreeCluster();
-             // initTopRightTreeCluster();
+           // initTopRightTreeCluster();
 
             //initSurrounded();
 
@@ -254,14 +254,14 @@ namespace Swarms.Datatypes.Grids
 
         public void initTenAgents()
         {
-            for (int i = 14; i < 24; i++)
+            for (int i = 15; i < 25; i++)
             {
                 addAgent(new Vector2(i, 23));
             }
         }
         public void initTwentyAgents(int yPos)
         {
-            for (int i = 9; i < 29; i++)
+            for (int i = 10; i < 30; i++)
             {
                 addAgent(new Vector2(i, yPos));
             }
