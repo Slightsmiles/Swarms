@@ -48,7 +48,7 @@ namespace Swarms.Datatypes.Grids
         public int _rowNums { get; set; } // Y-dimension
         public int _columnNums { get; set; }  // X-dimension
         public SpriteFont _font { get; set; }
-        public bool _onlyRandomMoves {get; set;}
+        public bool _onlyRandomMoves { get; set; }
         public SquareGrid(Vector2 startPos, GraphicsDevice graphics, int screenWidth, int screenHeight, int columnNums, int rowNums, bool isLogging, SpriteFont font, bool onlyRandomMoves)
         {
             _screenWidth = screenWidth;
@@ -173,13 +173,13 @@ namespace Swarms.Datatypes.Grids
         public void setSimulationGrid()
         {
 
-           // initTenAgents();
-        //   initTwentyAgents(23);
+            //initTenAgents();
+            //initTwentyAgents(23);
             //These two initTwentyAgents call will make 40 agents in total :)
-        //     initTwentyAgents(22);
-            //  initTwentyAgents(21);
-             InitTopLeftTreeCluster();
-            //  initBotMidTreeCluster();
+            //initTwentyAgents(22);
+            //initTwentyAgents(21);
+            InitTopLeftTreeCluster();
+            //initBotMidTreeCluster();
             initTopRightTreeCluster();
             initBotLeftTreeCluster();
             initbotRightTreeCluster();
@@ -193,11 +193,12 @@ namespace Swarms.Datatypes.Grids
 
         private void initCenterAgents()
         {
-            for (int i = 9; i< 15; i++){
-                for(int j = 17; j<23; j++)
-                addAgent(new Vector2(j, i));
+            for (int i = 9; i < 15; i++)
+            {
+                for (int j = 17; j < 23; j++)
+                    addAgent(new Vector2(j, i));
             }
-            
+
         }
 
         private void initbotRightTreeCluster()
@@ -433,8 +434,8 @@ namespace Swarms.Datatypes.Grids
 
                     RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
                     decimal percentOfAgents = Math.Round((((decimal)array[i][j]) / ((decimal)_agentList.Count * (decimal)totalSims)) * 100, 1);
-                    if(array[i][j] < 0) percentOfAgents = (array[i][j] + 1) * -1;
-                    if (array[i][j] != 0 && percentOfAgents > (Decimal) 0.1) spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.Magenta);
+                    if (array[i][j] < 0) percentOfAgents = (array[i][j] + 1) * -1;
+                    if (array[i][j] != 0 && percentOfAgents > (Decimal)0.1) spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.Magenta);
 
                 }
             }

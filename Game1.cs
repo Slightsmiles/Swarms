@@ -92,7 +92,6 @@ namespace Swarms
 
         protected void initGrid()
         {
-            Console.WriteLine(_onlyRandomMoves);
             _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging, _font, _onlyRandomMoves);
 
 
@@ -176,10 +175,10 @@ namespace Swarms
             // Below is for adding and removing stuff
             if (_currentKeyboardState.IsKeyDown(Keys.LeftControl) || _currentKeyboardState.IsKeyDown(Keys.RightControl))
             {
-                /* if (_currentKeyboardState.IsKeyDown(Keys.Space))
+                if (_currentKeyboardState.IsKeyDown(Keys.Space))
                 {
                     handleSpacebar();   
-                } */
+                }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
                 {
