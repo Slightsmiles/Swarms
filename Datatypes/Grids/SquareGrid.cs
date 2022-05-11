@@ -174,9 +174,9 @@ namespace Swarms.Datatypes.Grids
         {
 
             //initTenAgents(23);
-            //initTenAgents(0);
-            initTwentyAgents(23);
-            initTwentyAgents(0);
+            initTenAgents(0);
+            //initTwentyAgents(23);
+           // initTwentyAgents(0);
             //These two initTwentyAgents call will make 40 agents in total :)
             //initTwentyAgents(22);
             //initTwentyAgents(21);
@@ -459,8 +459,12 @@ namespace Swarms.Datatypes.Grids
 
                     RectangleSprite.FillRectangle(spriteBatch, new Rectangle(xOffset + 2, yOffset + 2, (int)_slotDim, (int)_slotDim), color);
                     decimal percentOfAgents = Math.Round((((decimal)array[i][j]) / ((decimal)_agentList.Count * (decimal)totalSims)) * 100, 1);
-                    if (array[i][j] < 0) percentOfAgents = (array[i][j] + 1) * -1;
-                    if (array[i][j] != 0 && percentOfAgents > (Decimal)0.1) spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.Magenta);
+                    if (array[i][j] < 0) {
+                        percentOfAgents = (array[i][j] + 1) * - 1;
+                        spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.WhiteSmoke);
+                    }
+                    else if (array[i][j] != 0 && percentOfAgents > (decimal) 0.7) spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.WhiteSmoke);
+                    else if (array[i][j] != 0 && percentOfAgents > (decimal) 0.1) spriteBatch.DrawString(_font, $"{percentOfAgents}%".ToString(), new Vector2(xOffset + 2, yOffset + 2), Color.Blue);
 
                 }
             }
