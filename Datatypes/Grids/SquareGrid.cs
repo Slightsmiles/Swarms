@@ -176,19 +176,19 @@ namespace Swarms.Datatypes.Grids
             //initTenAgents(23);
             //initTenAgents(0);
             initTwentyAgents(23);
-            initTwentyAgents(0);
+           // initTwentyAgents(0);
             //These two initTwentyAgents call will make 40 agents in total :)
             //initTwentyAgents(22);
             //initTwentyAgents(21);
-            //InitTopLeftTreeCluster();
+            InitTopLeftTreeCluster();
             //initBotMidTreeCluster();
-            //initTopRightTreeCluster();
+            initTopRightTreeCluster();
             //initBotLeftTreeCluster();
             //initbotRightTreeCluster();
             //initSurrounded();
 
             //initCenterAgents();
-            initCenterTreeCluster();
+            //initCenterTreeCluster();
 
 
         }

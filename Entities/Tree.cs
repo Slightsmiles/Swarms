@@ -49,10 +49,14 @@ namespace Swarms.Entities
 
                 var tempFactor = Math.Pow(0.5, Math.Floor(euclidianDistance)); // The further out the smaller the temperature increase
                  
+                if(_temp >= 300) {
+                    _color = GetColor();
+                    return;
+                }
                 if(tree._temp >= 160) _temp += 4 * tempFactor;
                 else if(tree._temp >= 80 && tree._temp < 160) _temp += 2 * tempFactor;
 
-                if(tree._temp >= 300) _temp = 300;
+                
             }
 
             _color = GetColor();
