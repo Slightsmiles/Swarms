@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 using System.IO;
 
@@ -23,12 +24,13 @@ namespace Swarms
         public int _screenHeight { get; private set; }
 
         public SquareGrid _grid;
-
+        public int[][] toMap {get; set;}
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
 
         public int _gridSizeX { get; set; }
         public int _gridSizeY { get; set; }
+        public String _testDataPath{get;set;}
 
 
         //Logging variables
@@ -37,13 +39,19 @@ namespace Swarms
         public int lowTest { get; set; }
         public int midTest { get; set; }
         public int highTest { get; set; }
-        public bool IsLogging { get; set; }
+        public bool IsLogging { get; set;  }
         public SquareGrid startingGrid { get; set; }
 
-        public int totalSims = 50;
+        public Heatmapper _mapper {get; set;}
+        public bool IsMapping {get; set;}
+        public int totalSims = 100;
 
-        public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, 
-                        bool logging = false, int lower = 40, int mid = 80, int high = 120)
+        public bool _onlyRandomMoves {get; set;}
+
+        public GraphicsDevice _graphicsDev {get; set;}
+
+        public Game1(   int gridSizeX = 40, int gridSizeY = 24, int screenHeight = 480, int screenWidth = 800, bool isMapping = false, 
+                        bool logging = true, int lower = 10, int mid = 80, int high = 120, String path = "testData120.xml", bool onlyRandomMoves = false)
         {
             _gridSizeX = gridSizeX;
             _gridSizeY = gridSizeY;
@@ -59,8 +67,12 @@ namespace Swarms
             IsLogging = logging;
             lowTest = lower;
             midTest = mid;
-            highTest = high;
-            _logger = new Logger(lowTest, midTest, highTest);
+            highTest = high; 
+
+            _mapper = new Heatmapper();
+            IsMapping = isMapping;
+            _testDataPath = path; 
+            _onlyRandomMoves = onlyRandomMoves;
 
         }
 
@@ -68,18 +80,19 @@ namespace Swarms
         {
             initSize();
             // TODO: Add your initialization logic here
-
+            LoadContent();
             initGrid();
 
+            _logger = new Logger(lowTest, midTest, highTest, _grid);
 
-            LoadContent();
+            
             base.Initialize();
         }
 
 
         protected void initGrid()
         {
-            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging);
+            _grid = new SquareGrid(new Vector2(0, 0), GraphicsDevice, _screenWidth, _screenHeight, _gridSizeX, _gridSizeY, IsLogging, _font, _onlyRandomMoves);
 
 
         }
@@ -92,10 +105,12 @@ namespace Swarms
         }
         //currently unused in SquareGrid class, even though we pass it as argument
         Texture2D rectTexture;
+
+        SpriteFont _font;
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _font = Content.Load<SpriteFont>("File");
             rectTexture = new Texture2D(GraphicsDevice, 1, 1);
             rectTexture.SetData(new[] { Color.White });
             // TODO: use this.Content to load your game content here
@@ -123,8 +138,9 @@ namespace Swarms
         {
             GraphicsDevice.Clear(Color.WhiteSmoke);
 
-
-            _grid.drawGrid(new Vector2(0, 0), _spriteBatch, rectTexture);
+            if(IsMapping) _grid.drawHeatMap(new Vector2(0,0), _spriteBatch, toMap, totalSims);
+            else {_grid.drawGrid(new Vector2(0, 0), _spriteBatch, rectTexture);}
+            
 
             base.Draw(gameTime);
 
@@ -161,8 +177,7 @@ namespace Swarms
             {
                 if (_currentKeyboardState.IsKeyDown(Keys.Space))
                 {
-
-                    handleSpacebar();
+                    handleSpacebar();   
                 }
 
                 if (_currentKeyboardState.IsKeyDown(Keys.T))
@@ -187,11 +202,11 @@ namespace Swarms
                 if (_currentKeyboardState.IsKeyDown(Keys.B))
                 {
                     if (isSquareOccupied(position)) return;
-                    _grid.addTree(position, 80);
+                    _grid.addTree(position, 180);
                 }
 
                 //used for clearing
-                if (_currentKeyboardState.IsKeyDown(Keys.Back))
+                if (_currentKeyboardState.IsKeyDown(Keys.D))
                 {
                     _grid._slots[(int)posX][(int)posY] = new Boardentity(1, true, position);
                 }
@@ -208,17 +223,21 @@ namespace Swarms
                 }
                 if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.L))
                 {
-                    readSimData();
+                    //readSimData();
                     //Console.WriteLine("reading from xml");
-                    // var newgrid = readXML();
-                    // _grid = newgrid;
+                     var newgrid = readXML();
+                     _grid = newgrid;
 
+                }
+                if (_currentKeyboardState.IsKeyDown(Keys.LeftShift) && _currentKeyboardState.IsKeyDown(Keys.M)){
+                    toMap = readSimData();
+                    IsMapping = true;
+                    
                 }
             }
 
             if (_currentKeyboardState.IsKeyDown(Keys.Space) && !_previousKeyboardState.IsKeyDown(Keys.Space))
             {
-
                 handleSpacebar();
             }
         }
@@ -229,33 +248,16 @@ namespace Swarms
             {
                 for (int x = 0; x < totalSims; x++)
                 {
-                    for (int i = 0; i < lowTest; i++)
+                    var tempgrid = new SquareGrid(new Vector2(), _grid._graphics, _grid._screenWidth, _grid._screenHeight, _grid._columnNums, _grid._rowNums, true, _grid._font, _onlyRandomMoves);
+                    for (int i = 0; i <= highTest; i++)
                     {
+                        _logger.logLocations(i, _grid);
                         _grid = _grid.TickOnce();
-
-                    }
-
-                    _logger.logLocations(lowTest, _grid);
-
-                    for (int i = lowTest; i < midTest; i++)
-                    {
-                        _grid = _grid.TickOnce();
-
-                    }
-
-                    _logger.logLocations(midTest, _grid);
-
-
-                    for (int i = midTest; i < highTest; i++)
-                    {
-                        _grid = _grid.TickOnce();
-
-
-                    }
-                    _logger.logLocations(highTest, _grid);
-                    Initialize();
+                    }/* 
+                    _logger.logLocations(highTest, _grid); */
+                    _grid = tempgrid;
                 }
-                _logger.serialize();
+                _logger.serialize(_grid._agentList.Count * totalSims);
             }
             else
             {
@@ -265,7 +267,7 @@ namespace Swarms
         }
         public void writeXML(SquareGrid grid)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid));
+            XmlSerializer serializer = new XmlSerializer(typeof(SquareGrid), types);
 
             StreamWriter writer = new StreamWriter("testGrid.xml");
             serializer.Serialize(writer, grid);
@@ -275,8 +277,8 @@ namespace Swarms
         public SquareGrid readXML()
         {
 
-            var mySerializer = new XmlSerializer(typeof(SquareGrid));
-            using var myFileStream = new FileStream("testGrid.xml", FileMode.Open);
+            var mySerializer = new XmlSerializer(typeof(SquareGrid), types);
+            using var myFileStream = new FileStream("CenterWithQualityBias.xml", FileMode.Open);
 
             var grid = (SquareGrid)mySerializer.Deserialize(myFileStream);
 
@@ -284,19 +286,18 @@ namespace Swarms
         }
 
         Type[] types = { typeof(Boardentity), typeof(Agent), typeof(Obstacle), typeof(Tree) };
-        public void readSimData()
+        public int[][] readSimData()
         {
 
-            var mySerializer = new XmlSerializer(typeof(GridLocation[][][]), types);
-            var path = "testData40.xml";
-            using var myFileStream = new FileStream(path, FileMode.Open);
+            var mySerializer = new XmlSerializer(typeof(int[][]), types);
+            using var myFileStream = new FileStream(_testDataPath, FileMode.Open);
 
-            var data = (GridLocation[][][])mySerializer.Deserialize(myFileStream);
+            var data = (int[][])mySerializer.Deserialize(myFileStream);
+            return data;
 
-            var realData = data[0];
-            _grid._slots = realData;
 
         }
+
     }
 
 }

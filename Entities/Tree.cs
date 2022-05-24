@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Globalization;
 using System;
 using System.Collections.Generic;
@@ -13,6 +12,8 @@ namespace Swarms.Entities
 
         public int _id {get;set;}
         public bool _isBurning {get; set;}
+
+        public static int _spreadRange = 3;
 
         public Tree(Vector2 location, double temp = 30, int  id = 0) : base(-1, false, location){
   
@@ -39,7 +40,7 @@ namespace Swarms.Entities
 
         public void tickTemp(GridLocation[][] grid, List<Tree> trees)
         {
-            var adjacentSquares = getAdjacent(grid, 5);
+            var adjacentSquares = getAdjacent(grid, _spreadRange);
             var adjacentTrees = getAdjacentTrees(grid, adjacentSquares, trees);
             
             foreach (var tree in adjacentTrees)
@@ -47,9 +48,15 @@ namespace Swarms.Entities
                 var euclidianDistance = getEuclidianDistance(tree._location, _location);
 
                 var tempFactor = Math.Pow(0.5, Math.Floor(euclidianDistance)); // The further out the smaller the temperature increase
-
+                 
+                if(_temp >= 300) {
+                    _color = GetColor();
+                    return;
+                }
                 if(tree._temp >= 160) _temp += 4 * tempFactor;
                 else if(tree._temp >= 80 && tree._temp < 160) _temp += 2 * tempFactor;
+
+                
             }
 
             _color = GetColor();
@@ -69,7 +76,7 @@ namespace Swarms.Entities
                 
                 return;
             }
-            _temp -= 15;
+            _temp -= 9;
         }
 
     }

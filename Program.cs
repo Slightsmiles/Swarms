@@ -9,12 +9,15 @@ namespace Swarms
         {
             var _x = 40;
             var _y = 24;
-            var _screenHeight =  480;
-            var _screenWidth = 800;
-            var _logging = false;
-            var _lower = 40;
-            var _mid = 80;
-            var _high = 120;
+            var _screenHeight =  720;
+            var _screenWidth = 1280;
+            var _logging = true;
+            var _lower = 50;
+            var _mid = 100;
+            var _high = 200;
+            var _isMapping = false;
+            var _testDataPath = "testData200.xml";
+            var _onlyRandomMoves = false;
             
             if(args.Length != 0)
             { 
@@ -48,31 +51,17 @@ namespace Swarms
                         case "high":
                             _high = Int32.Parse(arg[1]);
                             break;
-
+                        case "ds":
+                            _testDataPath = arg[1];
+                            break;
+                        case "rm" :
+                            _onlyRandomMoves = bool.Parse(arg[1]);
+                            break;
                     }
                 }
-                /* logging = bool.Parse(args[0]);
-                
-                //what are these?
-                lower = Int32.Parse(args[1]);  
-                mid = Int32.Parse(args[2]);    
-                high = Int32.Parse(args[3]);
-
-
-                if (args.Length > 4)
-                {
-                    x = Int32.Parse(args[4]);
-                    y = Int32.Parse(args[5]);
-                }
-
-                if(args.Length > 6) {
-                    screenHeight = Int32.Parse(args[6]);
-                    screenWidth = Int32.Parse(args[7]);
-                }        
-               */
             }
 
-            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _logging, _lower, _mid, _high))
+            using (var game = new Game1(_x, _y, _screenHeight, _screenWidth, _isMapping, _logging, _lower, _mid, _high, _testDataPath, _onlyRandomMoves))
                 game.Run();
         }
     }
